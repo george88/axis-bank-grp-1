@@ -8,7 +8,7 @@
    <property name="bin.dir" value="bin"/>
    <property name="deploy.file" value="Axis_Bank.aar"/>
    <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\axis\repository\services"/>
-   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18\bin"/>
+   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18_2\bin"/>
 
    
 
@@ -57,7 +57,14 @@
 				<filename name="*"/>
 			</fileset>			
 		</copy> -->
-		<exec command="${tomcatbin.path}/startup.bat" ></exec>
+	</target>
+	<target name="startServer">
+	<exec executable="${tomcatbin.path}/startup.bat" ></exec>
+	</target>
+	<target name="stopServer">
+		<exec executable="${tomcatbin.path}/shutdown.bat" ></exec>
+	</target>
+	<target name="restartServer" depends="stopServer,startServer">
 	</target>
 
 </project> 

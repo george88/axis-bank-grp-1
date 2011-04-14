@@ -17,6 +17,10 @@ public class BankService {
 	private boolean login;
 	private Timer timer;
 
+	public BankService() {
+
+	}
+
 	public boolean login(String username, String password) {
 		// if(UserDAO.userExists()){
 		// if(UserDAO.passwordCorrect()){
