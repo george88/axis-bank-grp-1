@@ -7,7 +7,8 @@
    <property name="aar.dir" value="aar"/>
    <property name="bin.dir" value="bin"/>
    <property name="deploy.file" value="Axis_Bank.aar"/>
-   <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\deploy"/>
+   <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\axis\repository\services"/>
+   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18\bin"/>
 
    
 
@@ -51,11 +52,12 @@
    </target>
 	
 	<target name="all" depends="ErzeugeAAR">
-		<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
+		<!--<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
 			<fileset dir="${deploy.path}">
 				<filename name="*"/>
 			</fileset>			
-		</copy>
+		</copy> -->
+		<exec command="${tomcatbin.path}/startup.bat" ></exec>
 	</target>
 
 </project> 
