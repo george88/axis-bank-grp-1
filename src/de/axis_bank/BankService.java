@@ -54,7 +54,7 @@ public class BankService {
 		}
 	}
 
-	public int getLiquidity() {
+	public int getLiquiditaet() {
 		if (!isLogin())
 			return -1;
 		continueLogoffCounter();
@@ -62,12 +62,12 @@ public class BankService {
 		return Liqui_1;
 	}
 
-	public RepaymentPlan getRepaymentPlan() {
+	public Rueckzahlungsplan getRueckzahlungsPlan() {
 		if (!isLogin())
 			return null;
 		continueLogoffCounter();
 
-		return new RepaymentPlan();
+		return new Rueckzahlungsplan();
 	}
 
 	private void setLogin(boolean login) {
