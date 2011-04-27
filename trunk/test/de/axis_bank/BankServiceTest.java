@@ -11,7 +11,7 @@ public class BankServiceTest {
 	public void testGetLiquidity() {
 		BankService service = new BankService();
 		service.login("test", "test");
-		assertEquals("testGetLiquidity", 2.5, service.getLiquidity(), 2.5);
+		assertEquals("testGetLiquidity", 2.5, service.getLiquiditaet(), 2.5);
 	}
 
 	@Test
