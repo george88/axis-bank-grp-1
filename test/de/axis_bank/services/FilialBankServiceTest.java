@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.axis_bank.services.WebBankService;
+import de.axis_bank.services.web.WebBankService;
 
 public class FilialBankServiceTest {
 

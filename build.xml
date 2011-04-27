@@ -1,42 +1,44 @@
 <?xml version="1.0"?>
 
 <project name="Axis_Bank" basedir="." 
-     default="all">
+     default="allesFiliale">
 
    <property name="src.dir" value="src"/>
-   <property name="aar.dir" value="aar"/>
+   <property name="f_aar.dir" value="f_aar"/>
+   <property name="w_aar.dir" value="w_aar"/>
    <property name="bin.dir" value="bin"/>
-   <property name="deploy.file" value="Axis_Bank.aar"/>
+   <property name="f_deploy.file" value="Filiale_Axis_Bank.aar"/>
+   <property name="w_deploy.file" value="Web_Axis_Bank.aar"/>
    <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\axis\repository\services"/>
    <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18_2\bin"/>
 
    
 
-   <target name="Structure" depends="" 
+   <target name="FilialStructure" depends="" 
         description="[AXIS2] Struktur für AAR-File erzeugen">
 
-      <mkdir dir="${aar.dir}" />
-      <mkdir dir="${aar.dir}/META-INF" />
+      <mkdir dir="${f_aar.dir}" />
+      <mkdir dir="${f_aar.dir}/META-INF" />
 
-      <copy todir="${aar.dir}" preservelastmodified="true">
+      <copy todir="${f_aar.dir}" preservelastmodified="true">
          <fileset dir="${bin.dir}"
             includes="**/*.*"
             excludes="*.xml"/>
       </copy>
 
-      <copy todir="${aar.dir}/META-INF"
+      <copy todir="${f_aar.dir}/META-INF"
              preservelastmodified="true">
-         <fileset dir="${src.dir}"
+         <fileset dir="${src.dir}/de/axis_bank/services/filiale"
              includes="services.xml"/>
       </copy>
    
    </target>
 
-   <target name="ErzeugeAAR" depends="Structure"
+   <target name="ErzeugeFilialAAR" depends="FilialStructure"
         description="[AXIS2] AAR-File erzeugen">
 
-      <jar destfile="${deploy.path}/${deploy.file}">
-         <fileset dir="${aar.dir}">
+      <jar destfile="${deploy.path}/${f_deploy.file}">
+         <fileset dir="${f_aar.dir}">
             <include name="**/*.*"/>
          </fileset>
       </jar>
@@ -47,11 +49,11 @@
          </fileset>
       </copy>
 
-      <delete dir="${aar.dir}" />
+      <delete dir="${f_aar.dir}" />
 
    </target>
 	
-	<target name="all" depends="ErzeugeAAR">
+	<target name="allesFiliale" depends="ErzeugeFilialAAR">
 		<!--<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
 			<fileset dir="${deploy.path}">
 				<filename name="*"/>
@@ -66,5 +68,51 @@
 	</target>
 	<target name="restartServer" depends="stopServer,startServer">
 	</target>
+	
+	   <target name="WebStructure" depends="" 
+	        description="[AXIS2] Struktur für AAR-File erzeugen">
 
+	      <mkdir dir="${w_aar.dir}" />
+	      <mkdir dir="${w_aar.dir}/META-INF" />
+
+	      <copy todir="${w_aar.dir}" preservelastmodified="true">
+	         <fileset dir="${bin.dir}"
+	            includes="**/*.*"
+	            excludes="*.xml"/>
+	      </copy>
+
+	      <copy todir="${w_aar.dir}/META-INF"
+	             preservelastmodified="true">
+	         <fileset dir="${src.dir}/de/axis_bank/services/web"
+	             includes="services.xml"/>
+	      </copy>
+	   
+	   </target>
+
+	   <target name="ErzeugeWebAAR" depends="WebStructure"
+	        description="[AXIS2] AAR-File erzeugen">
+
+	      <jar destfile="${deploy.path}/${w_deploy.file}">
+	         <fileset dir="${w_aar.dir}">
+	            <include name="**/*.*"/>
+	         </fileset>
+	      </jar>
+
+	      <copy todir="${deploy.path}" preservelastmodified="true">
+	         <fileset dir=".">
+	            <include name="*.aar"/>
+	         </fileset>
+	      </copy>
+
+	      <delete dir="${w_aar.dir}" />
+
+	   </target>
+		
+		<target name="allesWeb" depends="ErzeugeWebAAR">
+			<!--<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
+				<fileset dir="${deploy.path}">
+					<filename name="*"/>
+				</fileset>			
+			</copy> -->
+		</target>
 </project> 

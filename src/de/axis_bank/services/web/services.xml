@@ -1,0 +1,7 @@
+<service>
+<description>Ein Service um einen Tilgungsplan zu erstellen</description>
+	<parameter name="ServiceClass" locked="false">
+      de.axis_bank.services.web.WebBankService
+   </parameter>
+</service>
+
