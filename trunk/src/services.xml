@@ -2,15 +2,31 @@
 
 	<description>Ein Service um die Liquidität eines Kunden zu erörtern und einen Tilgungsplan zu erstellen</description>
 	<parameter name="ServiceClass" locked="false">
-      de.axis_bank.BankService
+      de.axis_bank.services.FilialBankService
    </parameter>
 
-	<operation name="getLiquidity">
+	<operation name="getLiquiditaet">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 
-	<operation name="getRepaymentPlan">
+	<operation name="getRueckzahlungsPlan">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	
+	<operation name="login">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	
+	<operation name="logoff">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 
 </service>
+
+<service>
+<description>Ein Service um einen Tilgungsplan zu erstellen</description>
+	<parameter name="ServiceClass" locked="false">
+      de.axis_bank.services.WebBankService
+   </parameter>
+</service>
+

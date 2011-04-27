@@ -5,13 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import de.axis_bank.services.BankService;
+import de.axis_bank.services.WebBankService;
 
-public class BankServiceTest {
+public class FilialBankServiceTest {
 
 	@Test
 	public void testGetLiquidity() {
-		BankService service = new BankService();
+		WebBankService service = new WebBankService();
 		service.login("test", "test");
 		assertEquals("testGetLiquidity", 2.5, service.getLiquiditaet(), 2.5);
 	}
@@ -23,7 +23,7 @@ public class BankServiceTest {
 
 	@Test
 	public void login() {
-		BankService service = new BankService();
+		WebBankService service = new WebBankService();
 		assertTrue("login", service.login("test", "test"));
 	}
 
