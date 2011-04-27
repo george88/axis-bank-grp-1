@@ -1,4 +1,4 @@
-package de.axis_bank.services;
+package de.axis_bank.services.filiale;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +7,7 @@ import javax.swing.Timer;
 
 import de.axis_bank.daos.Rueckzahlungsplan;
 
-public class WebBankService {
+public class FilialBankService {
 
 	public final static int Liqui_1 = 1;
 	public final static int Liqui_2 = 2;
@@ -19,7 +19,7 @@ public class WebBankService {
 	private boolean login;
 	private Timer timer;
 
-	public WebBankService() {
+	public FilialBankService() {
 
 	}
 
