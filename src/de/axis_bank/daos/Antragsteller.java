@@ -1,4 +1,4 @@
-package de.axis_bank;
+package de.axis_bank.daos;
 
 public class Antragsteller {
 
