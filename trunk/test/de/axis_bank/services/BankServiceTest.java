@@ -1,9 +1,11 @@
-package de.axis_bank;
+package de.axis_bank.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import de.axis_bank.services.BankService;
 
 public class BankServiceTest {
 

@@ -1,9 +1,11 @@
-package de.axis_bank;
+package de.axis_bank.services;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
+
+import de.axis_bank.daos.Rueckzahlungsplan;
 
 public class BankService {
 
