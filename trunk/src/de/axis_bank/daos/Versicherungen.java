@@ -11,7 +11,7 @@ public class Versicherungen extends DaoObject {
 	private double mtlBeitrag;
 
 	public Versicherungen() {
-		setName(getClass().getName());
+		setTableName(getClass().getName());
 	}
 
 	public Versicherungen(String versArt, String versGesellschaft,

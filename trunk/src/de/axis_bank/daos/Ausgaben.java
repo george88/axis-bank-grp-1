@@ -30,7 +30,7 @@ public class Ausgaben extends DaoObject {
 	}
 
 	public Ausgaben() {
-		setName(getClass().getName());
+		setTableName(getClass().getName());
 
 	}
 

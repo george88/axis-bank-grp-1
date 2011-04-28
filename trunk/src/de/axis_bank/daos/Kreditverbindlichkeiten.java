@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Verbindlichkeiten extends DaoObject {
+public class Kreditverbindlichkeiten extends DaoObject {
 
 	private String kreditinstitut;
 
@@ -10,7 +10,7 @@ public class Verbindlichkeiten extends DaoObject {
 
 	private double mtlRate;
 
-	public Verbindlichkeiten(String kreditinstitut, double gesamtschuld,
+	public Kreditverbindlichkeiten(String kreditinstitut, double gesamtschuld,
 			double restSchuld, double mtlRate) {
 		super();
 		this.kreditinstitut = kreditinstitut;
@@ -19,8 +19,8 @@ public class Verbindlichkeiten extends DaoObject {
 		this.mtlRate = mtlRate;
 	}
 
-	public Verbindlichkeiten() {
-		setName(getClass().getName());
+	public Kreditverbindlichkeiten() {
+		setTableName(getClass().getName());
 
 	}
 

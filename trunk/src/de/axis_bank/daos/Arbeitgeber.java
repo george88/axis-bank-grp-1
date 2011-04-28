@@ -25,7 +25,7 @@ public class Arbeitgeber extends DaoObject {
 	}
 
 	public Arbeitgeber() {
-		setName(getClass().getName());
+		setTableName(getClass().getName());
 
 	}
 

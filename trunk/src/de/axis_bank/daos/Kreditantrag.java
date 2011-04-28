@@ -19,7 +19,7 @@ public class Kreditantrag extends DaoObject {
 	private int ratenAnzahl;
 
 	public Kreditantrag() {
-		setName(getClass().getName());
+		setTableName(getClass().getName());
 
 	}
 
