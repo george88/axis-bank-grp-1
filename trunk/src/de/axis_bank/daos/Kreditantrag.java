@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Kreditantrag {
+public class Kreditantrag extends DaoObject {
 
 	private int giroDarlehenskonto;
 
@@ -19,6 +19,7 @@ public class Kreditantrag {
 	private int ratenAnzahl;
 
 	public Kreditantrag() {
+		setName(getClass().getName());
 
 	}
 

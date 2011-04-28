@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Verbindlichkeiten {
+public class Verbindlichkeiten extends DaoObject {
 
 	private String kreditinstitut;
 
@@ -20,6 +20,7 @@ public class Verbindlichkeiten {
 	}
 
 	public Verbindlichkeiten() {
+		setName(getClass().getName());
 
 	}
 

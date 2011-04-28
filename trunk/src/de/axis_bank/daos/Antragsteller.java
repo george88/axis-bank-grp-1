@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Antragsteller {
+public class Antragsteller extends DaoObject {
 
 	private int idAntragsteller;
 
@@ -47,6 +47,7 @@ public class Antragsteller {
 	private Kreditantrag[] kreditantraege;
 
 	public Antragsteller() {
+		setName(getClass().getName());
 
 	}
 
