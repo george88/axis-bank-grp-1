@@ -42,12 +42,12 @@ public class Antragsteller extends DaoObject {
 
 	private Arbeitgeber[] arbeitgeber;
 
-	private Verbindlichkeiten[] verbindlichkeiten;
+	private Kreditverbindlichkeiten[] verbindlichkeiten;
 
 	private Kreditantrag[] kreditantraege;
 
 	public Antragsteller() {
-		setName(getClass().getName());
+		setTableName(getClass().getName());
 
 	}
 
@@ -57,7 +57,7 @@ public class Antragsteller extends DaoObject {
 			String telefon, String email, String beruf, int anzKinder,
 			String familienstand, Einnahmen einnahmen,
 			Versicherungen[] versicherungen, Ausgaben ausgaben,
-			Arbeitgeber[] arbeitgeber, Verbindlichkeiten[] verbindlichkeiten,
+			Arbeitgeber[] arbeitgeber, Kreditverbindlichkeiten[] verbindlichkeiten,
 			Kreditantrag[] kreditantraege) {
 		super();
 		this.idAntragsteller = idAntragsteller;
@@ -244,11 +244,11 @@ public class Antragsteller extends DaoObject {
 		this.arbeitgeber = arbeitgeber;
 	}
 
-	public Verbindlichkeiten[] getVerbindlichkeiten() {
+	public Kreditverbindlichkeiten[] getVerbindlichkeiten() {
 		return verbindlichkeiten;
 	}
 
-	public void setVerbindlichkeiten(Verbindlichkeiten[] verbindlichkeiten) {
+	public void setVerbindlichkeiten(Kreditverbindlichkeiten[] verbindlichkeiten) {
 		this.verbindlichkeiten = verbindlichkeiten;
 	}
 

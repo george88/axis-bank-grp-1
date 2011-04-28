@@ -4,7 +4,7 @@ public class DaoObject {
 
 	private int id;
 
-	private String name;
+	private String tableName;
 
 	public DaoObject() {
 
@@ -13,7 +13,7 @@ public class DaoObject {
 	public DaoObject(int id, String name) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.tableName = name;
 	}
 
 	public int getId() {
@@ -25,11 +25,11 @@ public class DaoObject {
 	}
 
 	public String getName() {
-		return name;
+		return tableName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTableName(String name) {
+		this.tableName = name;
 	}
 
 }
