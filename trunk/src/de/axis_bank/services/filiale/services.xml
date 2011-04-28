@@ -2,7 +2,7 @@
 
 	<description>Ein Service um die Liquidität eines Kunden zu erörtern und einen Tilgungsplan zu erstellen</description>
 	<parameter name="ServiceClass" locked="false">
-      de.axis_bank.services.filiale.FilialBankService
+      de.axisbank.services.filiale.FilialBankService
    </parameter>
 
 	<operation name="getLiquiditaet">

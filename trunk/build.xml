@@ -28,7 +28,7 @@
 
       <copy todir="${f_aar.dir}/META-INF"
              preservelastmodified="true">
-         <fileset dir="${src.dir}/de/axis_bank/services/filiale"
+         <fileset dir="${src.dir}/de/axisbank/services/filiale"
              includes="services.xml"/>
       </copy>
    
@@ -83,7 +83,7 @@
 
 	      <copy todir="${w_aar.dir}/META-INF"
 	             preservelastmodified="true">
-	         <fileset dir="${src.dir}/de/axis_bank/services/web"
+	         <fileset dir="${src.dir}/de/axisbank/services/web"
 	             includes="services.xml"/>
 	      </copy>
 	   
