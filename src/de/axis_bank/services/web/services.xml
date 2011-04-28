@@ -3,5 +3,10 @@
 	<parameter name="ServiceClass" locked="false">
       de.axis_bank.services.web.WebBankService
    </parameter>
+   
+   <operation name="getRueckzahlungsPlan">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	
 </service>
 
