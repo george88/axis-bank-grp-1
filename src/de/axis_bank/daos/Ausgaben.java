@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Ausgaben {
+public class Ausgaben extends DaoObject {
 
 	private double mieteDarlehen;
 
@@ -30,6 +30,7 @@ public class Ausgaben {
 	}
 
 	public Ausgaben() {
+		setName(getClass().getName());
 
 	}
 

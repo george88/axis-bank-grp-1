@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Einnahmen {
+public class Einnahmen extends DaoObject {
 
 	private double einkommen;
 
@@ -23,6 +23,7 @@ public class Einnahmen {
 	}
 
 	public Einnahmen() {
+		setName(getClass().getName());
 
 	}
 

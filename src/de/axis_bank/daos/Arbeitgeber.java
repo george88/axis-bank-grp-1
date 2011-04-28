@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Arbeitgeber {
+public class Arbeitgeber extends DaoObject {
 
 	private String nameArbeitgeber;
 
@@ -25,6 +25,7 @@ public class Arbeitgeber {
 	}
 
 	public Arbeitgeber() {
+		setName(getClass().getName());
 
 	}
 

@@ -1,6 +1,6 @@
 package de.axis_bank.daos;
 
-public class Versicherungen {
+public class Versicherungen extends DaoObject {
 
 	private String versArt;
 
@@ -11,7 +11,7 @@ public class Versicherungen {
 	private double mtlBeitrag;
 
 	public Versicherungen() {
-
+		setName(getClass().getName());
 	}
 
 	public Versicherungen(String versArt, String versGesellschaft,
