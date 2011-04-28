@@ -10,7 +10,7 @@
    <property name="f_deploy.file" value="Filiale_Axis_Bank.aar"/>
    <property name="w_deploy.file" value="Web_Axis_Bank.aar"/>
    <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\axis\repository\services"/>
-   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18_2\bin"/>
+   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18\bin"/>
 
    
 
