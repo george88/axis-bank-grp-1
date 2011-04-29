@@ -1,4 +1,4 @@
-package de.axis_bank.services;
+package de.axis_bank.services.filiale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
