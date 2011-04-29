@@ -12,6 +12,9 @@ public class Arbeitgeber extends DaoObject {
 
 	private String plzArbeitgeber;
 
+	public Arbeitgeber() {
+	}
+
 	public Arbeitgeber(String nameArbeitgeber, String beschSeit,
 			String strArbeitgeber, String hnrArbeitgeber,
 			String plzArbeitgeber, String ortArbeitgeber) {
@@ -22,11 +25,6 @@ public class Arbeitgeber extends DaoObject {
 		this.hnrArbeitgeber = hnrArbeitgeber;
 		this.plzArbeitgeber = plzArbeitgeber;
 		this.ortArbeitgeber = ortArbeitgeber;
-	}
-
-	public Arbeitgeber() {
-		setTableName(getClass().getName());
-
 	}
 
 	public String getNameArbeitgeber() {

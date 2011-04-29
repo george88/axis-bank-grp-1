@@ -23,7 +23,6 @@ public class Einnahmen extends DaoObject {
 	}
 
 	public Einnahmen() {
-		setTableName(getClass().getName());
 
 	}
 

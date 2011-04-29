@@ -20,7 +20,6 @@ public class Kreditverbindlichkeiten extends DaoObject {
 	}
 
 	public Kreditverbindlichkeiten() {
-		setTableName(getClass().getName());
 
 	}
 
