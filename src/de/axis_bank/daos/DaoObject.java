@@ -7,7 +7,7 @@ public class DaoObject {
 	private String tableName;
 
 	public DaoObject() {
-
+		setTableName(getClass().getSimpleName());
 	}
 
 	public DaoObject(int id, String name) {
@@ -24,7 +24,7 @@ public class DaoObject {
 		this.id = id;
 	}
 
-	public String getName() {
+	public String getTableName() {
 		return tableName;
 	}
 
