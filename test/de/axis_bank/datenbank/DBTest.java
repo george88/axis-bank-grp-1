@@ -21,35 +21,28 @@ public class DBTest {
 		Antragsteller a = new Antragsteller();
 		a.setKreditverbindlichkeiten(new Kreditverbindlichkeiten[] { new Kreditverbindlichkeiten() });
 
-		Object o = DB.select(a);
-		if (o != null) {
-			if (o.getClass().isArray())
-				for (int i = 0; i < Array.getLength(o); i++) {
-					DaoObject dd = (DaoObject) Array.get(o, i);
-					if (dd instanceof Antragsteller) {
-						for (Method m : dd.getClass().getDeclaredMethods()) {
-							if (m.getName().startsWith("get"))
-								try {
-									Object aa = m.invoke(dd, new Object[] {});
-									if (aa instanceof Ausgaben[])
-										System.out.println(((Ausgaben[]) aa)[0]
-												.getBetrag());
-									else
-										System.out.println(m.getName()
-												.substring(3)
-												+ " \t\t\t=\t "
-												+ aa);
-								} catch (IllegalArgumentException e) {
-									e.printStackTrace();
-								} catch (IllegalAccessException e) {
-									e.printStackTrace();
-								} catch (InvocationTargetException e) {
-									e.printStackTrace();
-								}
-						}
+		Antragsteller[] o = (Antragsteller[]) DB.select(a);
+		if (o != null)
+			if (o.length > 0)
+				for (Antragsteller as : o)
+					for (Method m : as.getClass().getDeclaredMethods()) {
+						if (m.getName().startsWith("get"))
+							try {
+								Object aa = m.invoke(as, new Object[] {});
+								if (aa instanceof Ausgaben[])
+									System.out.println(((Ausgaben[]) aa)[0]
+											.getBetrag());
+								else
+									System.out.println(m.getName().substring(3)
+											+ " \t\t\t=\t " + aa);
+							} catch (IllegalArgumentException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (InvocationTargetException e) {
+								e.printStackTrace();
+							}
 					}
-				}
-		}
 	}
 
 	@Test
