@@ -1,4 +1,4 @@
-package de.axis_bank.daos;
+package de.axisbank.daos;
 
 public class Ausgaben extends DaoObject {
 

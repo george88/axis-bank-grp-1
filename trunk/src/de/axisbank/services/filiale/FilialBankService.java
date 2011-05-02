@@ -1,11 +1,11 @@
-package de.axis_bank.services.filiale;
+package de.axisbank.services.filiale;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import de.axis_bank.daos.Rueckzahlungsplan;
+import de.axisbank.daos.Rueckzahlungsplan;
 
 public class FilialBankService {
 

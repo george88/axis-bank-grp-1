@@ -1,4 +1,4 @@
-package de.axis_bank.datenbank;
+package de.axisbank.datenbank;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -13,7 +13,7 @@ import java.sql.Types;
 import java.util.Properties;
 import java.util.Vector;
 
-import de.axis_bank.daos.DaoObject;
+import de.axisbank.daos.DaoObject;
 
 public class DB {
 
