@@ -1,6 +1,6 @@
-package de.axis_bank.services.web;
+package de.axisbank.services.web;
 
-import de.axis_bank.daos.Rueckzahlungsplan;
+import de.axisbank.daos.Rueckzahlungsplan;
 
 public class WebBankService {
 
