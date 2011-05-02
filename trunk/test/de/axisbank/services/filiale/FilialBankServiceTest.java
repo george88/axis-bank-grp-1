@@ -45,33 +45,27 @@ public class FilialBankServiceTest {
 				"http://localhost:8080/axis2/services/Filiale_Axis_Bank");
 		options.setTo(targetEPR);
 
-		// Die Operation "findHotel" soll aufgerufen werden
-		QName opFindHotel = new QName("http://axisbank.de", "getAntragsteller");
+		QName opGetAntragsteller = new QName(
+				"http://filiale.services.axisbank.de", "getAntragsteller");
 
-		// Die Parameter für die Operation "findHotel"
-		// werden definiert...
-		String hotelCode = "AX050";
-		Object[] opArgs = new Object[] { hotelCode };
+		String vorname = "hans";
+		String nachname = "meier";
+		Object[] opArgs = new Object[] { vorname, nachname };
+		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
+				null, false, null);
 
-		// ...und ein AXIOM-OMElement mit der
-		// Request-Nachricht erzeugt
-		OMElement request = BeanUtil.getOMElement(opFindHotel, opArgs, null,
-				false, null);
-
-		// Der Request wird an den Service abgeschickt.
-		// Der Aufruf erfolgt synchron mit dem
-		// Kommunikationsmuster IN-OUT
 		OMElement response = sender.sendReceive(request);
 
-		// Diese Typen sollte der Web Service zurückliefern...
-		Class[] returnTypes = new Class[] { Antragsteller.class };
-
-		// ...und werden mit einer Hilfsroutine in ein
-		// Objekt-Array überführt
+		Class[] returnTypes = new Class[] { Antragsteller[].class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
 
-		Antragsteller hotel = (Antragsteller) result[0];
+		Antragsteller[] antragsteller = (Antragsteller[]) result[0];
+		for (Antragsteller as : antragsteller) {
+			System.out.println("Anrede:" + as.getAnrede());
+			System.out.println("Vorname:" + as.getVorname());
+			System.out.println("Nachname:" + as.getNachname());
+		}
 
 	}
 

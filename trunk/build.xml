@@ -37,7 +37,7 @@
    <target name="ErzeugeFilialAAR" depends="FilialStructure"
         description="[AXIS2] AAR-File erzeugen">
 
-      <jar destfile="${deploy.path}/${f_deploy.file}">
+      <jar destfile="${deploy.path}/${f_deploy.file}" update="true">
          <fileset dir="${f_aar.dir}">
             <include name="**/*.*"/>
          </fileset>
@@ -90,9 +90,9 @@
 	   </target>
 
 	   <target name="ErzeugeWebAAR" depends="WebStructure"
-	        description="[AXIS2] AAR-File erzeugen">
+	        description="[AXIS2] AAR-File erzeugen" >
 
-	      <jar destfile="${deploy.path}/${w_deploy.file}">
+	      <jar destfile="${deploy.path}/${w_deploy.file}" update="true">
 	         <fileset dir="${w_aar.dir}">
 	            <include name="**/*.*"/>
 	         </fileset>
