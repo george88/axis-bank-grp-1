@@ -18,13 +18,16 @@ public class Kreditantrag extends DaoObject {
 
 	private int ratenAnzahl;
 
+	private Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller;
+
 	public Kreditantrag() {
 
 	}
 
 	public Kreditantrag(int giroDarlehenskonto, String berater, String datum,
 			String status, String filiale, double kreditWunsch,
-			double ratenHoehe, int ratenAnzahl) {
+			double ratenHoehe, int ratenAnzahl,
+			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
 		super();
 		this.giroDarlehenskonto = giroDarlehenskonto;
 		this.berater = berater;
@@ -34,6 +37,7 @@ public class Kreditantrag extends DaoObject {
 		this.kreditWunsch = kreditWunsch;
 		this.ratenHoehe = ratenHoehe;
 		this.ratenAnzahl = ratenAnzahl;
+		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
 	}
 
 	public int getGiroDarlehenskonto() {
@@ -98,6 +102,15 @@ public class Kreditantrag extends DaoObject {
 
 	public void setRatenAnzahl(int ratenAnzahl) {
 		this.ratenAnzahl = ratenAnzahl;
+	}
+
+	public void setKreditantrag_hat_antragsteller(
+			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
+		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
+	}
+
+	public Kreditantrag_hat_Antragsteller[] getKreditantrag_hat_antragsteller() {
+		return kreditantrag_hat_antragsteller;
 	}
 
 }

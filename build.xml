@@ -54,11 +54,11 @@
    </target>
 	
 	<target name="allesFiliale" depends="ErzeugeFilialAAR">
-		<!--<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
+		<copy todir="${tomcatbin.path}/../webapps/axis2/WEB-INF/services" overwrite="true" >
 			<fileset dir="${deploy.path}">
-				<filename name="*"/>
+				<filename name="${f_deploy.file}"/>
 			</fileset>			
-		</copy> -->
+		</copy> 
 	</target>
 	<target name="startServer">
 	<exec executable="${tomcatbin.path}/startup.bat" ></exec>
@@ -107,12 +107,14 @@
 	      <delete dir="${w_aar.dir}" />
 
 	   </target>
-		
+	
 		<target name="allesWeb" depends="ErzeugeWebAAR">
-			<!--<copy todir="${deploy.path}/../axis/repository/services" overwrite="true" >
+			<copy todir="${tomcatbin.path}/../webapps/axis2/WEB-INF/services" overwrite="true" >
 				<fileset dir="${deploy.path}">
-					<filename name="*"/>
+					<filename name="${w_deploy.file}"/>
 				</fileset>			
-			</copy> -->
+			</copy>
 		</target>
+	
+	<target name="allesalles" depends="stopServer,allesFiliale,allesWeb,startServer"></target>
 </project> 

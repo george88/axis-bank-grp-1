@@ -44,7 +44,7 @@ public class Antragsteller extends DaoObject {
 
 	private Kreditverbindlichkeiten[] kreditverbindlichkeiten;
 
-	private Kreditantrag[] kreditantraege;
+	private Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller;
 
 	public Antragsteller() {
 
@@ -58,7 +58,7 @@ public class Antragsteller extends DaoObject {
 			Versicherungen[] versicherungen, Ausgaben[] ausgaben,
 			Arbeitgeber[] arbeitgeber,
 			Kreditverbindlichkeiten[] kreditverbindlichkeiten,
-			Kreditantrag[] kreditantraege) {
+			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
 		super();
 		this.anrede = anrede;
 		this.titel = titel;
@@ -81,7 +81,8 @@ public class Antragsteller extends DaoObject {
 		this.ausgaben = ausgaben;
 		this.arbeitgeber = arbeitgeber;
 		this.kreditverbindlichkeiten = kreditverbindlichkeiten;
-		this.kreditantraege = kreditantraege;
+		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
+
 	}
 
 	public String getAnrede() {
@@ -253,11 +254,12 @@ public class Antragsteller extends DaoObject {
 		this.kreditverbindlichkeiten = verbindlichkeiten;
 	}
 
-	public Kreditantrag[] getKreditantraege() {
-		return kreditantraege;
+	public Kreditantrag_hat_Antragsteller[] getKreditantraege() {
+		return kreditantrag_hat_antragsteller;
 	}
 
-	public void setKreditantraege(Kreditantrag[] kreditantraege) {
-		this.kreditantraege = kreditantraege;
+	public void setKreditantraege(
+			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
+		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
 	}
 }

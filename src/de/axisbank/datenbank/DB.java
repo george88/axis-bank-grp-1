@@ -13,6 +13,8 @@ import java.sql.Types;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.commons.logging.impl.Log4JLogger;
+
 import de.axisbank.daos.DaoObject;
 
 public class DB {
@@ -36,7 +38,7 @@ public class DB {
 		String where = "";
 
 		try {
-			Class<?> c = Class.forName("de.axis_bank.daos."
+			Class<?> c = Class.forName("de.axisbank.daos."
 					+ daoObject.getTableName());
 			Method[] ms = c.getDeclaredMethods();
 			Object objId = c.getMethod("getId", new Class<?>[] {}).invoke(
@@ -104,7 +106,7 @@ public class DB {
 	private final static String SERVER_NAME = "//localhost";
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String PORT = ":3306";
-	private final static String DB_NAME = "/axis_bank";
+	private final static String DB_NAME = "/axisbank";// "/axis_bank";
 	private final static String USER_NAME = "root";
 	private final static String PASSWORD = "d3v3l0p3rs";
 	private final static String Table_Prefix = "";
@@ -134,8 +136,8 @@ public class DB {
 									.getClass()
 									.getMethod(mn, parameterTypes)
 									.invoke(daoObject,
-											new Object[] { rs.getObject(
-													mn.substring(3)).toString() });
+											new Object[] { rs.getObject(mn
+													.substring(3)) });
 						} else if (parameterTypes[0] == double.class) {
 							daoObject
 									.getClass()
@@ -144,11 +146,15 @@ public class DB {
 											new Object[] { rs.getDouble(mn
 													.substring(3)) });
 						} else if (parameterTypes[0] == DaoObject.class) {
-							Object d = select(
-									"SELECT * FROM " + mn.substring(3)
-											+ " WHERE id"
-											+ daoObject.getTableName() + " = "
-											+ rs.getInt("id"),
+							String subSelect = "SELECT * FROM "
+									+ parameterTypes[0].getComponentType()
+											.getSimpleName()
+									+ " WHERE id"
+									+ daoObject.getTableName()
+									+ " = "
+									+ rs.getInt("id" + daoObject.getTableName());
+
+							Object d = select(subSelect,
 									(DaoObject) parameterTypes[0].newInstance());
 							if (Array.getLength(d) > 0)
 								daoObject
@@ -157,14 +163,14 @@ public class DB {
 										.invoke(daoObject,
 												new Object[] { Array.get(d, 0) });
 						} else if (parameterTypes[0].isArray()) {
-							Object d = select(
-									"SELECT * FROM "
-											+ parameterTypes[0]
-													.getComponentType()
-													.getSimpleName()
-											+ " WHERE id"
-											+ daoObject.getTableName() + " = "
-											+ rs.getInt("id"),
+							String subSelect = "SELECT * FROM "
+									+ parameterTypes[0].getComponentType()
+											.getSimpleName()
+									+ " WHERE id"
+									+ daoObject.getTableName()
+									+ " = "
+									+ rs.getInt("id" + daoObject.getTableName());
+							Object d = select(subSelect,
 									(DaoObject) parameterTypes[0]
 											.getComponentType().newInstance());
 							if (Array.getLength(d) > 0) {
