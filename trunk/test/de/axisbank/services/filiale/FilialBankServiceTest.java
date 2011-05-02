@@ -60,13 +60,14 @@ public class FilialBankServiceTest {
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
 
-		Antragsteller[] antragsteller = (Antragsteller[]) result[0];
-		for (Antragsteller as : antragsteller) {
-			System.out.println("Anrede:" + as.getAnrede());
-			System.out.println("Vorname:" + as.getVorname());
-			System.out.println("Nachname:" + as.getNachname());
+		if (result != null && result.length > 0) {
+			Antragsteller[] antragsteller = (Antragsteller[]) result[0];
+			for (Antragsteller as : antragsteller) {
+				System.out.println("Anrede:" + as.getAnrede());
+				System.out.println("Vorname:" + as.getVorname());
+				System.out.println("Nachname:" + as.getNachname());
+			}
 		}
 
 	}
-
 }
