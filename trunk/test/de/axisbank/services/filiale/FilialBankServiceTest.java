@@ -14,7 +14,7 @@ import org.apache.axis2.databinding.utils.BeanUtil;
 import org.apache.axis2.engine.DefaultObjectSupplier;
 import org.junit.Test;
 
-import de.axisbank.daos.Antragsteller;
+import de.axisbank.daos.Antragssteller;
 import de.axisbank.services.filiale.FilialBankService;
 
 public class FilialBankServiceTest {
@@ -48,24 +48,30 @@ public class FilialBankServiceTest {
 		QName opGetAntragsteller = new QName(
 				"http://filiale.services.axisbank.de", "getAntragsteller");
 
-		String vorname = "hans";
-		String nachname = "meier";
+		String vorname = "Hans";
+		String nachname = "Meier";
 		Object[] opArgs = new Object[] { vorname, nachname };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
 				null, false, null);
 
 		OMElement response = sender.sendReceive(request);
 
-		Class[] returnTypes = new Class[] { Antragsteller[].class };
+		Class[] returnTypes = new Class[] { Antragssteller[].class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
 
 		if (result != null && result.length > 0) {
-			Antragsteller[] antragsteller = (Antragsteller[]) result[0];
-			for (Antragsteller as : antragsteller) {
+			Antragssteller[] antragsteller = (Antragssteller[]) result[0];
+			for (Antragssteller as : antragsteller) {
 				System.out.println("Anrede:" + as.getAnrede());
 				System.out.println("Vorname:" + as.getVorname());
 				System.out.println("Nachname:" + as.getNachname());
+				System.out.println(as.getKreditantraege().length
+						+ " Kreditanträge");
+				System.out.println("ZweitAntragsteller"
+						+ "("
+						+ as.getKreditantraege()[0].getAntragssteller_2()
+								.getVorname() + ")");
 			}
 		}
 
