@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.impl.Log4JLogger;
 
+import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.DaoObject;
 
 public class DB {
@@ -38,26 +39,25 @@ public class DB {
 		String where = "";
 
 		try {
-			Class<?> c = Class.forName("de.axisbank.daos."
-					+ daoObject.getTableName());
+			Class<?> c = Class.forName(daoObject.getClass().getPackage()
+					.getName()
+					+ "." + daoObject.getTableName());
 			Method[] ms = c.getDeclaredMethods();
-			Object objId = c.getMethod("getId", new Class<?>[] {}).invoke(
-					daoObject, new Object[] {});
-			if (objId == null || (objId != null && ((Integer) objId) == 0)) {
+			int id = daoObject.getId();
+			if (id == 0) {
 				for (Method m : ms) {
 					String mn = m.getName();
 					if (mn.startsWith("get")) {
 						Object obj = m.invoke(daoObject, new Object[] {});
 						if (obj != null) {
 							if (obj instanceof Integer) {
-								if (((Integer) obj).intValue() == 0)
+								if (((Integer) obj).intValue() == -1)
 									continue;
 								where += "`" + mn.substring(3).toLowerCase()
 										+ "` = " + ((Integer) obj).intValue()
 										+ " AND ";
-							}
-							if (obj instanceof Double) {
-								if (((Double) obj).doubleValue() == 0.0D)
+							} else if (obj instanceof Double) {
+								if (((Double) obj).doubleValue() == -1.0D)
 									continue;
 								where += "`" + mn.substring(3).toLowerCase()
 										+ "` = " + ((Double) obj).doubleValue()
@@ -69,7 +69,7 @@ public class DB {
 					}
 				}
 			} else {
-				where += "`id` = " + objId.toString();
+				where += "`" + daoObject.getIdName() + "` = " + id + "  AND ";
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -81,9 +81,13 @@ public class DB {
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		}
+
+		if (daoObject.getReferenzId() != 0
+				&& daoObject.getReferenzIdName() != null)
+			where += "`" + daoObject.getReferenzIdName() + "` = '"
+					+ daoObject.getReferenzId() + "' AND ";
+
 		if (where.length() > 0) {
 			where = " WHERE " + where.substring(0, where.length() - 4);
 		}
@@ -113,13 +117,14 @@ public class DB {
 
 	public Object select(String select, DaoObject daoObj) {
 
-		Vector<DaoObject> daoObjects = new Vector<DaoObject>();
+		Vector<Object> daoObjects = new Vector<Object>();
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(select);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			while (rs.next()) {
 				DaoObject daoObject = daoObj.getClass().newInstance();
+
 				for (Method m : daoObject.getClass().getDeclaredMethods()) {
 					String mn = m.getName();
 					if (mn.startsWith("set")) {
@@ -145,17 +150,26 @@ public class DB {
 									.invoke(daoObject,
 											new Object[] { rs.getDouble(mn
 													.substring(3)) });
-						} else if (parameterTypes[0] == DaoObject.class) {
-							String subSelect = "SELECT * FROM "
-									+ parameterTypes[0].getComponentType()
-											.getSimpleName()
-									+ " WHERE id"
-									+ daoObject.getTableName()
-									+ " = "
-									+ rs.getInt("id" + daoObject.getTableName());
-
-							Object d = select(subSelect,
-									(DaoObject) parameterTypes[0].newInstance());
+						} else if (parameterTypes[0] == long.class) {
+							daoObject
+									.getClass()
+									.getMethod(mn, parameterTypes)
+									.invoke(daoObject,
+											new Object[] { rs.getLong(mn
+													.substring(3)) });
+						} else if (!parameterTypes[0].isPrimitive()
+								&& !parameterTypes[0].isArray()) {
+							DaoObject dObj = (DaoObject) parameterTypes[0]
+									.newInstance();
+							System.out.println("fromTable: "
+									+ daoObject.getTableName());
+							System.out.println("toAsk: " + dObj.getTableName()
+									+ "\n\n");
+							dObj.setId(rs.getInt(dObj.getReferenzIdName()));
+							String subSelect = createSelect(dObj, null);
+							System.out
+									.println("subselect: " + subSelect + "\n");
+							Object d = select(subSelect, dObj);
 							if (Array.getLength(d) > 0)
 								daoObject
 										.getClass()
@@ -163,16 +177,18 @@ public class DB {
 										.invoke(daoObject,
 												new Object[] { Array.get(d, 0) });
 						} else if (parameterTypes[0].isArray()) {
-							String subSelect = "SELECT * FROM "
-									+ parameterTypes[0].getComponentType()
-											.getSimpleName()
-									+ " WHERE id"
-									+ daoObject.getTableName()
-									+ " = "
-									+ rs.getInt("id" + daoObject.getTableName());
-							Object d = select(subSelect,
-									(DaoObject) parameterTypes[0]
-											.getComponentType().newInstance());
+							DaoObject dObj = (DaoObject) parameterTypes[0]
+									.getComponentType().newInstance();
+							System.out.println("...\nfromTable: "
+									+ daoObject.getTableName());
+							System.out.println("toAsk: " + dObj.getTableName()
+									+ "\n");
+							dObj.setReferenzId(rs.getInt(daoObject
+									.getIdName()));
+							String subSelect = createSelect(dObj, null);
+							System.out.println("subselect: " + subSelect
+									+ "\nMethod:" + m.getName() + "...\n\n");
+							Object d = select(subSelect, dObj);
 							if (Array.getLength(d) > 0) {
 								m.invoke(daoObject, new Object[] { d });
 							}
@@ -181,6 +197,7 @@ public class DB {
 				}
 				daoObjects.add(daoObject);
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
