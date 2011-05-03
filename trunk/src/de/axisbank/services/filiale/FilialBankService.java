@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import de.axisbank.daos.Antragsteller;
+import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Rueckzahlungsplan;
 import de.axisbank.datenbank.DB;
 
@@ -74,11 +74,11 @@ public class FilialBankService {
 		return new Rueckzahlungsplan();
 	}
 
-	public Antragsteller[] getAntragsteller(String vorname, String nachname) {
-		Antragsteller as = new Antragsteller();
+	public Antragssteller[] getAntragsteller(String vorname, String nachname) {
+		Antragssteller as = new Antragssteller();
 		as.setVorname(vorname);
 		as.setNachname(nachname);
-		Antragsteller[] ass = (Antragsteller[]) DB.select(as);
+		Antragssteller[] ass = (Antragssteller[]) DB.select(as);
 		return ass;
 	}
 
