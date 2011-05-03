@@ -6,11 +6,13 @@ public class Versicherungen extends DaoObject {
 
 	private String versGesellschaft;
 
-	private double versSumme;
+	private double versSumme = -1.0D;
 
-	private double mtlBeitrag;
+	private double mtlBeitrag = -1.0D;
 
 	public Versicherungen() {
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public Versicherungen(String versArt, String versGesellschaft,
