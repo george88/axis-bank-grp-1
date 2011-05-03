@@ -1,6 +1,6 @@
 package de.axisbank.daos;
 
-public class Antragsteller extends DaoObject {
+public class Antragssteller extends DaoObject {
 
 	private String anrede;
 
@@ -13,6 +13,8 @@ public class Antragsteller extends DaoObject {
 	private String gebName;
 
 	private String gebOrt;
+
+	private String gebDatum;
 
 	private String str;
 
@@ -30,11 +32,11 @@ public class Antragsteller extends DaoObject {
 
 	private String beruf;
 
-	private int anzKinder;
+	private int anzKinder = -1;
 
 	private String familienstand;
 
-	private Einnahmen einnahmen;
+	private Einnahmen[] einnahmen;
 
 	private Versicherungen[] versicherungen;
 
@@ -44,21 +46,22 @@ public class Antragsteller extends DaoObject {
 
 	private Kreditverbindlichkeiten[] kreditverbindlichkeiten;
 
-	private Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller;
+	private Kreditantrag[] kreditantraege;
 
-	public Antragsteller() {
-
+	public Antragssteller() {
+		super();
+		setReferenzIdName("idAntragssteller_2");
 	}
 
-	public Antragsteller(String anrede, String titel, String vorname,
-			String nachname, String gebName, String gebOrt, String str,
-			String hnr, String plz, String ort, String wohnhaftSeit,
-			String telefon, String email, String beruf, int anzKinder,
-			String familienstand, Einnahmen einnahmen,
+	public Antragssteller(String anrede, String titel, String vorname,
+			String nachname, String gebName, String gebOrt, String gebDatum,
+			String str, String hnr, String plz, String ort,
+			String wohnhaftSeit, String telefon, String email, String beruf,
+			int anzKinder, String familienstand, Einnahmen[] einnahmen,
 			Versicherungen[] versicherungen, Ausgaben[] ausgaben,
 			Arbeitgeber[] arbeitgeber,
 			Kreditverbindlichkeiten[] kreditverbindlichkeiten,
-			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
+			Kreditantrag[] kreditantraege) {
 		super();
 		this.anrede = anrede;
 		this.titel = titel;
@@ -66,6 +69,7 @@ public class Antragsteller extends DaoObject {
 		this.nachname = nachname;
 		this.gebName = gebName;
 		this.gebOrt = gebOrt;
+		this.gebDatum = gebDatum;
 		this.str = str;
 		this.hnr = hnr;
 		this.plz = plz;
@@ -81,8 +85,7 @@ public class Antragsteller extends DaoObject {
 		this.ausgaben = ausgaben;
 		this.arbeitgeber = arbeitgeber;
 		this.kreditverbindlichkeiten = kreditverbindlichkeiten;
-		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
-
+		this.setKreditantraege(kreditantraege);
 	}
 
 	public String getAnrede() {
@@ -131,6 +134,14 @@ public class Antragsteller extends DaoObject {
 
 	public void setGebOrt(String gebOrt) {
 		this.gebOrt = gebOrt;
+	}
+
+	public void setGebDatum(String gebDatum) {
+		this.gebDatum = gebDatum;
+	}
+
+	public String getGebDatum() {
+		return gebDatum;
 	}
 
 	public String getStr() {
@@ -213,11 +224,11 @@ public class Antragsteller extends DaoObject {
 		this.familienstand = familienstand;
 	}
 
-	public Einnahmen getEinnahmen() {
+	public Einnahmen[] getEinnahmen() {
 		return einnahmen;
 	}
 
-	public void setEinnahmen(Einnahmen einnahmen) {
+	public void setEinnahmen(Einnahmen[] einnahmen) {
 		this.einnahmen = einnahmen;
 	}
 
@@ -254,12 +265,11 @@ public class Antragsteller extends DaoObject {
 		this.kreditverbindlichkeiten = verbindlichkeiten;
 	}
 
-	public Kreditantrag_hat_Antragsteller[] getKreditantraege() {
-		return kreditantrag_hat_antragsteller;
+	public void setKreditantraege(Kreditantrag[] kreditantraege) {
+		this.kreditantraege = kreditantraege;
 	}
 
-	public void setKreditantraege(
-			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
-		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
+	public Kreditantrag[] getKreditantraege() {
+		return kreditantraege;
 	}
 }

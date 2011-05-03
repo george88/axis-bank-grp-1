@@ -4,11 +4,11 @@ public class Kreditverbindlichkeiten extends DaoObject {
 
 	private String kreditinstitut;
 
-	private double gesamtschuld;
+	private double gesamtschuld = -1.0D;
 
-	private double restSchuld;
+	private double restSchuld = -1.0D;
 
-	private double mtlRate;
+	private double mtlRate = -1.0D;
 
 	public Kreditverbindlichkeiten(String kreditinstitut, double gesamtschuld,
 			double restSchuld, double mtlRate) {
@@ -20,7 +20,8 @@ public class Kreditverbindlichkeiten extends DaoObject {
 	}
 
 	public Kreditverbindlichkeiten() {
-
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public String getKreditinstitut() {

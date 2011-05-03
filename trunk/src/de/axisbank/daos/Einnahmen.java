@@ -2,15 +2,15 @@ package de.axisbank.daos;
 
 public class Einnahmen extends DaoObject {
 
-	private double einkommen;
+	private double einkommen = -1.0D;
 
-	private double rente;
+	private double rente = -1.0D;
 
-	private double mietEinnahmen;
+	private double mietEinnahmen = -1.0D;
 
-	private double kinderGeld;
+	private double kinderGeld = -1.0D;
 
-	private double sonstEinnahmen;
+	private double sonstEinnahmen = -1.0D;
 
 	public Einnahmen(double einkommen, double rente, double mietEinnahmen,
 			double kinderGeld, double sonstEinnahmen) {
@@ -23,7 +23,8 @@ public class Einnahmen extends DaoObject {
 	}
 
 	public Einnahmen() {
-
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public double getEinkommen() {

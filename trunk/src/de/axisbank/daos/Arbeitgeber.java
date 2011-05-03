@@ -13,6 +13,8 @@ public class Arbeitgeber extends DaoObject {
 	private String plzArbeitgeber;
 
 	public Arbeitgeber() {
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public Arbeitgeber(String nameArbeitgeber, String beschSeit,

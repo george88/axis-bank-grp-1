@@ -2,7 +2,7 @@ package de.axisbank.daos;
 
 public class Kreditantrag extends DaoObject {
 
-	private int giroDarlehenskonto;
+	private int giroDarlehenskonto = -1;
 
 	private String berater;
 
@@ -12,22 +12,25 @@ public class Kreditantrag extends DaoObject {
 
 	private String filiale;
 
-	private double kreditWunsch;
+	private double kreditWunsch = -1.0D;
 
-	private double ratenHoehe;
+	private double ratenHoehe = -1.0D;
 
-	private int ratenAnzahl;
+	private int ratenAnzahl = -1;
 
-	private Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller;
+	private Antragssteller antragssteller_2;
+
+	private String verhaeltnisZu_2;
 
 	public Kreditantrag() {
-
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public Kreditantrag(int giroDarlehenskonto, String berater, String datum,
 			String status, String filiale, double kreditWunsch,
 			double ratenHoehe, int ratenAnzahl,
-			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
+			Antragssteller antragssteller_2, String verhaeltnisZu_2) {
 		super();
 		this.giroDarlehenskonto = giroDarlehenskonto;
 		this.berater = berater;
@@ -37,7 +40,8 @@ public class Kreditantrag extends DaoObject {
 		this.kreditWunsch = kreditWunsch;
 		this.ratenHoehe = ratenHoehe;
 		this.ratenAnzahl = ratenAnzahl;
-		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
+		this.setAntragssteller_2(antragssteller_2);
+		this.setVerhaeltnisZu_2(verhaeltnisZu_2);
 	}
 
 	public int getGiroDarlehenskonto() {
@@ -104,13 +108,20 @@ public class Kreditantrag extends DaoObject {
 		this.ratenAnzahl = ratenAnzahl;
 	}
 
-	public void setKreditantrag_hat_antragsteller(
-			Kreditantrag_hat_Antragsteller[] kreditantrag_hat_antragsteller) {
-		this.kreditantrag_hat_antragsteller = kreditantrag_hat_antragsteller;
+	public void setAntragssteller_2(Antragssteller antragssteller_2) {
+		this.antragssteller_2 = antragssteller_2;
 	}
 
-	public Kreditantrag_hat_Antragsteller[] getKreditantrag_hat_antragsteller() {
-		return kreditantrag_hat_antragsteller;
+	public Antragssteller getAntragssteller_2() {
+		return antragssteller_2;
+	}
+
+	public void setVerhaeltnisZu_2(String verhaeltnisZu_2) {
+		this.verhaeltnisZu_2 = verhaeltnisZu_2;
+	}
+
+	public String getVerhaeltnisZu_2() {
+		return verhaeltnisZu_2;
 	}
 
 }

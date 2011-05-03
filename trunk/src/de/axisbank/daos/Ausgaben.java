@@ -4,10 +4,11 @@ public class Ausgaben extends DaoObject {
 
 	private String art;
 
-	private double betrag;
+	private double betrag = -1.0D;
 
 	public Ausgaben() {
-
+		super();
+		setReferenzIdName("idAntragssteller");
 	}
 
 	public Ausgaben(String art, double betrag) {
