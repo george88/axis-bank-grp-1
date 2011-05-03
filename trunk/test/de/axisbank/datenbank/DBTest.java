@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import de.axisbank.daos.Antragsteller;
+import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
 import de.axisbank.daos.DaoObject;
@@ -19,13 +19,13 @@ public class DBTest {
 
 	@Test
 	public void testSelect() {
-		Antragsteller a = new Antragsteller();
+		Antragssteller a = new Antragssteller();
 		a.setKreditverbindlichkeiten(new Kreditverbindlichkeiten[] { new Kreditverbindlichkeiten() });
 
-		Antragsteller[] o = (Antragsteller[]) DB.select(a);
+		Antragssteller[] o = (Antragssteller[]) DB.select(a);
 		if (o != null)
 			if (o.length > 0)
-				for (Antragsteller as : o)
+				for (Antragssteller as : o)
 					for (Method m : as.getClass().getDeclaredMethods()) {
 						if (m.getName().startsWith("get"))
 							try {
