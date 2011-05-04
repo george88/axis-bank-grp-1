@@ -2,11 +2,13 @@ package de.axisbank.daos;
 
 public class User extends DaoObject {
 
-	private String username;
+	private String benutzername;
+
+	private String passwort;
 
 	private int status = -1;
 
-	private long letzerLogin;
+	private long letzterLogin;
 
 	private String vorname;
 
@@ -15,26 +17,27 @@ public class User extends DaoObject {
 	private String gebDatum;
 
 	public User() {
-
+		setReferenzIdName("idUser");
 	}
 
-	public User(String username, int status, long letzerLogin, String vorname,
-			String nachname, String gebDatum) {
+	public User(String benutzername, String passwort, int status,
+			long letzterLogin, String vorname, String nachname, String gebDatum) {
 		super();
-		this.username = username;
+		this.benutzername = benutzername;
+		this.passwort = passwort;
 		this.status = status;
-		this.letzerLogin = letzerLogin;
+		this.letzterLogin = letzterLogin;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		this.gebDatum = gebDatum;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getBenutzername() {
+		return benutzername;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setBenutzername(String benutzername) {
+		this.benutzername = benutzername;
 	}
 
 	public int getStatus() {
@@ -45,12 +48,12 @@ public class User extends DaoObject {
 		this.status = status;
 	}
 
-	public long getLetzerLogin() {
-		return letzerLogin;
+	public long getLetzterLogin() {
+		return letzterLogin;
 	}
 
-	public void setLetzerLogin(long letzerLogin) {
-		this.letzerLogin = letzerLogin;
+	public void setLetzterLogin(long letzterLogin) {
+		this.letzterLogin = letzterLogin;
 	}
 
 	public String getVorname() {
@@ -75,6 +78,14 @@ public class User extends DaoObject {
 
 	public void setGebDatum(String gebDatum) {
 		this.gebDatum = gebDatum;
+	}
+
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
+	}
+
+	public String getPasswort() {
+		return passwort;
 	}
 
 }
