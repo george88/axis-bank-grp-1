@@ -13,19 +13,21 @@ import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
 import de.axisbank.daos.DaoObject;
 import de.axisbank.daos.Kreditverbindlichkeiten;
+import de.axisbank.daos.User;
 import de.axisbank.datenbank.DB;
 
 public class DBTest {
 
 	@Test
 	public void testSelect() {
-		Antragssteller a = new Antragssteller();
-		a.setKreditverbindlichkeiten(new Kreditverbindlichkeiten[] { new Kreditverbindlichkeiten() });
+		User a = new User();
+		a.setPasswort("Meier");
+		a.setBenutzername("Hans");
 
-		Antragssteller[] o = (Antragssteller[]) DB.select(a);
+		User[] o = (User[]) DB.select(a);
 		if (o != null)
 			if (o.length > 0)
-				for (Antragssteller as : o)
+				for (User as : o)
 					for (Method m : as.getClass().getDeclaredMethods()) {
 						if (m.getName().startsWith("get"))
 							try {

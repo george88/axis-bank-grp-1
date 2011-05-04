@@ -6,16 +6,10 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.Properties;
 import java.util.Vector;
-
-import org.apache.commons.logging.impl.Log4JLogger;
-
-import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.DaoObject;
 
 public class DB {
@@ -24,18 +18,118 @@ public class DB {
 		return new DB().select(createSelect(daoObject, null), daoObject);
 	}
 
-	public static void update(DaoObject daoObject) {
-
+	public static int[] update(DaoObject[] daoObject) {
+		return new DB().update(createUpdate(daoObject), daoObject);
 	}
 
-	public static void insert(DaoObject daoObject) {
+	public static boolean[] insert(DaoObject[] daoObject) {
+		return new DB().insert(createInsert(daoObject), daoObject);
+	}
 
+	private static String[] createUpdate(DaoObject[] daoObject) {
+		if (daoObject == null)
+			return null;
+		String[] updates = new String[daoObject.length];
+		for (int i = 0; i < updates.length; i++) {
+			if (daoObject[i] != null) {
+				int id = daoObject[i].getId();
+				if (id != 0) {
+					String update = "UPDATE " + Table_Prefix
+							+ daoObject[i].getTableName() + " SET ";
+					try {
+						String set = "";
+						Class<?> c = Class.forName(daoObject.getClass()
+								.getPackage().getName()
+								+ "." + daoObject[i].getTableName());
+						Method[] ms = c.getDeclaredMethods();
+						for (Method m : ms) {
+							String mn = m.getName();
+							if (mn.startsWith("get")) {
+								Object o = m.invoke(daoObject, new Object[] {});
+								if (o != null) {
+									if (o.getClass().isPrimitive()) {
+										set += "`" + mn.substring(3) + "` = '"
+												+ o.toString() + "', ";
+									}
+								}
+							}
+						}
+						if (set.length() > 0) {
+							update += set.substring(0, update.length() - 2)
+									+ " WHERE " + daoObject[i].getIdName()
+									+ " = " + id;
+							updates[i] = update;
+						} else
+							updates[i] = null;
+
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+					return updates;
+				} else
+					updates[i] = null;
+			} else
+				updates[i] = null;
+		}
+		return updates;
+	}
+
+	private static String[] createInsert(DaoObject[] daoObject) {
+		String[] inserts = new String[daoObject.length];
+		for (int i = 0; i < inserts.length; i++) {
+			try {
+				String insert = "INSERT INTO " + Table_Prefix
+						+ daoObject[i].getTableName() + "(";
+				Class<?> c = Class.forName(daoObject.getClass().getPackage()
+						.getName()
+						+ "." + daoObject[i].getTableName());
+				Method[] ms = c.getDeclaredMethods();
+				String values = "";
+				String valueNames = "";
+				for (Method m : ms) {
+					String mn = m.getName();
+					if (mn.startsWith("get")) {
+						if (m.getReturnType().isPrimitive()) {
+							valueNames += "`" + mn.substring(3) + "`, ";
+							values += "'"
+									+ m.invoke(daoObject[i], new Object[] {})
+											.toString() + "', ";
+						}
+					}
+				}
+				if (values.length() > 0 && valueNames.length() > 0) {
+					values = values.substring(0, values.length() - 2);
+					valueNames = valueNames.substring(0,
+							valueNames.length() - 2);
+					insert += valueNames + ") VALUES(" + values + ")";
+					inserts[i] = insert;
+				} else
+					inserts[i] = null;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		return inserts;
 	}
 
 	private static String createSelect(DaoObject daoObject, String columns) {
-
 		String select = "SELECT " + (columns != null ? columns : "*")
-				+ " FROM " + daoObject.getTableName();
+				+ " FROM " + Table_Prefix + daoObject.getTableName();
 		String where = "";
 
 		try {
@@ -121,7 +215,6 @@ public class DB {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(select);
-			ResultSetMetaData rsmd = rs.getMetaData();
 			while (rs.next()) {
 				DaoObject daoObject = daoObj.getClass().newInstance();
 
@@ -183,8 +276,7 @@ public class DB {
 									+ daoObject.getTableName());
 							System.out.println("toAsk: " + dObj.getTableName()
 									+ "\n");
-							dObj.setReferenzId(rs.getInt(daoObject
-									.getIdName()));
+							dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
 							String subSelect = createSelect(dObj, null);
 							System.out.println("subselect: " + subSelect
 									+ "\nMethod:" + m.getName() + "...\n\n");
@@ -217,6 +309,43 @@ public class DB {
 		for (int i = 0; i < Array.getLength(ds); i++)
 			Array.set(ds, i, daoObjects.get(i));
 		return ds;
+	}
+
+	public int[] update(String[] updates, DaoObject daoObj[]) {
+		if (updates == null
+				|| daoObj == null
+				|| ((updates != null && daoObj != null) && updates.length != daoObj.length))
+			return null;
+		int[] counts = new int[updates.length];
+		for (int i = 0; i < updates.length; i++) {
+			try {
+				Statement stmt = connection.createStatement();
+				counts[i] = stmt.executeUpdate(updates[i]);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return counts;
+	}
+
+	public boolean[] insert(String[] update, DaoObject daoObj[]) {
+
+		if (update == null
+				|| daoObj == null
+				|| ((daoObj != null && update != null) && update.length != daoObj.length))
+			return null;
+
+		boolean[] success = new boolean[daoObj.length];
+		try {
+			for (int i = 0; i < update.length; i++) {
+				Statement stmt = connection.createStatement();
+				success[i] = stmt.execute(update[i]);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	private static void connecting() {

@@ -21,9 +21,7 @@ public class FilialBankServiceTest {
 
 	@Test
 	public void testGetLiquidity() {
-		FilialBankService service = new FilialBankService();
-		service.login("test", "test");
-		assertEquals("testGetLiquidity", 2.5, service.getLiquiditaet(), 2.5);
+
 	}
 
 	@Test
@@ -32,31 +30,69 @@ public class FilialBankServiceTest {
 	}
 
 	@Test
-	public void login() {
-		FilialBankService service = new FilialBankService();
-		assertTrue("login", service.login("test", "test"));
-	}
-
-	@Test
-	public void testWSDL() throws AxisFault {
+	public void testlogin() throws AxisFault {
 		ServiceClient sender = new ServiceClient();
 		Options options = sender.getOptions();
 		EndpointReference targetEPR = new EndpointReference(
 				"http://localhost:8080/axis2/services/Filiale_Axis_Bank");
 		options.setTo(targetEPR);
 
+		QName opLogin = new QName("http://filiale.services.axisbank.de",
+				"login");
+
+		String benutzername = "Hans";
+		String passwort = "Meier";
+		Object[] opArgs = new Object[] { benutzername, passwort };
+		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false,
+				null);
+
+		OMElement response = sender.sendReceive(request);
+
+		Class<?>[] returnTypes = new Class[] { boolean.class };
+		Object[] result = BeanUtil.deserialize(response, returnTypes,
+				new DefaultObjectSupplier());
+
+		System.out.println("Loginergebnis: " + result[0]);
+	}
+
+	@Test
+	public void testGetAntragsteller() throws AxisFault {
+		ServiceClient sender = new ServiceClient();
+		Options options = sender.getOptions();
+		EndpointReference targetEPR = new EndpointReference(
+				"http://localhost:8080/axis2/services/Filiale_Axis_Bank");
+		options.setTo(targetEPR);
+		// start Login
+		QName opLogin = new QName("http://filiale.services.axisbank.de",
+				"login");
+
+		String benutzername = "Hans";
+		String passwort = "Meier";
+		Object[] opArgs = new Object[] { benutzername, passwort };
+		OMElement request0 = BeanUtil.getOMElement(opLogin, opArgs, null,
+				false, null);
+
+		OMElement response0 = sender.sendReceive(request0);
+
+		Class<?>[] returnTypes0 = new Class[] { boolean.class };
+		Object[] result0 = BeanUtil.deserialize(response0, returnTypes0,
+				new DefaultObjectSupplier());
+
+		System.out.println("Login=: " + result0[0]);
+		// end Lgin
+		// start getAntragsteller
 		QName opGetAntragsteller = new QName(
 				"http://filiale.services.axisbank.de", "getAntragsteller");
 
 		String vorname = "Hans";
 		String nachname = "Meier";
-		Object[] opArgs = new Object[] { vorname, nachname };
+		opArgs = new Object[] { vorname, nachname };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
 				null, false, null);
 
 		OMElement response = sender.sendReceive(request);
 
-		Class[] returnTypes = new Class[] { Antragssteller[].class };
+		Class<?>[] returnTypes = new Class[] { Antragssteller[].class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
 

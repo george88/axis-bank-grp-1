@@ -6,7 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 import de.axisbank.daos.Antragssteller;
-import de.axisbank.daos.Rueckzahlungsplan;
+import de.axisbank.daos.DaoObject;
+import de.axisbank.daos.Tilgungsplan;
+import de.axisbank.daos.User;
 import de.axisbank.datenbank.DB;
 
 public class FilialBankService {
@@ -25,14 +27,16 @@ public class FilialBankService {
 
 	}
 
-	public boolean login(String username, String password) {
-		// if(UserDAO.userExists()){
-		// if(UserDAO.passwordCorrect()){
-		setLogin(true);
-		continueLogoffCounter();
-		// }
-		// }
+	public boolean login(String benutzername, String passwort) {
 
+		User tmpUser = new User();
+		tmpUser.setBenutzername(benutzername);
+		tmpUser.setPasswort(passwort);
+		if (DB.select(tmpUser) != null)
+			if (((User[]) DB.select(tmpUser)).length > 0)
+				if (((User[]) DB.select(tmpUser))[0] != null)
+					setLogin(((User[]) DB.select(tmpUser))[0].getBenutzername()
+							.equals(benutzername));
 		return isLogin();
 	}
 
@@ -41,21 +45,21 @@ public class FilialBankService {
 	}
 
 	private void continueLogoffCounter() {
-		if (isLogin()) {
-			if (timer != null) {
-				currentTime = logoffTimeInSeconds;
-				timer = new Timer(1000, new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						currentTime--;
-						if (currentTime < 1) {
-							logoff();
-						}
-					}
-				});
-			}
-			currentTime = logoffTimeInSeconds;
-		}
+		// if (isLogin()) {
+		// if (timer != null) {
+		// currentTime = logoffTimeInSeconds;
+		// timer = new Timer(1000, new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// currentTime--;
+		// if (currentTime < 1) {
+		// logoff();
+		// }
+		// }
+		// });
+		// }
+		// currentTime = logoffTimeInSeconds;
+		// }
 	}
 
 	public int getLiquiditaet() {
@@ -66,20 +70,25 @@ public class FilialBankService {
 		return Liqui_1;
 	}
 
-	public Rueckzahlungsplan getRueckzahlungsPlan() {
+	public Tilgungsplan getRueckzahlungsPlan() {
 		if (!isLogin())
 			return null;
 		continueLogoffCounter();
 
-		return new Rueckzahlungsplan();
+		return new Tilgungsplan();
 	}
 
 	public Antragssteller[] getAntragsteller(String vorname, String nachname) {
+		if (!isLogin())
+			return null;
 		Antragssteller as = new Antragssteller();
 		as.setVorname(vorname);
 		as.setNachname(nachname);
-		Antragssteller[] ass = (Antragssteller[]) DB.select(as);
-		return ass;
+		return (Antragssteller[]) DB.select(as);
+	}
+
+	public int[] updateAntragsteller(DaoObject[] daoObject) {
+		return DB.update(daoObject);
 	}
 
 	private void setLogin(boolean login) {

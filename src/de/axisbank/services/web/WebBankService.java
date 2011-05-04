@@ -1,6 +1,6 @@
 package de.axisbank.services.web;
 
-import de.axisbank.daos.Rueckzahlungsplan;
+import de.axisbank.daos.Tilgungsplan;
 
 public class WebBankService {
 
@@ -8,8 +8,8 @@ public class WebBankService {
 
 	}
 
-	public Rueckzahlungsplan getRueckzahlungsPlan() {
-		return new Rueckzahlungsplan();
+	public Tilgungsplan getRueckzahlungsPlan() {
+		return new Tilgungsplan();
 	}
 
 }
