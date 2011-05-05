@@ -1,4 +1,4 @@
-<service>
+<service name="FilialBankService"  scope="transportsession" >
 
 	<description>Ein Service um die Liquidität eines Kunden zu erörtern und einen Tilgungsplan zu erstellen</description>
 	<parameter name="ServiceClass" locked="false">

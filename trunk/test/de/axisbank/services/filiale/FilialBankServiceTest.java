@@ -34,7 +34,7 @@ public class FilialBankServiceTest {
 		ServiceClient sender = new ServiceClient();
 		Options options = sender.getOptions();
 		EndpointReference targetEPR = new EndpointReference(
-				"http://localhost:8080/axis2/services/Filiale_Axis_Bank");
+				"http://localhost:8080/axis2/services/FilialBankService");
 		options.setTo(targetEPR);
 
 		QName opLogin = new QName("http://filiale.services.axisbank.de",
@@ -60,8 +60,9 @@ public class FilialBankServiceTest {
 		ServiceClient sender = new ServiceClient();
 		Options options = sender.getOptions();
 		EndpointReference targetEPR = new EndpointReference(
-				"http://localhost:8080/axis2/services/Filiale_Axis_Bank");
+				"http://localhost:8080/axis2/services/FilialBankService");
 		options.setTo(targetEPR);
+		options.setManageSession(true);
 		// start Login
 		QName opLogin = new QName("http://filiale.services.axisbank.de",
 				"login");
@@ -79,7 +80,7 @@ public class FilialBankServiceTest {
 				new DefaultObjectSupplier());
 
 		System.out.println("Login=: " + result0[0]);
-		// end Lgin
+		// end Login
 		// start getAntragsteller
 		QName opGetAntragsteller = new QName(
 				"http://filiale.services.axisbank.de", "getAntragsteller");
