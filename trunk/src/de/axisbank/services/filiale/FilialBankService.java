@@ -2,6 +2,7 @@ package de.axisbank.services.filiale;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 
 import javax.swing.Timer;
 
@@ -13,15 +14,8 @@ import de.axisbank.datenbank.DB;
 
 public class FilialBankService {
 
-	public final static int Liqui_1 = 1;
-	public final static int Liqui_2 = 2;
-	public final static int Liqui_3 = 3;
-	public final static int Liqui_4 = 4;
-	public final static int Liqui_5 = 5;
-	private final int logoffTimeInSeconds = 720;
-	private int currentTime;
 	private boolean login;
-	private Timer timer;
+	private String benutzername;
 
 	public FilialBankService() {
 
@@ -32,48 +26,49 @@ public class FilialBankService {
 		User tmpUser = new User();
 		tmpUser.setBenutzername(benutzername);
 		tmpUser.setPasswort(passwort);
-		if (DB.select(tmpUser) != null)
-			if (((User[]) DB.select(tmpUser)).length > 0)
-				if (((User[]) DB.select(tmpUser))[0] != null)
-					setLogin(((User[]) DB.select(tmpUser))[0].getBenutzername()
-							.equals(benutzername));
+		User[] users = (User[]) DB.select(tmpUser);
+		if (users != null)
+			if (users.length == 1)
+				if (((User[]) DB.select(tmpUser))[0] != null) {
+					User user = users[0];
+					setLogin(user.getBenutzername().equals(benutzername));
+					setBenutzername(benutzername);
+					User updateuser = new User();
+					updateuser.setId(user.getId());
+					updateuser.setStatus(1);
+					updateuser.setLetzterLogin(System.currentTimeMillis());
+					DB.update(new DaoObject[] { updateuser });
+				}
 		return isLogin();
 	}
 
-	public void logoff() {
-		login = false;
+	public boolean logoff() {
+		setLogin(false);
+		User updateuser = new User();
+		updateuser.setBenutzername(getBenutzername());
+		updateuser.setStatus(1);
+		if (((User[]) DB.select(updateuser)).length > 0) {
+			updateuser = ((User[]) DB.select(updateuser))[0];
+			updateuser.setId(updateuser.getId());
+			updateuser.setBenutzername(null);
+			updateuser.setStatus(0);
+			int[] e = DB.update(new DaoObject[] { updateuser });
+			return e[0] == 1;
+		}
+		return false;
+
 	}
 
-	private void continueLogoffCounter() {
-		// if (isLogin()) {
-		// if (timer != null) {
-		// currentTime = logoffTimeInSeconds;
-		// timer = new Timer(1000, new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		// currentTime--;
-		// if (currentTime < 1) {
-		// logoff();
-		// }
-		// }
-		// });
-		// }
-		// currentTime = logoffTimeInSeconds;
-		// }
-	}
-
-	public int getLiquiditaet() {
+	public int getLiquiditaet(Antragssteller antragstller) {
 		if (!isLogin())
 			return -1;
-		continueLogoffCounter();
 
-		return Liqui_1;
+		return 0;
 	}
 
-	public Tilgungsplan getRueckzahlungsPlan() {
+	public Tilgungsplan getTilgungsPlan() {
 		if (!isLogin())
 			return null;
-		continueLogoffCounter();
 
 		return new Tilgungsplan();
 	}
@@ -97,6 +92,14 @@ public class FilialBankService {
 
 	public boolean isLogin() {
 		return login;
+	}
+
+	public void setBenutzername(String benutzername) {
+		this.benutzername = benutzername;
+	}
+
+	public String getBenutzername() {
+		return benutzername;
 	}
 
 }
