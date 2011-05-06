@@ -4,7 +4,7 @@ public class Kreditantrag extends DaoObject {
 
 	private int giroDarlehenskonto = -1;
 
-	private String berater;
+	private User berater;
 
 	private String datum;
 
@@ -27,7 +27,7 @@ public class Kreditantrag extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
-	public Kreditantrag(int giroDarlehenskonto, String berater, String datum,
+	public Kreditantrag(int giroDarlehenskonto, User berater, String datum,
 			String status, String filiale, double kreditWunsch,
 			double ratenHoehe, int ratenAnzahl,
 			Antragssteller antragssteller_2, String verhaeltnisZu_2) {
@@ -52,11 +52,11 @@ public class Kreditantrag extends DaoObject {
 		this.giroDarlehenskonto = giroDarlehenskonto;
 	}
 
-	public String getBerater() {
+	public User getBerater() {
 		return berater;
 	}
 
-	public void setBerater(String berater) {
+	public void setBerater(User berater) {
 		this.berater = berater;
 	}
 

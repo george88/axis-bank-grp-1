@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.Vector;
 import de.axisbank.daos.DaoObject;
@@ -19,7 +20,7 @@ public class DB {
 	}
 
 	public static int[] update(DaoObject[] daoObject) {
-		return new DB().update(createUpdate(daoObject), daoObject);
+		return new DB().update(createUpdate(daoObject));
 	}
 
 	public static boolean[] insert(DaoObject[] daoObject) {
@@ -33,21 +34,36 @@ public class DB {
 		for (int i = 0; i < updates.length; i++) {
 			if (daoObject[i] != null) {
 				int id = daoObject[i].getId();
-				if (id != 0) {
+				if (id > 0) {
 					String update = "UPDATE " + Table_Prefix
 							+ daoObject[i].getTableName() + " SET ";
 					try {
 						String set = "";
-						Class<?> c = Class.forName(daoObject.getClass()
+						Class<?> c = Class.forName(daoObject[i].getClass()
 								.getPackage().getName()
 								+ "." + daoObject[i].getTableName());
 						Method[] ms = c.getDeclaredMethods();
 						for (Method m : ms) {
 							String mn = m.getName();
 							if (mn.startsWith("get")) {
-								Object o = m.invoke(daoObject, new Object[] {});
+								Object o = m.invoke(daoObject[i],
+										new Object[] {});
 								if (o != null) {
-									if (o.getClass().isPrimitive()) {
+									if (o.getClass().equals(String.class)) {
+										set += "`" + mn.substring(3) + "` = '"
+												+ o.toString() + "', ";
+									} else if (o.getClass().equals(
+											Integer.class)
+											&& ((Integer) o) != -1) {
+										set += "`" + mn.substring(3) + "` = '"
+												+ o.toString() + "', ";
+									} else if (o.getClass().equals(Long.class)
+											&& ((Long) o) != -1L) {
+										set += "`" + mn.substring(3) + "` = '"
+												+ o.toString() + "', ";
+									} else if (o.getClass()
+											.equals(Double.class)
+											&& ((Double) o) != -1.0D) {
 										set += "`" + mn.substring(3) + "` = '"
 												+ o.toString() + "', ";
 									}
@@ -55,7 +71,7 @@ public class DB {
 							}
 						}
 						if (set.length() > 0) {
-							update += set.substring(0, update.length() - 2)
+							update += set.substring(0, set.length() - 2)
 									+ " WHERE " + daoObject[i].getIdName()
 									+ " = " + id;
 							updates[i] = update;
@@ -71,7 +87,6 @@ public class DB {
 					} catch (InvocationTargetException e) {
 						e.printStackTrace();
 					}
-					return updates;
 				} else
 					updates[i] = null;
 			} else
@@ -230,12 +245,11 @@ public class DB {
 											new Object[] { rs.getInt(mn
 													.substring(3)) });
 						} else if (parameterTypes[0] == String.class) {
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getObject(mn
-													.substring(3)) });
+							System.out.println("String:");
+							Object obj = rs.getObject(mn.substring(3));
+							System.out.println(mn.substring(3) + " = " + obj);
+							daoObject.getClass().getMethod(mn, parameterTypes)
+									.invoke(daoObject, new Object[] { obj });
 						} else if (parameterTypes[0] == double.class) {
 							daoObject
 									.getClass()
@@ -244,6 +258,10 @@ public class DB {
 											new Object[] { rs.getDouble(mn
 													.substring(3)) });
 						} else if (parameterTypes[0] == long.class) {
+							System.out.println("Long:");
+							Object obj = rs.getLong(mn.substring(3));
+							System.out.println(mn.substring(3) + " = " + obj
+									+ "\n");
 							daoObject
 									.getClass()
 									.getMethod(mn, parameterTypes)
@@ -287,6 +305,7 @@ public class DB {
 						}
 					}
 				}
+				daoObject.setId(rs.getInt(daoObject.getIdName()));
 				daoObjects.add(daoObject);
 			}
 
@@ -311,19 +330,19 @@ public class DB {
 		return ds;
 	}
 
-	public int[] update(String[] updates, DaoObject daoObj[]) {
-		if (updates == null
-				|| daoObj == null
-				|| ((updates != null && daoObj != null) && updates.length != daoObj.length))
+	public int[] update(String[] updates) {
+		if (updates == null)
 			return null;
 		int[] counts = new int[updates.length];
 		for (int i = 0; i < updates.length; i++) {
-			try {
-				Statement stmt = connection.createStatement();
-				counts[i] = stmt.executeUpdate(updates[i]);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			if (updates[i] != null)
+				try {
+					Statement stmt = connection.createStatement();
+					System.out.println("update: " + updates[i] + "\n\n");
+					counts[i] = stmt.executeUpdate(updates[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 		}
 		return counts;
 	}
