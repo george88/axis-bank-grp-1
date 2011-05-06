@@ -1,0 +1,14 @@
+#labels Einführung
+#Einführung in das Projekt. 
+
+= Einführung =
+
+Das Projekt findet im Rahmen einer Seminararbeit statt, die innerhalb des Studienganges "Angewandte Informatik" der FHDW in Paderborn von der "Gruppe 1" durchgeführt wird.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
