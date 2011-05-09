@@ -1,6 +1,6 @@
 package de.axisbank.services.web;
 
-import de.axisbank.daos.Tilgungsplan;
+import de.axisbank.services.Tilgungsplan;
 
 public class WebBankService {
 
