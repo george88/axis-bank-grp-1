@@ -1,4 +1,4 @@
-package de.axisbank.daos;
+package de.axisbank.services;
 
 public class Tilgungsplan {
 

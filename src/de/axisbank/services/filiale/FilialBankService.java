@@ -2,9 +2,9 @@ package de.axisbank.services.filiale;
 
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.DaoObject;
-import de.axisbank.daos.Tilgungsplan;
 import de.axisbank.daos.User;
 import de.axisbank.datenbank.DB;
+import de.axisbank.services.Tilgungsplan;
 
 public class FilialBankService {
 
