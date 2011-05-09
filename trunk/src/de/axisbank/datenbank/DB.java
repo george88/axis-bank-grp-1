@@ -8,7 +8,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.Vector;
 import de.axisbank.daos.DaoObject;
@@ -16,18 +15,227 @@ import de.axisbank.daos.DaoObject;
 public class DB {
 
 	public static Object select(DaoObject daoObject) {
-		return new DB().select(createSelect(daoObject, null), daoObject);
+		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null),
+				daoObject, true);
 	}
 
 	public static int[] update(DaoObject[] daoObject) {
-		return new DB().update(createUpdate(daoObject));
+		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
 	}
 
 	public static boolean[] insert(DaoObject[] daoObject) {
-		return new DB().insert(createInsert(daoObject), daoObject);
+		return new DB().insert(MySqlQueryFactory.createInsert(daoObject),
+				daoObject, true);
 	}
 
-	private static String[] createUpdate(DaoObject[] daoObject) {
+	public DB() {
+		connecting();
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		closing();
+	}
+
+	protected static Connection connection = null;
+	private final static String URL = "jdbc:mysql:";
+	private final static String SERVER_NAME = "//localhost";
+	private final static String DRIVER = "com.mysql.jdbc.Driver";
+	private final static String PORT = ":3306";
+	private final static String DB_NAME = "/axisbank";
+	private final static String USER_NAME = "root";
+	private final static String PASSWORD = "d3v3l0p3rs";
+	protected final static String Table_Prefix = "";
+
+	public Object select(String select, DaoObject daoObj, boolean hauptSelect) {
+
+		Vector<Object> daoObjects = new Vector<Object>();
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(select);
+			while (rs.next()) {
+				DaoObject daoObject = daoObj.getClass().newInstance();
+
+				for (Method m : daoObject.getClass().getDeclaredMethods()) {
+					String mn = m.getName();
+					if (mn.startsWith("set")) {
+						Class<?>[] parameterTypes = m.getParameterTypes();
+						if (parameterTypes[0] == int.class) {
+							daoObject
+									.getClass()
+									.getMethod(mn, parameterTypes)
+									.invoke(daoObject,
+											new Object[] { rs.getInt(mn
+													.substring(3)) });
+						} else if (parameterTypes[0] == String.class) {
+							System.out.println("String:");
+							Object obj = rs.getObject(mn.substring(3));
+							System.out.println(mn.substring(3) + " = " + obj);
+							daoObject.getClass().getMethod(mn, parameterTypes)
+									.invoke(daoObject, new Object[] { obj });
+						} else if (parameterTypes[0] == double.class) {
+							daoObject
+									.getClass()
+									.getMethod(mn, parameterTypes)
+									.invoke(daoObject,
+											new Object[] { rs.getDouble(mn
+													.substring(3)) });
+						} else if (parameterTypes[0] == long.class) {
+							System.out.println("Long:");
+							Object obj = rs.getLong(mn.substring(3));
+							System.out.println(mn.substring(3) + " = " + obj
+									+ "\n");
+							daoObject
+									.getClass()
+									.getMethod(mn, parameterTypes)
+									.invoke(daoObject,
+											new Object[] { rs.getLong(mn
+													.substring(3)) });
+						} else if (!parameterTypes[0].isPrimitive()
+								&& !parameterTypes[0].isArray()) {
+							DaoObject dObj = (DaoObject) parameterTypes[0]
+									.newInstance();
+							System.out.println("fromTable: "
+									+ daoObject.getTableName());
+							System.out.println("toAsk: " + dObj.getTableName()
+									+ "\n\n");
+							dObj.setId(rs.getInt(dObj.getReferenzIdName()));
+							String subSelect = MySqlQueryFactory.createSelect(
+									dObj, null);
+							System.out
+									.println("subselect: " + subSelect + "\n");
+							Object d = select(subSelect, dObj, false);
+							if (Array.getLength(d) > 0)
+								daoObject
+										.getClass()
+										.getMethod(mn, parameterTypes)
+										.invoke(daoObject,
+												new Object[] { Array.get(d, 0) });
+						} else if (parameterTypes[0].isArray()) {
+							DaoObject dObj = (DaoObject) parameterTypes[0]
+									.getComponentType().newInstance();
+							System.out.println("...\nfromTable: "
+									+ daoObject.getTableName());
+							System.out.println("toAsk: " + dObj.getTableName()
+									+ "\n");
+							dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
+							String subSelect = MySqlQueryFactory.createSelect(
+									dObj, null);
+							System.out.println("subselect: " + subSelect
+									+ "\nMethod:" + m.getName() + "...\n\n");
+							Object d = select(subSelect, dObj, false);
+							if (Array.getLength(d) > 0) {
+								m.invoke(daoObject, new Object[] { d });
+							}
+						}
+					}
+				}
+				daoObject.setId(rs.getInt(daoObject.getIdName()));
+				daoObjects.add(daoObject);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		Object ds = Array.newInstance(daoObj.getClass(), daoObjects.size());
+		for (int i = 0; i < Array.getLength(ds); i++)
+			Array.set(ds, i, daoObjects.get(i));
+
+		if (hauptSelect)
+			closing();
+		return ds;
+	}
+
+	public int[] update(String[] updates, boolean hauptUpdate) {
+		if (updates == null)
+			return null;
+		int[] counts = new int[updates.length];
+		for (int i = 0; i < updates.length; i++) {
+			if (updates[i] != null)
+				try {
+					Statement stmt = connection.createStatement();
+					System.out.println("update: " + updates[i] + "\n\n");
+					counts[i] = stmt.executeUpdate(updates[i]);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		if (hauptUpdate)
+			closing();
+		return counts;
+	}
+
+	public boolean[] insert(String[] update, DaoObject daoObj[],
+			boolean hauptInsert) {
+
+		if (update == null
+				|| daoObj == null
+				|| ((daoObj != null && update != null) && update.length != daoObj.length))
+			return null;
+
+		boolean[] success = new boolean[daoObj.length];
+		try {
+			for (int i = 0; i < update.length; i++) {
+				Statement stmt = connection.createStatement();
+				success[i] = stmt.execute(update[i]);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (hauptInsert)
+			closing();
+		return success;
+	}
+
+	private static void connecting() {
+
+		if (connection == null) {
+			try {
+				Class.forName(DRIVER);
+				Properties prop = new Properties();
+				prop.put("user", USER_NAME);
+				prop.put("password", PASSWORD);
+				connection = DriverManager.getConnection(URL + SERVER_NAME
+						+ PORT + DB_NAME, prop);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("connection established");
+		}
+	}
+
+	private static void closing() {
+		if (connection != null) {
+
+			try {
+				connection.clearWarnings();
+				connection.close();
+				connection = null;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			System.out.println("connection closed");
+		}
+	}
+}
+
+class MySqlQueryFactory {
+	protected static String[] createUpdate(DaoObject[] daoObject) {
 		if (daoObject == null)
 			return null;
 		String[] updates = new String[daoObject.length];
@@ -35,7 +243,7 @@ public class DB {
 			if (daoObject[i] != null) {
 				int id = daoObject[i].getId();
 				if (id > 0) {
-					String update = "UPDATE " + Table_Prefix
+					String update = "UPDATE " + DB.Table_Prefix
 							+ daoObject[i].getTableName() + " SET ";
 					try {
 						String set = "";
@@ -95,11 +303,11 @@ public class DB {
 		return updates;
 	}
 
-	private static String[] createInsert(DaoObject[] daoObject) {
+	protected static String[] createInsert(DaoObject[] daoObject) {
 		String[] inserts = new String[daoObject.length];
 		for (int i = 0; i < inserts.length; i++) {
 			try {
-				String insert = "INSERT INTO " + Table_Prefix
+				String insert = "INSERT INTO " + DB.Table_Prefix
 						+ daoObject[i].getTableName() + "(";
 				Class<?> c = Class.forName(daoObject.getClass().getPackage()
 						.getName()
@@ -142,9 +350,9 @@ public class DB {
 		return inserts;
 	}
 
-	private static String createSelect(DaoObject daoObject, String columns) {
+	protected static String createSelect(DaoObject daoObject, String columns) {
 		String select = "SELECT " + (columns != null ? columns : "*")
-				+ " FROM " + Table_Prefix + daoObject.getTableName();
+				+ " FROM " + DB.Table_Prefix + daoObject.getTableName();
 		String where = "";
 
 		try {
@@ -202,204 +410,6 @@ public class DB {
 		}
 
 		return select + where;
-	}
-
-	public DB() {
-		connecting();
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		closing();
-	}
-
-	protected static Connection connection = null;
-	private final static String URL = "jdbc:mysql:";
-	private final static String SERVER_NAME = "//localhost";
-	private final static String DRIVER = "com.mysql.jdbc.Driver";
-	private final static String PORT = ":3306";
-	private final static String DB_NAME = "/axisbank";// "/axis_bank";
-	private final static String USER_NAME = "root";
-	private final static String PASSWORD = "d3v3l0p3rs";
-	private final static String Table_Prefix = "";
-
-	public Object select(String select, DaoObject daoObj) {
-
-		Vector<Object> daoObjects = new Vector<Object>();
-		try {
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(select);
-			while (rs.next()) {
-				DaoObject daoObject = daoObj.getClass().newInstance();
-
-				for (Method m : daoObject.getClass().getDeclaredMethods()) {
-					String mn = m.getName();
-					if (mn.startsWith("set")) {
-						Class<?>[] parameterTypes = m.getParameterTypes();
-						if (parameterTypes[0] == int.class) {
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getInt(mn
-													.substring(3)) });
-						} else if (parameterTypes[0] == String.class) {
-							System.out.println("String:");
-							Object obj = rs.getObject(mn.substring(3));
-							System.out.println(mn.substring(3) + " = " + obj);
-							daoObject.getClass().getMethod(mn, parameterTypes)
-									.invoke(daoObject, new Object[] { obj });
-						} else if (parameterTypes[0] == double.class) {
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getDouble(mn
-													.substring(3)) });
-						} else if (parameterTypes[0] == long.class) {
-							System.out.println("Long:");
-							Object obj = rs.getLong(mn.substring(3));
-							System.out.println(mn.substring(3) + " = " + obj
-									+ "\n");
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getLong(mn
-													.substring(3)) });
-						} else if (!parameterTypes[0].isPrimitive()
-								&& !parameterTypes[0].isArray()) {
-							DaoObject dObj = (DaoObject) parameterTypes[0]
-									.newInstance();
-							System.out.println("fromTable: "
-									+ daoObject.getTableName());
-							System.out.println("toAsk: " + dObj.getTableName()
-									+ "\n\n");
-							dObj.setId(rs.getInt(dObj.getReferenzIdName()));
-							String subSelect = createSelect(dObj, null);
-							System.out
-									.println("subselect: " + subSelect + "\n");
-							Object d = select(subSelect, dObj);
-							if (Array.getLength(d) > 0)
-								daoObject
-										.getClass()
-										.getMethod(mn, parameterTypes)
-										.invoke(daoObject,
-												new Object[] { Array.get(d, 0) });
-						} else if (parameterTypes[0].isArray()) {
-							DaoObject dObj = (DaoObject) parameterTypes[0]
-									.getComponentType().newInstance();
-							System.out.println("...\nfromTable: "
-									+ daoObject.getTableName());
-							System.out.println("toAsk: " + dObj.getTableName()
-									+ "\n");
-							dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
-							String subSelect = createSelect(dObj, null);
-							System.out.println("subselect: " + subSelect
-									+ "\nMethod:" + m.getName() + "...\n\n");
-							Object d = select(subSelect, dObj);
-							if (Array.getLength(d) > 0) {
-								m.invoke(daoObject, new Object[] { d });
-							}
-						}
-					}
-				}
-				daoObject.setId(rs.getInt(daoObject.getIdName()));
-				daoObjects.add(daoObject);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-		Object ds = Array.newInstance(daoObj.getClass(), daoObjects.size());
-		for (int i = 0; i < Array.getLength(ds); i++)
-			Array.set(ds, i, daoObjects.get(i));
-		return ds;
-	}
-
-	public int[] update(String[] updates) {
-		if (updates == null)
-			return null;
-		int[] counts = new int[updates.length];
-		for (int i = 0; i < updates.length; i++) {
-			if (updates[i] != null)
-				try {
-					Statement stmt = connection.createStatement();
-					System.out.println("update: " + updates[i] + "\n\n");
-					counts[i] = stmt.executeUpdate(updates[i]);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-		return counts;
-	}
-
-	public boolean[] insert(String[] update, DaoObject daoObj[]) {
-
-		if (update == null
-				|| daoObj == null
-				|| ((daoObj != null && update != null) && update.length != daoObj.length))
-			return null;
-
-		boolean[] success = new boolean[daoObj.length];
-		try {
-			for (int i = 0; i < update.length; i++) {
-				Statement stmt = connection.createStatement();
-				success[i] = stmt.execute(update[i]);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return success;
-	}
-
-	private static void connecting() {
-
-		if (connection == null) {
-			try {
-				Class.forName(DRIVER);
-				Properties prop = new Properties();
-				prop.put("user", USER_NAME);
-				prop.put("password", PASSWORD);
-				connection = DriverManager.getConnection(URL + SERVER_NAME
-						+ PORT + DB_NAME, prop);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private static void closing() {
-		if (connection != null) {
-
-			try {
-				connection.clearWarnings();
-				connection.close();
-				connection = null;
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void reconnect() {
-		closing();
-		connecting();
 	}
 
 }

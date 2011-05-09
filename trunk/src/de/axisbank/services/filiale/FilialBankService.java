@@ -1,11 +1,5 @@
 package de.axisbank.services.filiale;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Timestamp;
-
-import javax.swing.Timer;
-
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.DaoObject;
 import de.axisbank.daos.Tilgungsplan;
@@ -59,14 +53,21 @@ public class FilialBankService {
 
 	}
 
-	public int getLiquiditaet(Antragssteller antragstller) {
+	public int getLiquiditaet(Antragssteller antragsteller) {
 		if (!isLogin())
 			return -1;
 
 		return 0;
 	}
 
-	public Tilgungsplan getTilgungsPlan() {
+	public Tilgungsplan getTilgungsPlan(double kreditHoehe, double ratenHoehe) {
+		if (!isLogin())
+			return null;
+
+		return new Tilgungsplan();
+	}
+
+	public Tilgungsplan getTilgungsPlan(double kreditHoehe, int laufzeitMonate) {
 		if (!isLogin())
 			return null;
 
