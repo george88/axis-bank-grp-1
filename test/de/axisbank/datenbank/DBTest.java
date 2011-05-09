@@ -21,8 +21,8 @@ public class DBTest {
 	@Test
 	public void testSelect() {
 		User a = new User();
-		a.setPasswort("Meier");
-		a.setBenutzername("Hans");
+		a.setPasswort("Superman");
+		a.setBenutzername("Kreditberater");
 
 		User[] o = (User[]) DB.select(a);
 		if (o != null)
