@@ -1,10 +1,10 @@
-<service>
+<service name="WebAxisBank" >
 <description>Ein Service um einen Tilgungsplan zu erstellen</description>
 	<parameter name="ServiceClass" locked="false">
       de.axisbank.services.web.WebBankService
    </parameter>
    
-   <operation name="getRueckzahlungsPlan">
+   <operation name="getTilgungsPlan">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 	

@@ -8,7 +8,8 @@ public class WebBankService {
 
 	}
 
-	public Tilgungsplan getRueckzahlungsPlan() {
+	public Tilgungsplan getTilgungsPlan(int haushaltsUeberschuss) {
+		System.out.println("Hü:" + haushaltsUeberschuss);
 		return new Tilgungsplan();
 	}
 
