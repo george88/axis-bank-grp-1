@@ -29,7 +29,7 @@ public class WebBankService {
 		    double gesamtBetrag = (double)Math.round((startKreditHoehe+annuitaet)*100)/100;
 			double monRate = gesamtBetrag/startLaufzeit;
 			monRate = (double)Math.round((monRate*100))/100;
-			System.out.println("MonRate: "+monRate);
+			
 			if(monRate<=haushaltsUeberschuss)
 			{
 				double letzteRate=0;
