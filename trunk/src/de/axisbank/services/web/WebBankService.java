@@ -23,38 +23,42 @@ public class WebBankService {
 
 		Vector<KreditWunsch> kw = new Vector<KreditWunsch>();
 		
-		while (laufzeit <= MAX_LAUFZEIT) {
-			
-			
-			double mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1;  // monatl. Zins
-			double monRate = (startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); // monatl. Rate
-			double gesamtBetrag = monRate *laufzeit;
-			
-			monRate = (double)Math.round((monRate*100))/100;
-			
-			if(monRate<=haushaltsUeberschuss)
-			{
-				double letzteRate=0;
-				if((monRate*laufzeit)!= gesamtBetrag)
+		if(startKreditHoehe<=MAX_KREDIT)
+		{
+			while (laufzeit <= MAX_LAUFZEIT) {
+				
+				
+				double mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1;  // monatl. Zins
+				double monRate = (startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); // monatl. Rate
+				double gesamtBetrag = monRate *laufzeit;
+				
+				monRate = (double)Math.round((monRate*100))/100;
+				
+				if(monRate<=haushaltsUeberschuss)
 				{
-					letzteRate = gesamtBetrag-(monRate*(laufzeit-1));
-				}
-				else
-				{
-					letzteRate = monRate;
+					double letzteRate=0;
+					if((monRate*laufzeit)!= gesamtBetrag)
+					{
+						letzteRate = gesamtBetrag-(monRate*(laufzeit-1));
+					}
+					else
+					{
+						letzteRate = monRate;
+					}
+					
+					
+					kw.add(new KreditWunsch(Math.rint(startKreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag));
+					startKreditHoehe += haushaltsUeberschuss;
 				}
 				
 				
-				kw.add(new KreditWunsch(Math.rint(startKreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag));
-				startKreditHoehe += haushaltsUeberschuss;
-			}
-			
-			
-				laufzeit++;
-			
-			if (startKreditHoehe > MAX_KREDIT)
-				break;
+					laufzeit++;
+				
+				if (startKreditHoehe > MAX_KREDIT)
+					break;
+			}			
 		}
+		
 		KreditWunsch[] k = new KreditWunsch[kw.size()];
 		k = kw.toArray(k);
 		return k;
