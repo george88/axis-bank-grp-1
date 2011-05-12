@@ -7,8 +7,7 @@ public class WebBankService {
 	static final int MAX_LAUFZEIT = 84;
 	static final double MIN_KREDIT = 5000;
 	static final double MAX_KREDIT = 50000;
-	static final double ZINSSATZ = 0.0595;
-	
+	static final double ZINSSATZ = 5.59;
 	public WebBankService() {
 
 	}
@@ -16,26 +15,29 @@ public class WebBankService {
 	public KreditWunsch[] getTilgungsPlan(int haushaltsUeberschuss) {
 
 		double startKreditHoehe = MIN_KREDIT;
-		int startLaufzeit = MIN_LAUFZEIT;
+		int laufzeit = MIN_LAUFZEIT;
 
 		if ((startKreditHoehe / haushaltsUeberschuss) < 12) {
 			startKreditHoehe = ((haushaltsUeberschuss * 12)*0.90);
 		}
 
 		Vector<KreditWunsch> kw = new Vector<KreditWunsch>();
-
-		while (startLaufzeit <= MAX_LAUFZEIT) {
-			double annuitaet = (double)Math.round((startKreditHoehe *(((ZINSSATZ*Math.pow((startLaufzeit/12), (1+ZINSSATZ))))/(Math.pow((startLaufzeit/12), (1+ZINSSATZ))-1)))*100)/100;
-		    double gesamtBetrag = (double)Math.round((startKreditHoehe+annuitaet)*100)/100;
-			double monRate = gesamtBetrag/startLaufzeit;
+		
+		while (laufzeit <= MAX_LAUFZEIT) {
+			
+			
+			double mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1;  // monatl. Zins
+			double monRate = ((double)Math.round((startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit)))*100))/100d; // monatl. Rate
+			double gesamtBetrag = monRate *laufzeit;
+			
 			monRate = (double)Math.round((monRate*100))/100;
 			
 			if(monRate<=haushaltsUeberschuss)
 			{
 				double letzteRate=0;
-				if((monRate*startLaufzeit)!= gesamtBetrag)
+				if((monRate*laufzeit)!= gesamtBetrag)
 				{
-					letzteRate = gesamtBetrag-(monRate*(startLaufzeit-1));
+					letzteRate = gesamtBetrag-(monRate*(laufzeit-1));
 				}
 				else
 				{
@@ -43,12 +45,12 @@ public class WebBankService {
 				}
 				
 				
-				kw.add(new KreditWunsch(Math.rint(startKreditHoehe), startLaufzeit, monRate,letzteRate, gesamtBetrag));
+				kw.add(new KreditWunsch(Math.rint(startKreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag));
 				startKreditHoehe += haushaltsUeberschuss;
 			}
 			
 			
-				startLaufzeit++;
+				laufzeit++;
 			
 			if (startKreditHoehe > MAX_KREDIT)
 				break;
