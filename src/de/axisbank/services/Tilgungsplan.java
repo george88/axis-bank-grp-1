@@ -6,8 +6,6 @@ public class Tilgungsplan {
 
 	private double ratenHoehe;
 
-	private double abschlussRate;
-
 	private double zinsSatz;
 
 	private double kredithoehe;
@@ -28,13 +26,6 @@ public class Tilgungsplan {
 		this.ratenHoehe = ratenHoehe;
 	}
 
-	public double getAbschlussRate() {
-		return abschlussRate;
-	}
-
-	public void setAbschlussRate(double abschlussRate) {
-		this.abschlussRate = abschlussRate;
-	}
 
 	public double getZinsSatz() {
 		return zinsSatz;
