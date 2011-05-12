@@ -25,7 +25,7 @@ public class WebBankService {
 		Vector<KreditWunsch> kw = new Vector<KreditWunsch>();
 
 		while (startLaufzeit <= MAX_LAUFZEIT) {
-			double annuitaet = (double)Math.round((startKreditHoehe *(((ZINSSATZ*Math.pow((MAX_LAUFZEIT/12), (1+ZINSSATZ))))/(Math.pow((MAX_LAUFZEIT/12), (1+ZINSSATZ))-1)))*100)/100;
+			double annuitaet = (double)Math.round((startKreditHoehe *(((ZINSSATZ*Math.pow((startLaufzeit/12), (1+ZINSSATZ))))/(Math.pow((startLaufzeit/12), (1+ZINSSATZ))-1)))*100)/100;
 		    double gesamtBetrag = (double)Math.round((startKreditHoehe+annuitaet)*100)/100;
 			double monRate = gesamtBetrag/startLaufzeit;
 			monRate = (double)Math.round((monRate*100))/100;
