@@ -37,9 +37,9 @@ public class FilialBankServiceTest {
 				ServiceClient s = new ServiceClient();
 				Options options = s.getOptions();
 				EndpointReference targetEPR = new EndpointReference(
-						"http://localhost:8080/axis2/services/FilialBankService");
+						"http://localhost:9080/axis2/services/FilialBankService");
 				options.setTo(targetEPR);
-				options.setManageSession(true);
+				// options.setManageSession(true);
 				senders.add(s);
 			}
 			sc = senders.get(nr);
