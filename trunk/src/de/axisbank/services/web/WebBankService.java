@@ -27,7 +27,7 @@ public class WebBankService {
 			
 			
 			double mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1;  // monatl. Zins
-			double monRate = ((double)Math.round((startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit)))*100))/100d; // monatl. Rate
+			double monRate = (startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); // monatl. Rate
 			double gesamtBetrag = monRate *laufzeit;
 			
 			monRate = (double)Math.round((monRate*100))/100;
