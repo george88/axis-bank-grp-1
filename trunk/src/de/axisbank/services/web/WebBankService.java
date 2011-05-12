@@ -2,25 +2,21 @@ package de.axisbank.services.web;
 
 import java.util.Vector;
 
-import de.axisbank.services.Tilgungsplan;
-
 public class WebBankService {
-
+	static final int MIN_LAUFZEIT = 12;
+	static final int MAX_LAUFZEIT = 84;
+	static final double MIN_KREDIT = 5000;
+	static final double MAX_KREDIT = 50000;
+	static final double ZINSSATZ = 0.0595;
+	
 	public WebBankService() {
 
 	}
 
 	public KreditWunsch[] getTilgungsPlan(int haushaltsUeberschuss) {
-		System.out.println("Hü:" + haushaltsUeberschuss);
-		int laufzeitmin = 12;
-		int laufzeitmax = 84;
-		double minkredit = 5000;
-		double maxKredit = 50000;
-		double zinssatz = 0.0595;
-		
-		
-		double startKreditHoehe = minkredit;
-		int startLaufzeit = laufzeitmin;
+
+		double startKreditHoehe = MIN_KREDIT;
+		int startLaufzeit = MIN_LAUFZEIT;
 
 		if ((startKreditHoehe / haushaltsUeberschuss) < 12) {
 			startKreditHoehe = ((haushaltsUeberschuss * 12)*0.90);
@@ -28,8 +24,8 @@ public class WebBankService {
 
 		Vector<KreditWunsch> kw = new Vector<KreditWunsch>();
 
-		while (startLaufzeit <= laufzeitmax) {
-			double annuitaet = (double)Math.round((startKreditHoehe *(((zinssatz*Math.pow((laufzeitmax/12), (1+zinssatz))))/(Math.pow((laufzeitmax/12), (1+zinssatz))-1)))*100)/100;
+		while (startLaufzeit <= MAX_LAUFZEIT) {
+			double annuitaet = (double)Math.round((startKreditHoehe *(((ZINSSATZ*Math.pow((MAX_LAUFZEIT/12), (1+ZINSSATZ))))/(Math.pow((MAX_LAUFZEIT/12), (1+ZINSSATZ))-1)))*100)/100;
 		    double gesamtBetrag = (double)Math.round((startKreditHoehe+annuitaet)*100)/100;
 			double monRate = gesamtBetrag/startLaufzeit;
 			monRate = (double)Math.round((monRate*100))/100;
@@ -54,7 +50,7 @@ public class WebBankService {
 			
 				startLaufzeit++;
 			
-			if (startKreditHoehe > maxKredit)
+			if (startKreditHoehe > MAX_KREDIT)
 				break;
 		}
 		KreditWunsch[] k = new KreditWunsch[kw.size()];
