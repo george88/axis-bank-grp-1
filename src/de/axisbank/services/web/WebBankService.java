@@ -34,7 +34,7 @@ public class WebBankService {
 		/**************************Variablen*************************************/
 		double kreditHoehe = MIN_KREDIT; //Kredithoehe mit der die Berechnung begonnen wird
 											  //initial = MIN_KREDIT
-		int laufzeit = MIN_LAUFZEIT; //Laufzeit bei der die Berechnung begonnen wird
+		int laufZeit = MIN_LAUFZEIT; //Laufzeit bei der die Berechnung begonnen wird
 									 //initial = MIN_LAUFZEIT
 		double monZins; //monatlicher Zins
 		double monRate; //monatliche Rate
@@ -54,12 +54,12 @@ public class WebBankService {
 		if(kreditHoehe<=MAX_KREDIT)
 		{
 			//solange die Maximallaufzeit nicht erreicht ist
-			while (laufzeit <= MAX_LAUFZEIT) {
+			while (laufZeit <= MAX_LAUFZEIT) {
 				
 				
 				monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
-				monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufzeit) / (-1 + Math.pow((1 + monZins),laufzeit))); //berechne monatl. Rate
-				gesamtBetrag = monRate *laufzeit; //berechne Gesamtbetrag
+				monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufZeit) / (-1 + Math.pow((1 + monZins),laufZeit))); //berechne monatl. Rate
+				gesamtBetrag = monRate *laufZeit; //berechne Gesamtbetrag
 				
 				monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
 				
@@ -68,18 +68,18 @@ public class WebBankService {
 				if(monRate<=haushaltsUeberschuss)
 				{
 					//Berechnung der letzten Rate
-					if((monRate*laufzeit)!= gesamtBetrag)
+					if((monRate*laufZeit)!= gesamtBetrag)
 					{
-						letzteRate = gesamtBetrag-(monRate*(laufzeit-1));
+						letzteRate = gesamtBetrag-(monRate*(laufZeit-1));
 					}
 					else
 					{
 						letzteRate = monRate;
 					}
-					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag)); //Objekt dem Vector hinzufuegen
+					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufZeit, monRate,letzteRate, gesamtBetrag)); //Objekt dem Vector hinzufuegen
 					kreditHoehe += haushaltsUeberschuss; // Naechste Kredithoehe
 				}	
-				laufzeit++;//Laufzeit um einen Monat erhoehen
+				laufZeit++;//Laufzeit um einen Monat erhoehen
 				
 				//Abbruch wenn Maximalkredit erreicht ist
 				if (kreditHoehe > MAX_KREDIT)
@@ -91,6 +91,52 @@ public class WebBankService {
 		return rueckgabeArray;//Rueckgabearray zurueckgeben
 	}
 	
-	
+	/**
+	*Diese Methode bekommt eine Wunschrate und berechnet daraus die möglichen Kreditkonstellation.
+	*
+	*@param haushaltsUeberschuss - höhe der monatlichen Rate
+	*@return KreditWunsch[] - ein Array mit Kreditwünschen
+	*/
+	public KreditWunsch getTilgungsPlanDurchBetragLaufzeit(double kreditHoehe,int laufZeit)
+	{
+		KreditWunsch kreditWunsch = new KreditWunsch();
+		double monZins; //monatlicher Zins
+		double monRate = 0; //monatliche Rate
+		double gesamtBetrag = 0; //Gesamtkosten des Kredites
+		double letzteRate=0; //letze Rate des Kredites
+		
+		//wird nur ausgefuehrt, wenn die uebergebenen Werte in Rahmen liegen
+		if(kreditHoehe>=MIN_KREDIT && kreditHoehe<=MAX_KREDIT && laufZeit >=MIN_LAUFZEIT && laufZeit <=MAX_LAUFZEIT)
+		{
+			monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
+			monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufZeit) / (-1 + Math.pow((1 + monZins),laufZeit))); //berechne monatl. Rate
+			gesamtBetrag = monRate *laufZeit; //berechne Gesamtbetrag
+			
+			monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
+			
+			//Berechnung der letzten Rate
+			if((monRate*laufZeit)!= gesamtBetrag)
+			{
+				letzteRate = gesamtBetrag-(monRate*(laufZeit-1));
+			}
+			else
+			{
+				letzteRate = monRate;
+			}
+			
+			//Objekt setzen
+			kreditWunsch.setKreditHoehe(kreditHoehe);
+			kreditWunsch.setLaufzeit(laufZeit);
+			kreditWunsch.setMonRate(monRate);
+			kreditWunsch.setLetzteRate(letzteRate);
+			kreditWunsch.setGesamtBetrag(gesamtBetrag);
+		}
+		else
+		{
+			kreditWunsch = null; 
+		}
+		
+		return kreditWunsch;
+	}
 }
 
