@@ -2,7 +2,7 @@ package de.axisbank.daos;
 
 public class Kreditantrag extends DaoObject {
 
-	private int giroDarlehenskonto = -1;
+
 
 	private User berater;
 
@@ -27,12 +27,11 @@ public class Kreditantrag extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
-	public Kreditantrag(int giroDarlehenskonto, User berater, String datum,
+	public Kreditantrag(User berater, String datum,
 			String status, String filiale, double kreditWunsch,
 			double ratenHoehe, int ratenAnzahl,
 			Antragssteller antragssteller_2, String verhaeltnisZu_2) {
 		super();
-		this.giroDarlehenskonto = giroDarlehenskonto;
 		this.berater = berater;
 		this.datum = datum;
 		this.status = status;
@@ -42,14 +41,6 @@ public class Kreditantrag extends DaoObject {
 		this.ratenAnzahl = ratenAnzahl;
 		this.setAntragssteller_2(antragssteller_2);
 		this.setVerhaeltnisZu_2(verhaeltnisZu_2);
-	}
-
-	public int getGiroDarlehenskonto() {
-		return giroDarlehenskonto;
-	}
-
-	public void setGiroDarlehenskonto(int giroDarlehenskonto) {
-		this.giroDarlehenskonto = giroDarlehenskonto;
 	}
 
 	public User getBerater() {
