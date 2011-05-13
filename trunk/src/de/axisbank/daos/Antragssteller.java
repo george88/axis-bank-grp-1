@@ -25,6 +25,8 @@ public class Antragssteller extends DaoObject {
 	private String ort;
 
 	private String wohnhaftSeit;
+	
+	private int hauptGirokonto = -1;
 
 	private String telefon;
 
@@ -56,7 +58,7 @@ public class Antragssteller extends DaoObject {
 	public Antragssteller(String anrede, String titel, String vorname,
 			String nachname, String gebName, String gebOrt, String gebDatum,
 			String str, String hnr, String plz, String ort,
-			String wohnhaftSeit, String telefon, String email, String beruf,
+			String wohnhaftSeit,int hauptGirokonto,  String telefon, String email, String beruf,
 			int anzKinder, String familienstand, Einnahmen[] einnahmen,
 			Versicherungen[] versicherungen, Ausgaben[] ausgaben,
 			Arbeitgeber[] arbeitgeber,
@@ -75,6 +77,7 @@ public class Antragssteller extends DaoObject {
 		this.plz = plz;
 		this.ort = ort;
 		this.wohnhaftSeit = wohnhaftSeit;
+		this.hauptGirokonto = hauptGirokonto;
 		this.telefon = telefon;
 		this.email = email;
 		this.beruf = beruf;
@@ -182,6 +185,13 @@ public class Antragssteller extends DaoObject {
 
 	public void setWohnhaftSeit(String wohnhaftSeit) {
 		this.wohnhaftSeit = wohnhaftSeit;
+	}
+	public int getHauptGirokonto() {
+		return hauptGirokonto;
+	}
+
+	public void setHauptGirokonto(int hauptGirokonto) {
+		this.hauptGirokonto = hauptGirokonto;
 	}
 
 	public String getTelefon() {
