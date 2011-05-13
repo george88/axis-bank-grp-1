@@ -29,7 +29,7 @@ public class WebBankService {
 	*@param haushaltsUeberschuss - höhe der monatlichen Rate
 	*@return KreditWunsch[] - ein Array mit Kreditwünschen
 	*/
-	public KreditWunsch[] getTilgungsPlan(int haushaltsUeberschuss) {
+	public KreditWunsch[] getTilgungsPlanDurchRate(int haushaltsUeberschuss) {
 
 		/**************************Variablen*************************************/
 		double kreditHoehe = MIN_KREDIT; //Kredithoehe mit der die Berechnung begonnen wird
@@ -90,5 +90,7 @@ public class WebBankService {
 		rueckgabeArray = bufferVector.toArray(rueckgabeArray); //Zwischenspeicher im Rueckgabearray ablegen
 		return rueckgabeArray;//Rueckgabearray zurueckgeben
 	}
+	
+	
 }
 
