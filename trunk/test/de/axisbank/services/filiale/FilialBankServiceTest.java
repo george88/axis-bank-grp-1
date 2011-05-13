@@ -39,7 +39,7 @@ public class FilialBankServiceTest {
 				EndpointReference targetEPR = new EndpointReference(
 						"http://localhost:9080/axis2/services/FilialBankService");
 				options.setTo(targetEPR);
-				// options.setManageSession(true);
+				options.setManageSession(true);
 				senders.add(s);
 			}
 			sc = senders.get(nr);
@@ -121,6 +121,8 @@ public class FilialBankServiceTest {
 							+ "("
 							+ as.getKreditantraege()[0].getAntragssteller_2()
 									.getVorname() + ")");
+					System.out.println("Arbeitgeber:"
+							+ as.getArbeitgeber()[0].getNameArbeitgeber());
 				}
 
 			}
