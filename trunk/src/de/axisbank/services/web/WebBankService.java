@@ -36,7 +36,7 @@ public class WebBankService {
 											  //initial = MIN_KREDIT
 		int laufzeit = MIN_LAUFZEIT; //Laufzeit bei der die Berechnung begonnen wird
 									 //initial = MIN_LAUFZEIT
-		double mz; //monatlicher Zins
+		double monZins; //monatlicher Zins
 		double monRate; //monatliche Rate
 		double gesamtBetrag; //Gesamtkosten des Kredites
 		double letzteRate=0; //letze Rate des Kredites
@@ -57,8 +57,8 @@ public class WebBankService {
 			while (laufzeit <= MAX_LAUFZEIT) {
 				
 				
-				mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
-				monRate = (kreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); //berechne monatl. Rate
+				monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
+				monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufzeit) / (-1 + Math.pow((1 + monZins),laufzeit))); //berechne monatl. Rate
 				gesamtBetrag = monRate *laufzeit; //berechne Gesamtbetrag
 				
 				monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
