@@ -32,7 +32,7 @@ public class WebBankService {
 	public KreditWunsch[] getTilgungsPlan(int haushaltsUeberschuss) {
 
 		/**************************Variablen*************************************/
-		double startKreditHoehe = MIN_KREDIT; //Kredithoehe mit der die Berechnung begonnen wird
+		double kreditHoehe = MIN_KREDIT; //Kredithoehe mit der die Berechnung begonnen wird
 											  //initial = MIN_KREDIT
 		int laufzeit = MIN_LAUFZEIT; //Laufzeit bei der die Berechnung begonnen wird
 									 //initial = MIN_LAUFZEIT
@@ -47,18 +47,18 @@ public class WebBankService {
 		//Wenn der haushaltsUeberschuss den MIN_KREDIT in weniger als MIN_LAUFZEIT
 		//zurueckzahlen kann, wird die startKreditHoehe neu gesetzt
 		if ((MIN_KREDIT / haushaltsUeberschuss) < MIN_LAUFZEIT) {
-			startKreditHoehe = ((haushaltsUeberschuss * 12)*0.90);
+			kreditHoehe = ((haushaltsUeberschuss * 12)*0.90);
 		}
 		
 		//Wenn die Starthoehe groesser als der Maximalkredit ist, dann wird nichts berechnet
-		if(startKreditHoehe<=MAX_KREDIT)
+		if(kreditHoehe<=MAX_KREDIT)
 		{
 			//solange die Maximallaufzeit nicht erreicht ist
 			while (laufzeit <= MAX_LAUFZEIT) {
 				
 				
 				mz = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
-				monRate = (startKreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); //berechne monatl. Rate
+				monRate = (kreditHoehe * mz * Math.pow((1 + mz),laufzeit) / (-1 + Math.pow((1 + mz),laufzeit))); //berechne monatl. Rate
 				gesamtBetrag = monRate *laufzeit; //berechne Gesamtbetrag
 				
 				monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
@@ -76,13 +76,13 @@ public class WebBankService {
 					{
 						letzteRate = monRate;
 					}
-					bufferVector.add(new KreditWunsch(Math.rint(startKreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag)); //Objekt dem Vector hinzufuegen
-					startKreditHoehe += haushaltsUeberschuss; // Naechste Kredithoehe
+					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufzeit, monRate,letzteRate, gesamtBetrag)); //Objekt dem Vector hinzufuegen
+					kreditHoehe += haushaltsUeberschuss; // Naechste Kredithoehe
 				}	
 				laufzeit++;//Laufzeit um einen Monat erhoehen
 				
 				//Abbruch wenn Maximalkredit erreicht ist
-				if (startKreditHoehe > MAX_KREDIT)
+				if (kreditHoehe > MAX_KREDIT)
 					break;
 			}			
 		}
