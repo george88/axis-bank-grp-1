@@ -10,47 +10,68 @@
    <property name="f_deploy.file" value="Filiale_Axis_Bank.aar"/>
    <property name="w_deploy.file" value="Web_Axis_Bank.aar"/>
    <property name="deploy.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\axis\repository\services"/>
-   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18\bin"/>
+   <property name="tomcatbin.path" value="C:\Dokumente und Einstellungen\JFP\FHDWworkspace\apache-tomcat-6.0.18_2\bin"/>
 
    
-
+	<target name="clean">
+		<delete includeemptydirs="true">
+		    <fileset dir="${bin.dir}" includes="**/*"/>
+		  </delete>
+	</target>
+	<target name="compile" depends="" description="">
+		<javac srcdir="${src.dir}"
+	         destdir="${bin.dir}">
+			<include name="**/*.java"/>
+		</javac>
+		<javac srcdir="test"
+	         destdir="${bin.dir}">
+			<include name="**/*.java"/>
+		</javac>
+		<copy todir="${bin.dir}">
+			<fileset dir="konfigurationen">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+	
    <target name="FilialStructure" depends="" 
         description="[AXIS2] Struktur für AAR-File erzeugen">
 
       <mkdir dir="${f_aar.dir}" />
-      <mkdir dir="${f_aar.dir}/META-INF" />
+   	  <mkdir dir="${f_aar.dir}/META-INF" />
 
-      <copy todir="${f_aar.dir}" preservelastmodified="true">
-         <fileset dir="${bin.dir}"
-            includes="**/*.*"
-            excludes="*.xml"/>
+   		
+   	
+      <copy todir="${f_aar.dir}" overwrite="true">
+         <fileset dir="${bin.dir}" >
+            <include name="**/*.*" />
+            <exclude name="*.xml" />
+            <exclude name="**/**Test.*"  />         	
+      	 </fileset>
       </copy>
-
+   	
       <copy todir="${f_aar.dir}/META-INF"
              preservelastmodified="true">
          <fileset dir="${src.dir}/de/axisbank/services/filiale"
-             includes="services.xml"/>
+             includes="*.xml"/>
       </copy>
    
    </target>
 
    <target name="ErzeugeFilialAAR" depends="FilialStructure"
         description="[AXIS2] AAR-File erzeugen">
-
-      <jar destfile="${deploy.path}/${f_deploy.file}" update="true">
+   	<delete file="${deploy.path}/${f_deploy.file}" />
+      <jar destfile="${deploy.path}/${f_deploy.file}" update="true" >
          <fileset dir="${f_aar.dir}">
             <include name="**/*.*"/>
          </fileset>
       </jar>
-
-      <copy todir="${deploy.path}" preservelastmodified="true">
+      <copy todir="${deploy.path}"  overwrite="true" >
          <fileset dir=".">
             <include name="*.aar"/>
          </fileset>
       </copy>
-
       <delete dir="${f_aar.dir}" />
-
    </target>
 	
 	<target name="allesFiliale" depends="ErzeugeFilialAAR">
@@ -91,14 +112,14 @@
 
 	   <target name="ErzeugeWebAAR" depends="WebStructure"
 	        description="[AXIS2] AAR-File erzeugen" >
-
+	   	<delete file="${deploy.path}/${w_deploy.file}" />
 	      <jar destfile="${deploy.path}/${w_deploy.file}" update="true">
 	         <fileset dir="${w_aar.dir}">
 	            <include name="**/*.*"/>
 	         </fileset>
 	      </jar>
 
-	      <copy todir="${deploy.path}" preservelastmodified="true">
+	      <copy todir="${deploy.path}"  overwrite="true" >
 	         <fileset dir=".">
 	            <include name="*.aar"/>
 	         </fileset>
