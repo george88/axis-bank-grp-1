@@ -27,6 +27,12 @@ public class Einnahmen extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
+	public Einnahmen(int idEinnahmen) {
+		super();
+		setReferenzIdName("idAntragssteller");
+		setReferenzId(idEinnahmen);
+	}
+
 	public double getEinkommen() {
 		return einkommen;
 	}
