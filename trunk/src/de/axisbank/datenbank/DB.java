@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -17,7 +20,6 @@ import de.axisbank.tools.Konfiguration;
 public class DB {
 
 	public static Object select(DaoObject daoObject) {
-
 		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null),
 				daoObject, true);
 	}
@@ -49,8 +51,9 @@ public class DB {
 	private final static String PORT = ":3306";
 	private final static String DB_NAME = "/axisbank";
 	private final static String USER_NAME = "root";// Konfiguration
-													// .readKonfiguration(Konfiguration.DB_USER);
-	private final static String PASSWORD = "d3v3l0p3rs";// Konfiguration.readKonfiguration(Konfiguration.DB_PASSWORT);
+	// .readKonfiguration(Konfiguration.DB_USER);
+	private final static String PASSWORD = "d3v3l0p3rs";// Konfiguration
+	// .readKonfiguration(Konfiguration.DB_PASSWORT);
 	protected final static String Table_Prefix = "";
 	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
 
@@ -60,6 +63,7 @@ public class DB {
 		Vector<Object> daoObjects = new Vector<Object>();
 		try {
 			Statement stmt = connection.createStatement();
+			System.out.println("SELECT: " + select + "\n\n");
 			ResultSet rs = stmt.executeQuery(select);
 			while (rs.next()) {
 				DaoObject daoObject = daoObj.getClass().newInstance();
@@ -70,25 +74,50 @@ public class DB {
 					if (mn.startsWith("set")) {
 						Class<?>[] parameterTypes = m.getParameterTypes();
 						if (parameterTypes[0] == int.class) {
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getInt(mn
-													.substring(3)) });
-						} else if (parameterTypes[0] == String.class) {
-							System.out.print("String:");
-							Object obj = rs.getObject(mn.substring(3));
+							System.out.print("Integer:");
+							Object obj = rs.getInt(mn.substring(3));
 							System.out.println(mn.substring(3) + " = " + obj);
+
+							daoObject.getClass().getMethod(mn, parameterTypes)
+									.invoke(daoObject, new Object[] { obj });
+						} else if (parameterTypes[0] == String.class) {
+							Object obj = null;
+							if (mn.substring(3).contains("Datum")) {
+								System.out.print("String:");
+								java.sql.Date o = rs.getDate(mn.substring(3));
+								if (o != null) {
+									Calendar c = Calendar.getInstance();
+									c.setTime(o);
+									String d = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0"
+											+ c.get(Calendar.DAY_OF_MONTH)
+											: c.get(Calendar.DAY_OF_MONTH))
+											+ "."
+											+ (c.get(Calendar.MONTH) < 10 ? "0"
+													+ c.get(Calendar.MONTH) : c
+													.get(Calendar.MONTH))
+											+ "."
+											+ c.get(Calendar.YEAR);
+
+									System.out.println(mn.substring(3) + " = "
+											+ d);
+									obj = d;
+								}
+
+							} else {
+								System.out.print("String:");
+								Object o = rs.getObject(mn.substring(3));
+								System.out.println(mn.substring(3) + " = " + o);
+								obj = o;
+							}
 							daoObject.getClass().getMethod(mn, parameterTypes)
 									.invoke(daoObject, new Object[] { obj });
 						} else if (parameterTypes[0] == double.class) {
-							daoObject
-									.getClass()
-									.getMethod(mn, parameterTypes)
-									.invoke(daoObject,
-											new Object[] { rs.getDouble(mn
-													.substring(3)) });
+							System.out.print("Double:");
+							Object obj = rs.getDouble(mn.substring(3));
+							System.out.println(mn.substring(3) + " = " + obj);
+
+							daoObject.getClass().getMethod(mn, parameterTypes)
+									.invoke(daoObject, new Object[] { obj });
 						} else if (parameterTypes[0] == long.class) {
 							System.out.print("Long:");
 							Object obj = rs.getLong(mn.substring(3));
@@ -100,56 +129,59 @@ public class DB {
 									.invoke(daoObject,
 											new Object[] { rs.getLong(mn
 													.substring(3)) });
-						} else if (!parameterTypes[0].isPrimitive()
-								&& !parameterTypes[0].isArray()) {
-
-							if (lastAskedSubClasses.contains(parameterTypes[0])) {
-								continue;
-							}
-							lastAskedSubClasses.add(parameterTypes[0]);
-
-							DaoObject dObj = (DaoObject) parameterTypes[0]
-									.newInstance();
-
-							System.out.println("SubTable: "
-									+ dObj.getTableName() + "\n");
-							dObj.setId(rs.getInt(dObj.getReferenzIdName()));
-							String subSelect = MySqlQueryFactory.createSelect(
-									dObj, null);
-							System.out
-									.println("subselect: " + subSelect + "\n");
-							Object d = select(subSelect, dObj, false);
-							if (Array.getLength(d) > 0)
-								daoObject
-										.getClass()
-										.getMethod(mn, parameterTypes)
-										.invoke(daoObject,
-												new Object[] { Array.get(d, 0) });
-						} else if (parameterTypes[0].isArray()) {
-
-							if (lastAskedSubClasses.contains(parameterTypes[0])) {
-								continue;
-							}
-							lastAskedSubClasses.add(parameterTypes[0]);
-
-							DaoObject dObj = (DaoObject) parameterTypes[0]
-									.getComponentType().newInstance();
-
-							System.out.println("SubTable: "
-									+ dObj.getTableName() + "\n");
-							dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
-							String subSelect = MySqlQueryFactory.createSelect(
-									dObj, null);
-							System.out.println("subselect: " + subSelect
-									+ "\nMethod:" + m.getName() + "\n");
-							Object d = select(subSelect, dObj, false);
-							if (Array.getLength(d) > 0) {
-								m.invoke(daoObject, new Object[] { d });
-							}
 						}
+						// else if (!parameterTypes[0].isPrimitive()
+						// && !parameterTypes[0].isArray()) {
+						//
+						// if (lastAskedSubClasses.contains(parameterTypes[0]))
+						// {
+						// continue;
+						// }
+						// lastAskedSubClasses.add(parameterTypes[0]);
+						//
+						// DaoObject dObj = (DaoObject) parameterTypes[0]
+						// .newInstance();
+						//
+						// System.out.println("SubTable: "
+						// + dObj.getTableName() + "\n");
+						// dObj.setId(rs.getInt(dObj.getReferenzIdName()));
+						// String subSelect = MySqlQueryFactory.createSelect(
+						// dObj, null);
+						//
+						// Object d = select(subSelect, dObj, false);
+						// if (Array.getLength(d) > 0)
+						// daoObject
+						// .getClass()
+						// .getMethod(mn, parameterTypes)
+						// .invoke(daoObject,
+						// new Object[] { Array.get(d, 0) });
+						// } else if (parameterTypes[0].isArray()) {
+						//
+						// if (lastAskedSubClasses.contains(parameterTypes[0]))
+						// {
+						// continue;
+						// }
+						// lastAskedSubClasses.add(parameterTypes[0]);
+						//
+						// DaoObject dObj = (DaoObject) parameterTypes[0]
+						// .getComponentType().newInstance();
+						//
+						// System.out.println("SubTable: "
+						// + dObj.getTableName() + "\n");
+						// dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
+						// String subSelect = MySqlQueryFactory.createSelect(
+						// dObj, null);
+						// Object d = select(subSelect, dObj, false);
+						// if (Array.getLength(d) > 0) {
+						// m.invoke(daoObject, new Object[] { d });
+						// }
+						// }
 					}
 				}
-				daoObject.setId(rs.getInt(daoObject.getIdName()));
+				System.out.print("Integer:");
+				int id = rs.getInt(daoObject.getIdName());
+				System.out.println(daoObject.getIdName() + " = " + id + "\n");
+				daoObject.setId(id);
 				daoObjects.add(daoObject);
 			}
 
@@ -183,12 +215,13 @@ public class DB {
 
 		if (updates == null)
 			return null;
+
 		int[] counts = new int[updates.length];
 		for (int i = 0; i < updates.length; i++) {
 			if (updates[i] != null)
 				try {
+					System.out.println("UPDATE: " + updates[i] + "\n\n");
 					Statement stmt = connection.createStatement();
-					System.out.println("update: " + updates[i] + "\n\n");
 					counts[i] = stmt.executeUpdate(updates[i]);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -199,21 +232,22 @@ public class DB {
 		return counts;
 	}
 
-	public boolean[] insert(String[] update, DaoObject daoObj[],
+	public boolean[] insert(String[] insert, DaoObject daoObj[],
 			boolean hauptInsert) {
 		if (connection == null)
 			return null;
 
-		if (update == null
+		if (insert == null
 				|| daoObj == null
-				|| ((daoObj != null && update != null) && update.length != daoObj.length))
+				|| ((daoObj != null && insert != null) && insert.length != daoObj.length))
 			return null;
 
 		boolean[] success = new boolean[daoObj.length];
 		try {
-			for (int i = 0; i < update.length; i++) {
+			for (int i = 0; i < insert.length; i++) {
 				Statement stmt = connection.createStatement();
-				success[i] = stmt.execute(update[i]);
+				System.out.println("INSERT: " + insert[i] + "\n\n");
+				success[i] = stmt.execute(insert[i]);
 			}
 
 		} catch (SQLException e) {
@@ -281,8 +315,26 @@ class MySqlQueryFactory {
 										new Object[] {});
 								if (o != null) {
 									if (o.getClass().equals(String.class)) {
-										set += "`" + mn.substring(3) + "` = '"
-												+ o.toString() + "', ";
+										if (mn.substring(3).contains("Datum")) {
+											try {
+												String[] ds = o.toString()
+														.split("\\.");
+												for (String s : ds)
+													System.out.println(s);
+												String d = ds[2] + "-" + ds[1]
+														+ "-" + ds[0];
+												set += "`" + mn.substring(3)
+														+ "` = '" + d + "', ";
+
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										} else {
+											set += "`" + mn.substring(3)
+													+ "` = '" + o.toString()
+													+ "', ";
+										}
+
 									} else if (o.getClass().equals(
 											Integer.class)
 											&& ((Integer) o) != -1) {
@@ -422,7 +474,6 @@ class MySqlQueryFactory {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-
 		if (daoObject.getReferenzId() != 0
 				&& daoObject.getReferenzIdName() != null)
 			where += "`" + daoObject.getReferenzIdName() + "` = '"
@@ -431,7 +482,6 @@ class MySqlQueryFactory {
 		if (where.length() > 0) {
 			where = " WHERE " + where.substring(0, where.length() - 4);
 		}
-
 		return select + where;
 	}
 
