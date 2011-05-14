@@ -25,8 +25,6 @@ public class Antragssteller extends DaoObject {
 	private String ort;
 
 	private String wohnhaftSeit;
-	
-	private int hauptGirokonto = -1;
 
 	private String telefon;
 
@@ -37,6 +35,8 @@ public class Antragssteller extends DaoObject {
 	private int anzKinder = -1;
 
 	private String familienstand;
+
+	private int hauptGirokonto = -1;
 
 	private Einnahmen[] einnahmen;
 
@@ -55,13 +55,19 @@ public class Antragssteller extends DaoObject {
 		setReferenzIdName("idAntragssteller_2");
 	}
 
+	public Antragssteller(int idAntragssteller) {
+		super();
+		setReferenzIdName("idAntragssteller_2");
+		setReferenzId(idAntragssteller);
+	}
+
 	public Antragssteller(String anrede, String titel, String vorname,
 			String nachname, String gebName, String gebOrt, String gebDatum,
 			String str, String hnr, String plz, String ort,
-			String wohnhaftSeit,int hauptGirokonto,  String telefon, String email, String beruf,
-			int anzKinder, String familienstand, Einnahmen[] einnahmen,
-			Versicherungen[] versicherungen, Ausgaben[] ausgaben,
-			Arbeitgeber[] arbeitgeber,
+			String wohnhaftSeit, String telefon, String email, String beruf,
+			int anzKinder, String familienstand, int hauptGirokonto,
+			Einnahmen[] einnahmen, Versicherungen[] versicherungen,
+			Ausgaben[] ausgaben, Arbeitgeber[] arbeitgeber,
 			Kreditverbindlichkeiten[] kreditverbindlichkeiten,
 			Kreditantrag[] kreditantraege) {
 		super();
@@ -77,12 +83,12 @@ public class Antragssteller extends DaoObject {
 		this.plz = plz;
 		this.ort = ort;
 		this.wohnhaftSeit = wohnhaftSeit;
-		this.hauptGirokonto = hauptGirokonto;
 		this.telefon = telefon;
 		this.email = email;
 		this.beruf = beruf;
 		this.anzKinder = anzKinder;
 		this.familienstand = familienstand;
+		this.hauptGirokonto = hauptGirokonto;
 		this.einnahmen = einnahmen;
 		this.versicherungen = versicherungen;
 		this.ausgaben = ausgaben;
@@ -186,13 +192,6 @@ public class Antragssteller extends DaoObject {
 	public void setWohnhaftSeit(String wohnhaftSeit) {
 		this.wohnhaftSeit = wohnhaftSeit;
 	}
-	public int getHauptGirokonto() {
-		return hauptGirokonto;
-	}
-
-	public void setHauptGirokonto(int hauptGirokonto) {
-		this.hauptGirokonto = hauptGirokonto;
-	}
 
 	public String getTelefon() {
 		return telefon;
@@ -281,5 +280,13 @@ public class Antragssteller extends DaoObject {
 
 	public Kreditantrag[] getKreditantraege() {
 		return kreditantraege;
+	}
+
+	public void setHauptGirokonto(int hauptGirokonto) {
+		this.hauptGirokonto = hauptGirokonto;
+	}
+
+	public int getHauptGirokonto() {
+		return hauptGirokonto;
 	}
 }
