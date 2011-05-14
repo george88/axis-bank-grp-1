@@ -10,11 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.util.Vector;
+
 import de.axisbank.daos.DaoObject;
+import de.axisbank.tools.Konfiguration;
 
 public class DB {
 
 	public static Object select(DaoObject daoObject) {
+
 		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null),
 				daoObject, true);
 	}
@@ -29,6 +32,7 @@ public class DB {
 	}
 
 	public DB() {
+		lastAskedSubClasses.removeAllElements();
 		connecting();
 	}
 
@@ -44,19 +48,23 @@ public class DB {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String PORT = ":3306";
 	private final static String DB_NAME = "/axisbank";
-	private final static String USER_NAME = "root";
-	private final static String PASSWORD = "d3v3l0p3rs";
+	private final static String USER_NAME = "root";// Konfiguration
+													// .readKonfiguration(Konfiguration.DB_USER);
+	private final static String PASSWORD = "d3v3l0p3rs";// Konfiguration.readKonfiguration(Konfiguration.DB_PASSWORT);
 	protected final static String Table_Prefix = "";
+	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
 
 	public Object select(String select, DaoObject daoObj, boolean hauptSelect) {
-
+		if (connection == null)
+			return null;
 		Vector<Object> daoObjects = new Vector<Object>();
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(select);
 			while (rs.next()) {
 				DaoObject daoObject = daoObj.getClass().newInstance();
-
+				System.out
+						.println("\n\nMainTable: " + daoObject.getTableName());
 				for (Method m : daoObject.getClass().getDeclaredMethods()) {
 					String mn = m.getName();
 					if (mn.startsWith("set")) {
@@ -69,7 +77,7 @@ public class DB {
 											new Object[] { rs.getInt(mn
 													.substring(3)) });
 						} else if (parameterTypes[0] == String.class) {
-							System.out.println("String:");
+							System.out.print("String:");
 							Object obj = rs.getObject(mn.substring(3));
 							System.out.println(mn.substring(3) + " = " + obj);
 							daoObject.getClass().getMethod(mn, parameterTypes)
@@ -82,7 +90,7 @@ public class DB {
 											new Object[] { rs.getDouble(mn
 													.substring(3)) });
 						} else if (parameterTypes[0] == long.class) {
-							System.out.println("Long:");
+							System.out.print("Long:");
 							Object obj = rs.getLong(mn.substring(3));
 							System.out.println(mn.substring(3) + " = " + obj
 									+ "\n");
@@ -94,12 +102,17 @@ public class DB {
 													.substring(3)) });
 						} else if (!parameterTypes[0].isPrimitive()
 								&& !parameterTypes[0].isArray()) {
+
+							if (lastAskedSubClasses.contains(parameterTypes[0])) {
+								continue;
+							}
+							lastAskedSubClasses.add(parameterTypes[0]);
+
 							DaoObject dObj = (DaoObject) parameterTypes[0]
 									.newInstance();
-							System.out.println("fromTable: "
-									+ daoObject.getTableName());
-							System.out.println("toAsk: " + dObj.getTableName()
-									+ "\n\n");
+
+							System.out.println("SubTable: "
+									+ dObj.getTableName() + "\n");
 							dObj.setId(rs.getInt(dObj.getReferenzIdName()));
 							String subSelect = MySqlQueryFactory.createSelect(
 									dObj, null);
@@ -113,17 +126,22 @@ public class DB {
 										.invoke(daoObject,
 												new Object[] { Array.get(d, 0) });
 						} else if (parameterTypes[0].isArray()) {
+
+							if (lastAskedSubClasses.contains(parameterTypes[0])) {
+								continue;
+							}
+							lastAskedSubClasses.add(parameterTypes[0]);
+
 							DaoObject dObj = (DaoObject) parameterTypes[0]
 									.getComponentType().newInstance();
-							System.out.println("...\nfromTable: "
-									+ daoObject.getTableName());
-							System.out.println("toAsk: " + dObj.getTableName()
-									+ "\n");
+
+							System.out.println("SubTable: "
+									+ dObj.getTableName() + "\n");
 							dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
 							String subSelect = MySqlQueryFactory.createSelect(
 									dObj, null);
 							System.out.println("subselect: " + subSelect
-									+ "\nMethod:" + m.getName() + "...\n\n");
+									+ "\nMethod:" + m.getName() + "\n");
 							Object d = select(subSelect, dObj, false);
 							if (Array.getLength(d) > 0) {
 								m.invoke(daoObject, new Object[] { d });
@@ -160,6 +178,9 @@ public class DB {
 	}
 
 	public int[] update(String[] updates, boolean hauptUpdate) {
+		if (connection == null)
+			return null;
+
 		if (updates == null)
 			return null;
 		int[] counts = new int[updates.length];
@@ -180,6 +201,8 @@ public class DB {
 
 	public boolean[] insert(String[] update, DaoObject daoObj[],
 			boolean hauptInsert) {
+		if (connection == null)
+			return null;
 
 		if (update == null
 				|| daoObj == null
@@ -211,10 +234,10 @@ public class DB {
 				prop.put("password", PASSWORD);
 				connection = DriverManager.getConnection(URL + SERVER_NAME
 						+ PORT + DB_NAME, prop);
+				System.out.println("connection established");
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("connection failed");
 			}
-			System.out.println("connection established");
 		}
 	}
 
