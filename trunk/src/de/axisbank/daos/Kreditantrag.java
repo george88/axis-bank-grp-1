@@ -2,9 +2,9 @@ package de.axisbank.daos;
 
 public class Kreditantrag extends DaoObject {
 
-
-
 	private User berater;
+
+	private int idUser = -1;
 
 	private String datum;
 
@@ -18,6 +18,8 @@ public class Kreditantrag extends DaoObject {
 
 	private int ratenAnzahl = -1;
 
+	private int idAntragssteller_2 = -1;
+
 	private Antragssteller antragssteller_2;
 
 	private String verhaeltnisZu_2;
@@ -27,10 +29,16 @@ public class Kreditantrag extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
-	public Kreditantrag(User berater, String datum,
-			String status, String filiale, double kreditWunsch,
-			double ratenHoehe, int ratenAnzahl,
-			Antragssteller antragssteller_2, String verhaeltnisZu_2) {
+	public Kreditantrag(int idKreditantrag) {
+		super();
+		setReferenzIdName("idAntragssteller");
+		setReferenzId(idKreditantrag);
+	}
+
+	public Kreditantrag(User berater, String datum, String status,
+			String filiale, double kreditWunsch, double ratenHoehe,
+			int ratenAnzahl, Antragssteller antragssteller_2,
+			String verhaeltnisZu_2) {
 		super();
 		this.berater = berater;
 		this.datum = datum;
@@ -115,4 +123,19 @@ public class Kreditantrag extends DaoObject {
 		return verhaeltnisZu_2;
 	}
 
+	public void setidUser(int idUser) {
+		this.idUser = idUser;
+	}
+
+	public int getidUser() {
+		return idUser;
+	}
+
+	public int getIdAntragssteller_2() {
+		return idAntragssteller_2;
+	}
+
+	public void setIdAntragssteller_2(int idAntragssteller_2) {
+		this.idAntragssteller_2 = idAntragssteller_2;
+	}
 }
