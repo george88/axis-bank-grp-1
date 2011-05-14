@@ -1,7 +1,12 @@
 package de.axisbank.services.filiale;
 
 import de.axisbank.daos.Antragssteller;
+import de.axisbank.daos.Arbeitgeber;
+import de.axisbank.daos.Ausgaben;
 import de.axisbank.daos.DaoObject;
+import de.axisbank.daos.Einnahmen;
+import de.axisbank.daos.Kreditantrag;
+import de.axisbank.daos.Kreditverbindlichkeiten;
 import de.axisbank.daos.User;
 import de.axisbank.datenbank.DB;
 import de.axisbank.services.Tilgungsplan;
@@ -46,6 +51,8 @@ public class FilialBankService {
 			updateuser.setId(updateuser.getId());
 			updateuser.setBenutzername(null);
 			updateuser.setStatus(0);
+			updateuser.setPasswort(null);
+			updateuser.setLetzterLogin(-1L);
 			int[] e = DB.update(new DaoObject[] { updateuser });
 			return e[0] == 1;
 		}
@@ -74,17 +81,48 @@ public class FilialBankService {
 		return new Tilgungsplan();
 	}
 
-	public Antragssteller[] getAntragsteller(String vorname, String nachname) {
+	public Antragssteller[] getAntragssteller(String vorname, String nachname,
+			String gebDatum) {
 		if (!isLogin())
 			return null;
 		Antragssteller as = new Antragssteller();
 		as.setVorname(vorname);
 		as.setNachname(nachname);
-		return (Antragssteller[]) DB.select(as);
+		as.setGebDatum(gebDatum);
+		Antragssteller[] asss = (Antragssteller[]) DB.select(as);
+		for (Antragssteller ass : asss) {
+			ass.setAusgaben((Ausgaben[]) DB.select(new Ausgaben(ass.getId())));
+			ass.setArbeitgeber((Arbeitgeber[]) DB.select(new Arbeitgeber(ass
+					.getId())));
+			ass.setEinnahmen((Einnahmen[]) DB.select(new Einnahmen(ass.getId())));
+			ass.setKreditantraege((Kreditantrag[]) DB.select(new Kreditantrag(
+					ass.getId())));
+			for (Kreditantrag ka : ass.getKreditantraege()) {
+				try {
+					Antragssteller a = new Antragssteller();
+					a.setId(ka.getIdAntragssteller_2());
+					ka.setAntragssteller_2(((Antragssteller[]) DB.select(a))[0]);
+				} catch (Exception e) {
+					ka.setAntragssteller_2(null);
+				}
+				try {
+					User u = new User();
+					System.out.println("userID" + ka.getidUser());
+					u.setId(ka.getidUser());
+					ka.setBerater(((User[]) DB.select(u))[0]);
+				} catch (Exception e) {
+					ka.setBerater(null);
+				}
+			}
+			ass.setKreditverbindlichkeiten((Kreditverbindlichkeiten[]) DB
+					.select(new Kreditverbindlichkeiten(ass.getId())));
+		}
+
+		return asss;
 	}
 
-	public int[] updateAntragsteller(DaoObject[] daoObject) {
-		return DB.update(daoObject);
+	public int[] updateAntragssteller(Antragssteller[] antragsssteller) {
+		return DB.update(antragsssteller);
 	}
 
 	private void setLogin(boolean login) {

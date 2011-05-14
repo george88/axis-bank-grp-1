@@ -24,7 +24,10 @@
 	<operation name="isLogin">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
-	<operation name="getAntragsteller">
+	<operation name="getAntragssteller">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	<operation name="updateAntragssteller">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 
