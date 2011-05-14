@@ -24,6 +24,12 @@ public class Kreditverbindlichkeiten extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
+	public Kreditverbindlichkeiten(int idKreditverbindlichkeiten) {
+		super();
+		setReferenzIdName("idAntragssteller");
+		setReferenzId(idKreditverbindlichkeiten);
+	}
+
 	public String getKreditinstitut() {
 		return kreditinstitut;
 	}

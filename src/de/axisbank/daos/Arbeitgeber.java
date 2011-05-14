@@ -12,9 +12,17 @@ public class Arbeitgeber extends DaoObject {
 
 	private String plzArbeitgeber;
 
+	private String ortArbeitgeber;
+
 	public Arbeitgeber() {
 		super();
 		setReferenzIdName("idAntragssteller");
+	}
+
+	public Arbeitgeber(int idArbeitgeber) {
+		super();
+		setReferenzIdName("idAntragssteller");
+		setReferenzId(idArbeitgeber);
 	}
 
 	public Arbeitgeber(String nameArbeitgeber, String beschSeit,
@@ -76,7 +84,4 @@ public class Arbeitgeber extends DaoObject {
 	public void setOrtArbeitgeber(String ortArbeitgeber) {
 		this.ortArbeitgeber = ortArbeitgeber;
 	}
-
-	private String ortArbeitgeber;
-
 }

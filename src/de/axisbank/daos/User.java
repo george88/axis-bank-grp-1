@@ -17,7 +17,14 @@ public class User extends DaoObject {
 	private String gebDatum;
 
 	public User() {
+		super();
 		setReferenzIdName("idUser");
+	}
+
+	public User(int idUser) {
+		super();
+		setReferenzIdName("idUser");
+		setReferenzId(idUser);
 	}
 
 	public User(String benutzername, String passwort, int status,
