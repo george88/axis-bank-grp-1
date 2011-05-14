@@ -20,6 +20,7 @@ public class DBTest {
 
 	@Test
 	public void testSelect() {
+
 		User a = new User();
 		a.setPasswort("Superman");
 		a.setBenutzername("Kreditberater");
