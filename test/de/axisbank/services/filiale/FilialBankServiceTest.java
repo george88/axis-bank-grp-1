@@ -31,6 +31,8 @@ public class FilialBankServiceTest {
 
 	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
 
+	private long sessionID;
+
 	private static ServiceClient getServiceClient(int nr) throws AxisFault {
 		ServiceClient sc = null;
 		if (senders.size() >= (nr + 1) && senders.get(nr) != null) {
@@ -42,7 +44,7 @@ public class FilialBankServiceTest {
 				EndpointReference targetEPR = new EndpointReference(
 						"http://localhost:9080/axis2/services/FilialBankService");
 				options.setTo(targetEPR);
-				options.setManageSession(true);
+				// options.setManageSession(true);
 				senders.add(s);
 			}
 			sc = senders.get(nr);
@@ -75,12 +77,13 @@ public class FilialBankServiceTest {
 				null);
 
 		OMElement response = sender.sendReceive(request);
-		Class<?>[] returnTypes = new Class[] { boolean.class };
+		Class<?>[] returnTypes = new Class[] { Long.class };
 
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
 
-		System.out.println("Login=: " + result[0]);
+		System.out.println("SessionID=: " + result[0]);
+		sessionID = (Long) result[0];
 		// end Login
 	}
 
@@ -95,7 +98,9 @@ public class FilialBankServiceTest {
 		String vorname = "Daniel";
 		String nachname = "Schmitz";
 		String gebDatum = null;
-		Object[] opArgs = new Object[] { vorname, nachname, gebDatum };
+		int hauptGirokonto = -1;
+		Object[] opArgs = new Object[] { vorname, nachname, gebDatum,
+				hauptGirokonto, sessionID };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
 				null, false, null);
 
@@ -155,7 +160,7 @@ public class FilialBankServiceTest {
 		as.setId(1);
 		as.setGebDatum("12.12.2012");
 		Antragssteller[] antragssteller = new Antragssteller[] { as };
-		Object[] opArgs = new Object[] { antragssteller };
+		Object[] opArgs = new Object[] { antragssteller, sessionID };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
 				null, false, null);
 
@@ -179,7 +184,7 @@ public class FilialBankServiceTest {
 		QName opLogin = new QName("http://filiale.services.axisbank.de",
 				"logoff");
 
-		Object[] opArgs = new Object[] {};
+		Object[] opArgs = new Object[] { sessionID };
 		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false,
 				null);
 
