@@ -59,11 +59,11 @@ public class Kreditantrag extends DaoObject {
 		this.berater = berater;
 	}
 
-	public String getDatum() {
+	public String getDatum_dt() {
 		return datum;
 	}
 
-	public void setDatum(String datum) {
+	public void setDatum_dt(String datum) {
 		this.datum = datum;
 	}
 

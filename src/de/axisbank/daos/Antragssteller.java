@@ -145,11 +145,11 @@ public class Antragssteller extends DaoObject {
 		this.gebOrt = gebOrt;
 	}
 
-	public void setGebDatum(String gebDatum) {
+	public void setGebDatum_dt(String gebDatum) {
 		this.gebDatum = gebDatum;
 	}
 
-	public String getGebDatum() {
+	public String getGebDatum_dt() {
 		return gebDatum;
 	}
 
@@ -185,11 +185,11 @@ public class Antragssteller extends DaoObject {
 		this.ort = ort;
 	}
 
-	public String getWohnhaftSeit() {
+	public String getWohnhaftSeit_dt() {
 		return wohnhaftSeit;
 	}
 
-	public void setWohnhaftSeit(String wohnhaftSeit) {
+	public void setWohnhaftSeit_dt(String wohnhaftSeit) {
 		this.wohnhaftSeit = wohnhaftSeit;
 	}
 

@@ -45,11 +45,11 @@ public class Arbeitgeber extends DaoObject {
 		this.nameArbeitgeber = nameArbeitgeber;
 	}
 
-	public String getBeschSeit() {
+	public String getBeschSeit_dt() {
 		return beschSeit;
 	}
 
-	public void setBeschSeit(String beschSeit) {
+	public void setBeschSeit_dt(String beschSeit) {
 		this.beschSeit = beschSeit;
 	}
 
