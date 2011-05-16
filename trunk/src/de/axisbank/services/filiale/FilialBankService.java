@@ -61,32 +61,40 @@ public class FilialBankService {
 	}
 
 	public int getLiquiditaet(Antragssteller antragsteller, Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) != null)
+		if (SessionManagement.checkSession(sessionID) == null)
 			return -1;
+
+		SessionManagement.updateSession(sessionID);
 
 		return 0;
 	}
 
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, double ratenHoehe,
 			Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) != null)
+		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
+
+		SessionManagement.updateSession(sessionID);
 
 		return new Tilgungsplan();
 	}
 
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, int laufzeitMonate,
 			Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) != null)
+		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
+
+		SessionManagement.updateSession(sessionID);
 
 		return new Tilgungsplan();
 	}
 
 	public Antragssteller[] getAntragssteller(String vorname, String nachname,
 			String gebDatum, int hauptGirokonto, Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) != null)
+		if (SessionManagement.checkSession(sessionID) == null) {
 			return null;
+		}
+
 		Antragssteller as = new Antragssteller();
 		as.setVorname(vorname);
 		as.setNachname(nachname);
@@ -122,15 +130,19 @@ public class FilialBankService {
 				ass.setKreditverbindlichkeiten((Kreditverbindlichkeiten[]) DB
 						.select(new Kreditverbindlichkeiten(ass.getId())));
 			}
-
+		SessionManagement.updateSession(sessionID);
 		return asss;
 	}
 
 	public int[] updateAntragssteller(Antragssteller[] antragsssteller,
 			Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) != null)
+		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
-		return DB.update(antragsssteller);
+		int[] updates = DB.update(antragsssteller);
+
+		SessionManagement.updateSession(sessionID);
+
+		return updates;
 	}
 }
