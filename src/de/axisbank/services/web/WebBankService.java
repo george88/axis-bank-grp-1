@@ -11,11 +11,12 @@ import java.util.Vector;
 
 public class WebBankService {
 	/**************************Konstanten*************************************/
-	static final int MIN_LAUFZEIT = 12;
-	static final int MAX_LAUFZEIT = 84;
-	static final double MIN_KREDIT = 5000;
-	static final double MAX_KREDIT = 50000;
-	static final double ZINSSATZ = 5.59;
+	
+	private static final int MIN_LAUFZEIT = 12;
+	private static final int MAX_LAUFZEIT = 84;
+	private static final double MIN_KREDIT = 5000;
+	private static final double MAX_KREDIT = 50000;
+	private static final double ZINSSATZ = 5.59;
 	
 	/**************************Konstruktor*************************************/
 	public WebBankService() {
@@ -36,9 +37,9 @@ public class WebBankService {
 											  //initial = MIN_KREDIT
 		int laufZeit = MIN_LAUFZEIT; //Laufzeit bei der die Berechnung begonnen wird
 									 //initial = MIN_LAUFZEIT
-		double monZins; //monatlicher Zins
-		double monRate; //monatliche Rate
-		double gesamtBetrag; //Gesamtkosten des Kredites
+		double monZins = 0; //monatlicher Zins
+		double monRate = 0; //monatliche Rate
+		double gesamtBetrag = 0; //Gesamtkosten des Kredites
 		double letzteRate=0; //letze Rate des Kredites
 		Vector<KreditWunsch> bufferVector = new Vector<KreditWunsch>(); //Vector in der die Berechnungen zwischengespeichert werden
 		KreditWunsch[] rueckgabeArray; //Rückgabearray
@@ -55,10 +56,8 @@ public class WebBankService {
 		{
 			//solange die Maximallaufzeit nicht erreicht ist
 			while (laufZeit <= MAX_LAUFZEIT) {
-				
-				
-				monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
-				monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufZeit) / (-1 + Math.pow((1 + monZins),laufZeit))); //berechne monatl. Rate
+				monZins = MonZins(); //berechne monatlichen Zins 
+				monRate = MonRate(kreditHoehe, monZins, laufZeit); //berechne monatl. Rate
 				gesamtBetrag = monRate *laufZeit; //berechne Gesamtbetrag
 				
 				monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
@@ -92,15 +91,16 @@ public class WebBankService {
 	}
 	
 	/**
-	*Diese Methode bekommt eine Wunschrate und berechnet daraus die möglichen Kreditkonstellation.
+	*Diese Methode bekommt Laufzeit und Kredithoehe und berechnet daraus die möglichen Kreditkonstellation.
 	*
-	*@param haushaltsUeberschuss - höhe der monatlichen Rate
-	*@return KreditWunsch[] - ein Array mit Kreditwünschen
+	*@param kreditHoehe - höhe des Kredites
+	*@param laufZeit - gewuenschte Laufzeit
+	*@return KreditWunsch - ein Objekt mit dem Kreditwunsch
 	*/
 	public KreditWunsch getTilgungsPlanDurchBetragLaufzeit(double kreditHoehe,int laufZeit)
 	{
 		KreditWunsch kreditWunsch = new KreditWunsch();
-		double monZins; //monatlicher Zins
+		double monZins = 0; //monatlicher Zins
 		double monRate = 0; //monatliche Rate
 		double gesamtBetrag = 0; //Gesamtkosten des Kredites
 		double letzteRate=0; //letze Rate des Kredites
@@ -108,8 +108,8 @@ public class WebBankService {
 		//wird nur ausgefuehrt, wenn die uebergebenen Werte in Rahmen liegen
 		if(kreditHoehe>=MIN_KREDIT && kreditHoehe<=MAX_KREDIT && laufZeit >=MIN_LAUFZEIT && laufZeit <=MAX_LAUFZEIT)
 		{
-			monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins 
-			monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufZeit) / (-1 + Math.pow((1 + monZins),laufZeit))); //berechne monatl. Rate
+			monZins = MonZins();//berechne monatlichen Zins 
+			monRate = MonRate(kreditHoehe, monZins, laufZeit); //berechne monatl. Rate
 			gesamtBetrag = monRate *laufZeit; //berechne Gesamtbetrag
 			
 			monRate = (double)Math.round((monRate*100))/100; //mon. Rate zur Darstellung runden
@@ -133,10 +133,36 @@ public class WebBankService {
 		}
 		else
 		{
-			kreditWunsch = null; 
+			kreditWunsch = null; //leeres Objekt
 		}
 		
 		return kreditWunsch;
+	}
+	
+	/**************************private Methoden*************************************/
+	/**
+	*Diese Methode berechnet den monatlichen Zins
+	*
+	*@return monZins - monatlicher Zins
+	*/
+	private double MonZins()
+	{
+		double monZins = (Math.pow((1 + (ZINSSATZ/100)),(1d/12d))) - 1; //berechne monatlichen Zins
+		return monZins;	
+	}
+	
+	/**
+	*Diese Methode berechnet die monatliche Rate
+	*
+	*@param kreditHoehe - Kredithoehe
+	*@param monZins - monatlicher Zins
+	*@param laufZeit - gewuenschte Gesamtlaufzeit
+	*@return monRate - monatlicher Rate
+	*/
+	private double MonRate(double kreditHoehe,double monZins, int laufZeit)
+	{
+		double monRate = (kreditHoehe * monZins * Math.pow((1 + monZins),laufZeit) / (-1 + Math.pow((1 + monZins),laufZeit))); //berechne monatl. Rate
+		return monRate;
 	}
 }
 
