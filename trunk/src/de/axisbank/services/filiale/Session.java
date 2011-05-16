@@ -13,23 +13,38 @@ public class Session implements ActionListener {
 	private static final long serialVersionUID = -4034449263354130980L;
 	private String username;
 	private Long sessionID;
-	private final int delay = 30 * 60 * 1000;
+	private final int initialDelay = 30 * 60;
+	private int delay;
 	private final Timer timer;
 
 	public Session(String username, Long sessionID) {
 		setUsername(username);
 		setSessionID(sessionID);
-		timer = new Timer(delay, this);
+		delay = initialDelay;
+		timer = new Timer(1000, this);
 		timer.start();
 	}
 
 	public void updateTimer() {
-		timer.restart();
+		System.out.println("Es wären noch " + timer.getDelay()
+				+ " Milisekunden zum SessionDelete");
+		delay = initialDelay;
+	}
+
+	public int getDelayTime() {
+		return delay;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		SessionManagement.deleteSession(getSessionID());
+		delay--;
+		System.out.println("Session " + sessionID + ": " + delay);
+		if (delay <= 0) {
+			System.out.println("Die Session mit der ID " + getSessionID()
+					+ " wird gelöscht!");
+			timer.stop();
+			SessionManagement.deleteSession(getSessionID());
+		}
 	}
 
 	public void setUsername(String username) {
