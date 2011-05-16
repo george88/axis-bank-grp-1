@@ -13,22 +13,22 @@ public class Session implements ActionListener {
 	private static final long serialVersionUID = -4034449263354130980L;
 	private String username;
 	private Long sessionID;
-	private final int initialDelay = 30 * 60;
+	private final int INITIAL_DELAY = 30 * 60;
 	private int delay;
 	private final Timer timer;
 
 	public Session(String username, Long sessionID) {
 		setUsername(username);
 		setSessionID(sessionID);
-		delay = initialDelay;
+		delay = INITIAL_DELAY;
 		timer = new Timer(1000, this);
 		timer.start();
 	}
 
 	public void updateTimer() {
-		System.out.println("Es wären noch " + timer.getDelay()
-				+ " Milisekunden zum SessionDelete");
-		delay = initialDelay;
+		System.out.println("Es wären noch " + delay
+				+ " Sekunden zum SessionDelete");
+		delay = INITIAL_DELAY;
 	}
 
 	public int getDelayTime() {
