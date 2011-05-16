@@ -38,12 +38,6 @@ public class DB {
 		connecting();
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		closing();
-	}
-
 	protected static Connection connection = null;
 	private final static String URL = "jdbc:mysql:";
 	private final static String SERVER_NAME = "//localhost";
