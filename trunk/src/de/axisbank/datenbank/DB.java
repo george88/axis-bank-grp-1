@@ -78,7 +78,8 @@ public class DB {
 							Object obj = null;
 							if (mn.substring(3).endsWith("_dt")) {
 								System.out.print("String:");
-								java.sql.Date o = rs.getDate(mn.substring(3));
+								java.sql.Date o = rs.getDate(mn.substring(3,
+										mn.indexOf("_dt")));
 								if (o != null) {
 									Calendar c = Calendar.getInstance();
 									c.setTime(o);
@@ -317,7 +318,9 @@ class MySqlQueryFactory {
 													System.out.println(s);
 												String d = ds[2] + "-" + ds[1]
 														+ "-" + ds[0];
-												set += "`" + mn.substring(3)
+												set += "`"
+														+ mn.substring(3, mn
+																.indexOf("_dt"))
 														+ "` = '" + d + "', ";
 
 											} catch (Exception e) {
