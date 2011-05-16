@@ -76,7 +76,7 @@ public class DB {
 									.invoke(daoObject, new Object[] { obj });
 						} else if (parameterTypes[0] == String.class) {
 							Object obj = null;
-							if (mn.substring(3).contains("Datum")) {
+							if (mn.substring(3).endsWith("_dt")) {
 								System.out.print("String:");
 								java.sql.Date o = rs.getDate(mn.substring(3));
 								if (o != null) {
@@ -309,7 +309,7 @@ class MySqlQueryFactory {
 										new Object[] {});
 								if (o != null) {
 									if (o.getClass().equals(String.class)) {
-										if (mn.substring(3).contains("Datum")) {
+										if (mn.substring(3).endsWith("_dt")) {
 											try {
 												String[] ds = o.toString()
 														.split("\\.");
