@@ -31,7 +31,7 @@ public class FilialBankServiceTest {
 
 	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
 
-	private long sessionID;
+	private static long sessionID;
 
 	private static ServiceClient getServiceClient(int nr) throws AxisFault {
 		ServiceClient sc = null;
@@ -89,6 +89,7 @@ public class FilialBankServiceTest {
 
 	@Test
 	public void testGetAntragsteller() throws AxisFault {
+
 		ServiceClient sender = getServiceClient(0);
 
 		// start getAntragsteller
@@ -99,6 +100,7 @@ public class FilialBankServiceTest {
 		String nachname = "Schmitz";
 		String gebDatum = null;
 		int hauptGirokonto = -1;
+		System.out.println(sessionID);
 		Object[] opArgs = new Object[] { vorname, nachname, gebDatum,
 				hauptGirokonto, sessionID };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
@@ -159,6 +161,8 @@ public class FilialBankServiceTest {
 		Antragssteller as = new Antragssteller();
 		as.setId(1);
 		as.setGebDatum("12.12.2012");
+		System.out.println(sessionID);
+
 		Antragssteller[] antragssteller = new Antragssteller[] { as };
 		Object[] opArgs = new Object[] { antragssteller, sessionID };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
