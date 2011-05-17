@@ -98,7 +98,7 @@ public class FilialBankService {
 		Antragssteller as = new Antragssteller();
 		as.setVorname(vorname);
 		as.setNachname(nachname);
-		as.setGebDatum(gebDatum);
+		as.setGebDatum_dt(gebDatum);
 		as.setHauptGirokonto(hauptGirokonto);
 		Antragssteller[] asss = (Antragssteller[]) DB.select(as);
 		if (asss != null)
