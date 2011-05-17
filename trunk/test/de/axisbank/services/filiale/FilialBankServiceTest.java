@@ -203,8 +203,7 @@ public class FilialBankServiceTest {
 		as.setGebDatum_dt("12.12.2012");
 		System.out.println(sessionID);
 
-		Antragssteller[] antragssteller = new Antragssteller[] { as };
-		Object[] opArgs = new Object[] { antragssteller, sessionID };
+		Object[] opArgs = new Object[] { as, sessionID };
 		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs,
 				null, false, null);
 
