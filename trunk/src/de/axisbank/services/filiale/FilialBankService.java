@@ -138,24 +138,24 @@ public class FilialBankService {
 		return asss;
 	}
 
-	public int[] updateAntragssteller(Antragssteller[] antragsssteller,
+	public int[] updateAntragssteller(Antragssteller antragsssteller,
 			Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
-		int[] updates = DB.update(antragsssteller);
-		for (Antragssteller ass : antragsssteller) {
-			DB.update(ass.getAusgaben());
-			DB.update(ass.getArbeitgeber());
-			DB.update(ass.getEinnahmen());
-			DB.update(ass.getKreditantraege());
-			DB.update(ass.getVersicherungen());
-			DB.update(ass.getKreditverbindlichkeiten());
-			for (Kreditantrag ka : ass.getKreditantraege()) {
+		int[] updates = DB.update(new DaoObject[]{antragsssteller});
+
+			DB.update(antragsssteller.getAusgaben());
+			DB.update(antragsssteller.getArbeitgeber());
+			DB.update(antragsssteller.getEinnahmen());
+			DB.update(antragsssteller.getKreditantraege());
+			DB.update(antragsssteller.getVersicherungen());
+			DB.update(antragsssteller.getKreditverbindlichkeiten());
+			for (Kreditantrag ka : antragsssteller.getKreditantraege()) {
 				DB.update(new DaoObject[] { ka.getAntragssteller_2() });
 				DB.update(new DaoObject[] { ka.getBerater() });
 			}
-		}
+		
 
 		SessionManagement.updateSession(sessionID);
 
