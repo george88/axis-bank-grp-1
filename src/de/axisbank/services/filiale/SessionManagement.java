@@ -14,7 +14,6 @@ public class SessionManagement {
 		while (checkSession(sessionID) != null) {
 			sessionID = random.nextLong();
 		}
-
 		sessions.put(sessionID, new Session(username, sessionID));
 		System.out.println("Session " + sessionID + " vom Benutzer " + username
 				+ " wurde erstellt");

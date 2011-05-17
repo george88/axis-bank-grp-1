@@ -38,7 +38,6 @@ public class Session implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		delay--;
-		System.out.println("Session " + sessionID + ": " + delay);
 		if (delay <= 0) {
 			System.out.println("Die Session mit der ID " + getSessionID()
 					+ " wird gelöscht!");
