@@ -79,11 +79,11 @@ public class User extends DaoObject {
 		this.nachname = nachname;
 	}
 
-	public String getGebDatum() {
+	public String getGebDatum_dt() {
 		return gebDatum;
 	}
 
-	public void setGebDatum(String gebDatum) {
+	public void setGebDatum_dt(String gebDatum) {
 		this.gebDatum = gebDatum;
 	}
 

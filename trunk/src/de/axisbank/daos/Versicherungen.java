@@ -15,10 +15,10 @@ public class Versicherungen extends DaoObject {
 		setReferenzIdName("idAntragssteller");
 	}
 
-	public Versicherungen(int idVersicherungen) {
+	public Versicherungen(int idAntragssteller) {
 		super();
 		setReferenzIdName("idAntragssteller");
-		setReferenzId(idVersicherungen);
+		setReferenzId(idAntragssteller);
 	}
 
 	public Versicherungen(String versArt, String versGesellschaft,

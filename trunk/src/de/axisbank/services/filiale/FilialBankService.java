@@ -1,5 +1,7 @@
 package de.axisbank.services.filiale;
 
+import org.apache.log4j.Logger;
+
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
@@ -8,13 +10,13 @@ import de.axisbank.daos.Einnahmen;
 import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.Kreditverbindlichkeiten;
 import de.axisbank.daos.User;
+import de.axisbank.daos.Versicherungen;
 import de.axisbank.datenbank.DB;
 import de.axisbank.services.Tilgungsplan;
 
 public class FilialBankService {
 
 	public FilialBankService() {
-
 	}
 
 	public Long login(String benutzername, String passwort) {
@@ -25,7 +27,7 @@ public class FilialBankService {
 		Long sessionID = -1L;
 		if (users != null)
 			if (users.length == 1)
-				if (((User[]) DB.select(tmpUser))[0] != null) {
+				if ((users)[0] != null) {
 					User user = users[0];
 					User updateuser = new User();
 					updateuser.setId(user.getId());
@@ -110,6 +112,8 @@ public class FilialBankService {
 						.getId())));
 				ass.setKreditantraege((Kreditantrag[]) DB
 						.select(new Kreditantrag(ass.getId())));
+				ass.setVersicherungen((Versicherungen[]) DB
+						.select(new Versicherungen(ass.getId())));
 				for (Kreditantrag ka : ass.getKreditantraege()) {
 					try {
 						Antragssteller a = new Antragssteller();
