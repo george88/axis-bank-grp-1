@@ -24,7 +24,9 @@ import org.junit.Test;
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.DaoObject;
+import de.axisbank.daos.Einnahmen;
 import de.axisbank.daos.Kreditantrag;
+import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.filiale.FilialBankService;
 
 public class FilialBankServiceTest {
@@ -90,6 +92,12 @@ public class FilialBankServiceTest {
 	@Test
 	public void testGetAntragsteller() throws AxisFault {
 
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+
 		ServiceClient sender = getServiceClient(0);
 
 		// start getAntragsteller
@@ -142,6 +150,36 @@ public class FilialBankServiceTest {
 						System.out.println("");
 					}
 				}
+				if (as.getEinnahmen() != null) {
+
+					System.out.println("\n\n" + as.getEinnahmen().length
+							+ "Einnahmen:\n");
+					for (Einnahmen e : as.getEinnahmen()) {
+						System.out.println("");
+						System.out.println("Art der Einnahme:" + e.getArt());
+
+						System.out.println("Betrag:" + e.getBetrag());
+
+						System.out.println("");
+					}
+				}
+				if (as.getVersicherungen() != null) {
+
+					System.out.println("\n\n" + as.getVersicherungen().length
+							+ "Versicherungen:\n");
+					for (Versicherungen e : as.getVersicherungen()) {
+						System.out.println("");
+						System.out.println("Art der Versicherunge:"
+								+ e.getVersArt());
+						System.out.println("Name der Versicherunge:"
+								+ e.getVersGesellschaft());
+
+						System.out.println("Monatlicher Betrag:"
+								+ e.getMtlBeitrag());
+
+						System.out.println("");
+					}
+				}
 				System.out.println("Arbeitgeber:");
 				for (Arbeitgeber ag : as.getArbeitgeber())
 					System.out.println(ag.getNameArbeitgeber());
@@ -160,7 +198,7 @@ public class FilialBankServiceTest {
 
 		Antragssteller as = new Antragssteller();
 		as.setId(1);
-		as.setGebDatum("12.12.2012");
+		as.setGebDatum_dt("12.12.2012");
 		System.out.println(sessionID);
 
 		Antragssteller[] antragssteller = new Antragssteller[] { as };
