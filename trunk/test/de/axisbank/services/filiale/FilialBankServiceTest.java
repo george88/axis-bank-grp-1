@@ -34,6 +34,7 @@ public class FilialBankServiceTest {
 	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
 
 	private static long sessionID;
+	private static Antragssteller antragssteller;
 
 	private static ServiceClient getServiceClient(int nr) throws AxisFault {
 		ServiceClient sc = null;
@@ -122,6 +123,8 @@ public class FilialBankServiceTest {
 
 		if (result != null && result.length > 0) {
 			Antragssteller[] antragsteller = (Antragssteller[]) result[0];
+			antragssteller = ((Antragssteller[]) result[0])[0];
+
 			for (Antragssteller as : antragsteller) {
 				System.out.println("Anrede:" + as.getAnrede());
 				System.out.println("Vorname:" + as.getVorname());
@@ -196,8 +199,7 @@ public class FilialBankServiceTest {
 		QName opGetAntragsteller = new QName(
 				"http://filiale.services.axisbank.de", "updateAntragssteller");
 
-		Antragssteller as = new Antragssteller();
-		as.setId(1);
+		Antragssteller as = antragssteller;
 		as.setGebDatum_dt("12.12.2012");
 		System.out.println(sessionID);
 
