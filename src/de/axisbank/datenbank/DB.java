@@ -451,9 +451,18 @@ class MySqlQueryFactory {
 								where += "`" + mn.substring(3).toLowerCase()
 										+ "` = " + ((Double) obj).doubleValue()
 										+ " AND ";
-							} else if (obj instanceof String)
-								where += "`" + mn.substring(3).toLowerCase()
-										+ "` = '" + obj.toString() + "' AND ";
+							} else if (obj instanceof String) {
+								if (mn.substring(3).endsWith("_dt")) {
+									where += "`"
+											+ mn.substring(3, mn.indexOf("_dt"))
+													.toLowerCase() + "` = '"
+											+ obj.toString() + "' AND ";
+								} else
+									where += "`"
+											+ mn.substring(3).toLowerCase()
+											+ "` = '" + obj.toString()
+											+ "' AND ";
+							}
 						}
 					}
 				}
