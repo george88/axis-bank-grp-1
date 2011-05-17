@@ -15,7 +15,6 @@ import java.util.Properties;
 import java.util.Vector;
 
 import de.axisbank.daos.DaoObject;
-import de.axisbank.tools.Konfiguration;
 
 public class DB {
 
@@ -46,7 +45,7 @@ public class DB {
 	private final static String DB_NAME = "/axisbank";
 	private final static String USER_NAME = "root";// Konfiguration
 	// .readKonfiguration(Konfiguration.DB_USER);
-	private final static String PASSWORD = "d3v3l0p3rs";// Konfiguration
+	private final static String PASSWORD = "";// Konfiguration
 	// .readKonfiguration(Konfiguration.DB_PASSWORT);
 	protected final static String Table_Prefix = "";
 	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
