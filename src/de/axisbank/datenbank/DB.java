@@ -460,7 +460,7 @@ class MySqlQueryFactory {
 									where += "`"
 											+ mn.substring(3).toLowerCase()
 											+ "` like '" + obj.toString()
-											+ "%' AND ";
+											+ "' AND ";
 							}
 						}
 					}
