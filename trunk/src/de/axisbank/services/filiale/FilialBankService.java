@@ -98,8 +98,8 @@ public class FilialBankService {
 		}
 
 		Antragssteller as = new Antragssteller();
-		as.setVorname(vorname);
-		as.setNachname(nachname);
+		as.setVorname(vorname + "%");
+		as.setNachname(nachname + "%");
 		as.setGebDatum_dt(gebDatum);
 		as.setHauptGirokonto(hauptGirokonto);
 		Antragssteller[] asss = (Antragssteller[]) DB.select(as);
@@ -143,19 +143,18 @@ public class FilialBankService {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
-		int[] updates = DB.update(new DaoObject[]{antragsssteller});
+		int[] updates = DB.update(new DaoObject[] { antragsssteller });
 
-			DB.update(antragsssteller.getAusgaben());
-			DB.update(antragsssteller.getArbeitgeber());
-			DB.update(antragsssteller.getEinnahmen());
-			DB.update(antragsssteller.getKreditantraege());
-			DB.update(antragsssteller.getVersicherungen());
-			DB.update(antragsssteller.getKreditverbindlichkeiten());
-			for (Kreditantrag ka : antragsssteller.getKreditantraege()) {
-				DB.update(new DaoObject[] { ka.getAntragssteller_2() });
-				DB.update(new DaoObject[] { ka.getBerater() });
-			}
-		
+		DB.update(antragsssteller.getAusgaben());
+		DB.update(antragsssteller.getArbeitgeber());
+		DB.update(antragsssteller.getEinnahmen());
+		DB.update(antragsssteller.getKreditantraege());
+		DB.update(antragsssteller.getVersicherungen());
+		DB.update(antragsssteller.getKreditverbindlichkeiten());
+		for (Kreditantrag ka : antragsssteller.getKreditantraege()) {
+			DB.update(new DaoObject[] { ka.getAntragssteller_2() });
+			DB.update(new DaoObject[] { ka.getBerater() });
+		}
 
 		SessionManagement.updateSession(sessionID);
 

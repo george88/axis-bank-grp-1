@@ -105,8 +105,8 @@ public class FilialBankServiceTest {
 		QName opGetAntragsteller = new QName(
 				"http://filiale.services.axisbank.de", "getAntragssteller");
 
-		String vorname = "Daniel";
-		String nachname = "Schmitz";
+		String vorname = "Da";
+		String nachname = "Schmi";
 		String gebDatum = null;
 		int hauptGirokonto = -1;
 		System.out.println(sessionID);
