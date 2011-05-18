@@ -45,7 +45,7 @@ public class DB {
 	private final static String DB_NAME = "/axisbank";
 	private final static String USER_NAME = "root";// Konfiguration
 	// .readKonfiguration(Konfiguration.DB_USER);
-	private final static String PASSWORD = "";// Konfiguration
+	private final static String PASSWORD = "d3v3l0p3rs";// Konfiguration
 	// .readKonfiguration(Konfiguration.DB_PASSWORT);
 	protected final static String Table_Prefix = "";
 	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
@@ -459,8 +459,8 @@ class MySqlQueryFactory {
 								} else
 									where += "`"
 											+ mn.substring(3).toLowerCase()
-											+ "` = '" + obj.toString()
-											+ "' AND ";
+											+ "` like '" + obj.toString()
+											+ "%' AND ";
 							}
 						}
 					}
