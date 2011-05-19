@@ -1,7 +1,5 @@
 package de.axisbank.services.filiale;
 
-import org.apache.log4j.Logger;
-
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
@@ -57,7 +55,8 @@ public class FilialBankService {
 				updateuser.setPasswort(null);
 				updateuser.setLetzterLogin(-1L);
 				int[] e = DB.update(new DaoObject[] { updateuser });
-				return e[0] == 1;
+				if (e != null && e.length > 0)
+					return e[0] == 1;
 			}
 		return false;
 	}
@@ -138,12 +137,12 @@ public class FilialBankService {
 		return asss;
 	}
 
-	public int[] updateAntragssteller(Antragssteller antragsssteller,
+	public int updateAntragssteller(Antragssteller antragsssteller,
 			Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
-			return null;
+			return -1;
 
-		int[] updates = DB.update(new DaoObject[] { antragsssteller });
+		int updates = DB.update(new DaoObject[] { antragsssteller })[0];
 
 		DB.update(antragsssteller.getAusgaben());
 		DB.update(antragsssteller.getArbeitgeber());
