@@ -10,6 +10,8 @@ import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
+import junit.framework.TestCase;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
@@ -29,7 +31,7 @@ import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.filiale.FilialBankService;
 
-public class FilialBankServiceTest {
+public class FilialBankServiceTest extends TestCase {
 
 	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
 
@@ -92,12 +94,6 @@ public class FilialBankServiceTest {
 
 	@Test
 	public void testGetAntragsteller() throws AxisFault {
-
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
 
 		ServiceClient sender = getServiceClient(0);
 
@@ -188,7 +184,6 @@ public class FilialBankServiceTest {
 					System.out.println(ag.getNameArbeitgeber());
 			}
 		}
-
 	}
 
 	@Test
@@ -209,14 +204,11 @@ public class FilialBankServiceTest {
 
 		OMElement response = sender.sendReceive(request);
 
-		Class<?>[] returnTypes = new Class[] { int[].class };
+		Class<?>[] returnTypes = new Class[] { int.class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
-		int[] results = (int[]) result[0];
-		for (int i : results) {
-			System.out.println(i);
-		}
-
+		int results = (Integer) result[0];
+		System.out.println(results + " Datensatz/Datensätze geupdated");
 	}
 
 	@Test
@@ -235,6 +227,7 @@ public class FilialBankServiceTest {
 		Class<?>[] returnTypes = new Class[] { boolean.class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes,
 				new DefaultObjectSupplier());
+		System.out.println("Logoff( " + sessionID + " ):" + result[0]);
 		assertEquals("LogoffReturnValue", true, result[0]);
 	}
 }
