@@ -27,8 +27,7 @@ public class User extends DaoObject {
 		setReferenzId(idUser);
 	}
 
-	public User(String benutzername, String passwort, int status,
-			long letzterLogin, String vorname, String nachname, String gebDatum) {
+	public User(String benutzername, String passwort, int status, long letzterLogin, String vorname, String nachname, String gebDatum) {
 		super();
 		this.benutzername = benutzername;
 		this.passwort = passwort;

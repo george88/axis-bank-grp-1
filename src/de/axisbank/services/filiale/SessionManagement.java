@@ -15,8 +15,7 @@ public class SessionManagement {
 			sessionID = random.nextLong();
 		}
 		sessions.put(sessionID, new Session(username, sessionID));
-		System.out.println("Session " + sessionID + " vom Benutzer " + username
-				+ " wurde erstellt");
+		System.out.println("Session " + sessionID + " vom Benutzer " + username + " wurde erstellt");
 		return sessionID;
 	}
 
@@ -29,8 +28,7 @@ public class SessionManagement {
 
 	public static String checkSession(Long sessionID) {
 		if (sessions.get(sessionID) != null) {
-			System.out.println("Noch " + sessions.get(sessionID).getDelayTime()
-					+ " Sekunden zum SessionDelete");
+			System.out.println("Noch " + sessions.get(sessionID).getDelayTime() + " Sekunden zum SessionDelete");
 			return sessions.get(sessionID).getUsername();
 		}
 		System.out.println("Session " + sessionID + " ungültig");

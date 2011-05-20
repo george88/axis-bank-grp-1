@@ -10,8 +10,7 @@ public class Kreditverbindlichkeiten extends DaoObject {
 
 	private double mtlRate = -1.0D;
 
-	public Kreditverbindlichkeiten(String kreditinstitut, double gesamtschuld,
-			double restSchuld, double mtlRate) {
+	public Kreditverbindlichkeiten(String kreditinstitut, double gesamtschuld, double restSchuld, double mtlRate) {
 		super();
 		this.kreditinstitut = kreditinstitut;
 		this.gesamtschuld = gesamtschuld;

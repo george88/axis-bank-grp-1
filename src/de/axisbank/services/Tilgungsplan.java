@@ -26,7 +26,6 @@ public class Tilgungsplan {
 		this.ratenHoehe = ratenHoehe;
 	}
 
-
 	public double getZinsSatz() {
 		return zinsSatz;
 	}

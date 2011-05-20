@@ -1,4 +1,5 @@
 package de.axisbank.services.web;
+
 /**
  * Diese Klasse definiert den Kreditwunsch des Kunden
  * 
@@ -8,7 +9,7 @@ package de.axisbank.services.web;
 
 public class KreditWunsch {
 
-	/**************************Variablen*************************************/
+	/************************** Variablen *************************************/
 	private double kreditHoehe;
 
 	private int laufzeit;
@@ -19,9 +20,8 @@ public class KreditWunsch {
 
 	private double gesamtBetrag;
 
-	/**************************Konstruktor*************************************/
-	public KreditWunsch(double kreditHoehe, int laufzeit, double monRate,
-			double letzteRate, double gesamtBetrag) {
+	/************************** Konstruktor *************************************/
+	public KreditWunsch(double kreditHoehe, int laufzeit, double monRate, double letzteRate, double gesamtBetrag) {
 		super();
 		this.kreditHoehe = kreditHoehe;
 		this.laufzeit = laufzeit;
@@ -33,8 +33,8 @@ public class KreditWunsch {
 	public KreditWunsch() {
 
 	}
-	
-	/*************************Getter/Setter************************************/
+
+	/************************* Getter/Setter ************************************/
 	public double getKreditHoehe() {
 		return kreditHoehe;
 	}

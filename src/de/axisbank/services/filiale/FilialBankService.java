@@ -36,8 +36,7 @@ public class FilialBankService {
 						sessionID = SessionManagement.addSession(benutzername);
 				}
 		String checkUser = SessionManagement.checkSession(sessionID);
-		return checkUser != null && checkUser.equals(benutzername) ? sessionID
-				: -1;
+		return checkUser != null && checkUser.equals(benutzername) ? sessionID : -1;
 	}
 
 	public boolean logoff(Long sessionID) {
@@ -68,8 +67,7 @@ public class FilialBankService {
 		return 0;
 	}
 
-	public Tilgungsplan getTilgungsPlan(double kreditHoehe, double ratenHoehe,
-			Long sessionID) {
+	public Tilgungsplan getTilgungsPlan(double kreditHoehe, double ratenHoehe, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
@@ -78,8 +76,7 @@ public class FilialBankService {
 		return new Tilgungsplan();
 	}
 
-	public Tilgungsplan getTilgungsPlan(double kreditHoehe, int laufzeitMonate,
-			Long sessionID) {
+	public Tilgungsplan getTilgungsPlan(double kreditHoehe, int laufzeitMonate, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
@@ -88,8 +85,7 @@ public class FilialBankService {
 		return new Tilgungsplan();
 	}
 
-	public Antragssteller[] getAntragssteller(String vorname, String nachname,
-			String gebDatum, int hauptGirokonto, Long sessionID) {
+	public Antragssteller[] getAntragssteller(String vorname, String nachname, String gebDatum, int hauptGirokonto, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null) {
 			return null;
 		}
@@ -103,14 +99,10 @@ public class FilialBankService {
 		if (asss != null)
 			for (Antragssteller ass : asss) {
 				ass.setAusgaben((Ausgaben[]) DB.select(new Ausgaben(ass.getId())));
-				ass.setArbeitgeber((Arbeitgeber[]) DB.select(new Arbeitgeber(
-						ass.getId())));
-				ass.setEinnahmen((Einnahmen[]) DB.select(new Einnahmen(ass
-						.getId())));
-				ass.setKreditantraege((Kreditantrag[]) DB
-						.select(new Kreditantrag(ass.getId())));
-				ass.setVersicherungen((Versicherungen[]) DB
-						.select(new Versicherungen(ass.getId())));
+				ass.setArbeitgeber((Arbeitgeber[]) DB.select(new Arbeitgeber(ass.getId())));
+				ass.setEinnahmen((Einnahmen[]) DB.select(new Einnahmen(ass.getId())));
+				ass.setKreditantraege((Kreditantrag[]) DB.select(new Kreditantrag(ass.getId())));
+				ass.setVersicherungen((Versicherungen[]) DB.select(new Versicherungen(ass.getId())));
 				for (Kreditantrag ka : ass.getKreditantraege()) {
 					try {
 						Antragssteller a = new Antragssteller();
@@ -128,15 +120,13 @@ public class FilialBankService {
 						ka.setBerater(null);
 					}
 				}
-				ass.setKreditverbindlichkeiten((Kreditverbindlichkeiten[]) DB
-						.select(new Kreditverbindlichkeiten(ass.getId())));
+				ass.setKreditverbindlichkeiten((Kreditverbindlichkeiten[]) DB.select(new Kreditverbindlichkeiten(ass.getId())));
 			}
 		SessionManagement.updateSession(sessionID);
 		return asss;
 	}
 
-	public boolean updateAntragssteller(Antragssteller antragsssteller,
-			Long sessionID) {
+	public boolean updateAntragssteller(Antragssteller antragsssteller, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
 

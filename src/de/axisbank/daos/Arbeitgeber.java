@@ -25,9 +25,7 @@ public class Arbeitgeber extends DaoObject {
 		setReferenzId(idArbeitgeber);
 	}
 
-	public Arbeitgeber(String nameArbeitgeber, String beschSeit,
-			String strArbeitgeber, String hnrArbeitgeber,
-			String plzArbeitgeber, String ortArbeitgeber) {
+	public Arbeitgeber(String nameArbeitgeber, String beschSeit, String strArbeitgeber, String hnrArbeitgeber, String plzArbeitgeber, String ortArbeitgeber) {
 		super();
 		this.nameArbeitgeber = nameArbeitgeber;
 		this.beschSeit = beschSeit;
