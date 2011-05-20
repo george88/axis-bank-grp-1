@@ -26,8 +26,7 @@ public class Session implements ActionListener {
 	}
 
 	public void updateTimer() {
-		System.out.println("Es wären noch " + delay
-				+ " Sekunden zum SessionDelete");
+		System.out.println("Es wären noch " + delay + " Sekunden zum SessionDelete");
 		delay = INITIAL_DELAY;
 	}
 
@@ -39,8 +38,7 @@ public class Session implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		delay--;
 		if (delay <= 0) {
-			System.out.println("Die Session mit der ID " + getSessionID()
-					+ " wird gelöscht!");
+			System.out.println("Die Session mit der ID " + getSessionID() + " wird gelöscht!");
 			timer.stop();
 			SessionManagement.deleteSession(getSessionID());
 		}

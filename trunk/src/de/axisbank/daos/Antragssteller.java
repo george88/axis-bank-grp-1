@@ -61,15 +61,9 @@ public class Antragssteller extends DaoObject {
 		setReferenzId(idAntragssteller);
 	}
 
-	public Antragssteller(String anrede, String titel, String vorname,
-			String nachname, String gebName, String gebOrt, String gebDatum,
-			String str, String hnr, String plz, String ort,
-			String wohnhaftSeit, String telefon, String email, String beruf,
-			int anzKinder, String familienstand, int hauptGirokonto,
-			Einnahmen[] einnahmen, Versicherungen[] versicherungen,
-			Ausgaben[] ausgaben, Arbeitgeber[] arbeitgeber,
-			Kreditverbindlichkeiten[] kreditverbindlichkeiten,
-			Kreditantrag[] kreditantraege) {
+	public Antragssteller(String anrede, String titel, String vorname, String nachname, String gebName, String gebOrt, String gebDatum, String str, String hnr, String plz, String ort,
+			String wohnhaftSeit, String telefon, String email, String beruf, int anzKinder, String familienstand, int hauptGirokonto, Einnahmen[] einnahmen, Versicherungen[] versicherungen,
+			Ausgaben[] ausgaben, Arbeitgeber[] arbeitgeber, Kreditverbindlichkeiten[] kreditverbindlichkeiten, Kreditantrag[] kreditantraege) {
 		super();
 		this.anrede = anrede;
 		this.titel = titel;
@@ -269,8 +263,7 @@ public class Antragssteller extends DaoObject {
 		return kreditverbindlichkeiten;
 	}
 
-	public void setKreditverbindlichkeiten(
-			Kreditverbindlichkeiten[] verbindlichkeiten) {
+	public void setKreditverbindlichkeiten(Kreditverbindlichkeiten[] verbindlichkeiten) {
 		this.kreditverbindlichkeiten = verbindlichkeiten;
 	}
 

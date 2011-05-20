@@ -21,8 +21,7 @@ public class Versicherungen extends DaoObject {
 		setReferenzId(idAntragssteller);
 	}
 
-	public Versicherungen(String versArt, String versGesellschaft,
-			double versSumme, double mtlBeitrag) {
+	public Versicherungen(String versArt, String versGesellschaft, double versSumme, double mtlBeitrag) {
 		super();
 		this.versArt = versArt;
 		this.versGesellschaft = versGesellschaft;
