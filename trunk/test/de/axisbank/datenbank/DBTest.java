@@ -34,11 +34,9 @@ public class DBTest {
 							try {
 								Object aa = m.invoke(as, new Object[] {});
 								if (aa instanceof Ausgaben[])
-									System.out.println(((Ausgaben[]) aa)[0]
-											.getBetrag());
+									System.out.println(((Ausgaben[]) aa)[0].getBetrag());
 								else
-									System.out.println(m.getName().substring(3)
-											+ " \t\t\t=\t " + aa);
+									System.out.println(m.getName().substring(3) + " \t\t\t=\t " + aa);
 							} catch (IllegalArgumentException e) {
 								e.printStackTrace();
 							} catch (IllegalAccessException e) {
