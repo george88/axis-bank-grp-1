@@ -92,10 +92,10 @@ public class WebBankService {
 					} else {
 						letzteRate = monRate;
 					}
-					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufZeit, monRate, letzteRate, gesamtBetrag)); // Objekt
-																																// dem
-																																// Vector
-																																// hinzufuegen
+					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufZeit, monRate, letzteRate, gesamtBetrag, ZINSSATZ)); // Objekt
+					// dem
+					// Vector
+					// hinzufuegen
 					kreditHoehe += haushaltsUeberschuss; // Naechste Kredithoehe
 				}
 				laufZeit++;// Laufzeit um einen Monat erhoehen
@@ -157,6 +157,7 @@ public class WebBankService {
 			kreditWunsch.setMonRate(monRate);
 			kreditWunsch.setLetzteRate(letzteRate);
 			kreditWunsch.setGesamtBetrag(gesamtBetrag);
+			kreditWunsch.setZinssatz(ZINSSATZ);
 		} else {
 			kreditWunsch = null; // leeres Objekt
 		}
