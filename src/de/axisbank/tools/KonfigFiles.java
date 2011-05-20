@@ -8,7 +8,7 @@ public class KonfigFiles {
 
 	public static final String DB_Konfiguration = "DB_Konfiguration";
 	private static final String fileType = ".properties";
-	private static final String konfigPath = "/konf/";
+	private static final String konfigPath = "/de/axisbank/konf/";
 	public static final String DBUSER = "DBUSER";
 	public static final String DBPASSWORD = "DBPASSWORD";
 	public static HashMap<String, String> props = new HashMap<String, String>();

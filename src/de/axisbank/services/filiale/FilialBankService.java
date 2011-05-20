@@ -54,9 +54,7 @@ public class FilialBankService {
 				updateuser.setStatus(0);
 				updateuser.setPasswort(null);
 				updateuser.setLetzterLogin(-1L);
-				int[] e = DB.update(new DaoObject[] { updateuser });
-				if (e != null && e.length > 0)
-					return e[0] == 1;
+				return DB.update(new DaoObject[] { updateuser });
 			}
 		return false;
 	}
@@ -137,26 +135,27 @@ public class FilialBankService {
 		return asss;
 	}
 
-	public int updateAntragssteller(Antragssteller antragsssteller,
+	public boolean updateAntragssteller(Antragssteller antragsssteller,
 			Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
-			return -1;
+			return false;
 
-		int updates = DB.update(new DaoObject[] { antragsssteller })[0];
+		boolean update = false;
+		update = DB.update(new DaoObject[] { antragsssteller });
 
-		DB.update(antragsssteller.getAusgaben());
-		DB.update(antragsssteller.getArbeitgeber());
-		DB.update(antragsssteller.getEinnahmen());
-		DB.update(antragsssteller.getKreditantraege());
-		DB.update(antragsssteller.getVersicherungen());
-		DB.update(antragsssteller.getKreditverbindlichkeiten());
+		update = DB.update(antragsssteller.getAusgaben());
+		update = DB.update(antragsssteller.getArbeitgeber());
+		update = DB.update(antragsssteller.getEinnahmen());
+		update = DB.update(antragsssteller.getKreditantraege());
+		update = DB.update(antragsssteller.getVersicherungen());
+		update = DB.update(antragsssteller.getKreditverbindlichkeiten());
 		for (Kreditantrag ka : antragsssteller.getKreditantraege()) {
-			DB.update(new DaoObject[] { ka.getAntragssteller_2() });
-			DB.update(new DaoObject[] { ka.getBerater() });
+			update = DB.update(new DaoObject[] { ka.getAntragssteller_2() });
+			update = DB.update(new DaoObject[] { ka.getBerater() });
 		}
 
 		SessionManagement.updateSession(sessionID);
 
-		return updates;
+		return update;
 	}
 }
