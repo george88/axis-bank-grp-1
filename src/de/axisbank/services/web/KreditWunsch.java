@@ -20,14 +20,17 @@ public class KreditWunsch {
 
 	private double gesamtBetrag;
 
+	private double zinssatz;
+
 	/************************** Konstruktor *************************************/
-	public KreditWunsch(double kreditHoehe, int laufzeit, double monRate, double letzteRate, double gesamtBetrag) {
+	public KreditWunsch(double kreditHoehe, int laufzeit, double monRate, double letzteRate, double gesamtBetrag, double zinssatz) {
 		super();
 		this.kreditHoehe = kreditHoehe;
 		this.laufzeit = laufzeit;
 		this.monRate = monRate;
 		this.letzteRate = letzteRate;
 		this.gesamtBetrag = gesamtBetrag;
+		this.zinssatz = zinssatz;
 	}
 
 	public KreditWunsch() {
@@ -73,5 +76,13 @@ public class KreditWunsch {
 
 	public void setGesamtBetrag(double gesamtBetrag) {
 		this.gesamtBetrag = gesamtBetrag;
+	}
+
+	public void setZinssatz(double zinssatz) {
+		this.zinssatz = zinssatz;
+	}
+
+	public double getZinssatz() {
+		return zinssatz;
 	}
 }
