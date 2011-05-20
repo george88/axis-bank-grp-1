@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Properties;
 import java.util.Vector;
 
-
 import de.axisbank.daos.DaoObject;
 import de.axisbank.tools.KonfigFiles;
 
@@ -23,7 +22,7 @@ public class DB {
 				daoObject, true);
 	}
 
-	public static int[] update(DaoObject[] daoObject) {
+	public static boolean update(DaoObject[] daoObject) {
 		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
 	}
 
@@ -221,27 +220,29 @@ public class DB {
 		return ds;
 	}
 
-	public int[] update(String[] updates, boolean hauptUpdate) {
+	public boolean update(String[] updates, boolean hauptUpdate) {
 		if (connection == null)
-			return null;
+			return false;
 
 		if (updates == null)
-			return null;
+			return false;
 
-		int[] counts = new int[updates.length];
+		boolean erfolg = false;
 		for (int i = 0; i < updates.length; i++) {
 			if (updates[i] != null)
 				try {
 					System.out.println("UPDATE: " + updates[i] + "\n\n");
 					Statement stmt = connection.createStatement();
-					counts[i] = stmt.executeUpdate(updates[i]);
+					int j = stmt.executeUpdate(updates[i]);
+					System.out.println(j + " Datensätze/Datensatz geändert.");
 				} catch (SQLException e) {
+					erfolg = false;
 					e.printStackTrace();
 				}
 		}
 		if (hauptUpdate)
 			closing();
-		return counts;
+		return erfolg;
 	}
 
 	public boolean[] insert(String[] insert, DaoObject daoObj[],
