@@ -72,15 +72,14 @@ public class FilialBankService {
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, String kreditBeginn, double zinsatzDifferenz, double ratenHoehe, int laufzeitMonate, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
-		if (zinsatzDifferenz > KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation)) {
-			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation);
-			System.out.println("MAX ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation));
-		} else if (zinsatzDifferenz < KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation)) {
-			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation);
-			System.out.println("MIN ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF, KonfigFiles.Konfiguration_Datei_Kalkulation));
+		if (zinsatzDifferenz > KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF)) {
+			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF);
+			System.out.println("MAX ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF));
+		} else if (zinsatzDifferenz < KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF)) {
+			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF);
+			System.out.println("MIN ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF));
 		}
-		Tilgungsplan tp = new Tilgungsplan(kreditHoehe, kreditBeginn, KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ, KonfigFiles.Konfiguration_Datei_Kalkulation) + zinsatzDifferenz,
-				ratenHoehe, laufzeitMonate, null);
+		Tilgungsplan tp = new Tilgungsplan(kreditHoehe, kreditBeginn, KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ) + zinsatzDifferenz, ratenHoehe, laufzeitMonate, null);
 		tp.setTilgungen(TilgungsPlanErsteller.erstelleTilgungsPlan(tp));
 		SessionManagement.updateSession(sessionID);
 
