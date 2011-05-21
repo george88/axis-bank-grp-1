@@ -19,6 +19,8 @@ public class KonfigFiles {
 	public static final String Kalkulation_MIN_KREDIT = "MIN_KREDIT";
 	public static final String Kalkulation_MAX_KREDIT = "MAX_KREDIT";
 	public static final String Kalkulation_ZINSSATZ = "ZINSSATZ";
+	public static final String Kalkulation_MAX_ZINSSATZDIF = "MAX_ZINSSATZDIF";
+	public static final String Kalkulation_MIN_ZINSSATZDIF = "MIN_ZINSSATZDIF";
 
 	public static HashMap<String, String> props = new HashMap<String, String>();
 

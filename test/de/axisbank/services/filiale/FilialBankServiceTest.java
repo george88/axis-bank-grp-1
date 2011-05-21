@@ -202,7 +202,7 @@ public class FilialBankServiceTest extends TestCase {
 
 		double kreditHoehe = 15000;
 		String kreditBeginn = "01.08.2011";
-		double zinsatzDifferenz = -0.39;
+		double zinsatzDifferenz = +0.639;
 		double ratenHoehe = 450.10;
 		int laufzeitMonate = -1;
 
@@ -232,7 +232,7 @@ public class FilialBankServiceTest extends TestCase {
 
 		kreditHoehe = 15000;
 		kreditBeginn = "01.08.2012";
-		zinsatzDifferenz = -0.39;
+		zinsatzDifferenz = -0.539;
 		ratenHoehe = -1;
 		laufzeitMonate = 36;
 
