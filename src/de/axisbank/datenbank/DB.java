@@ -40,8 +40,8 @@ public class DB {
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
 	private final static String PORT = ":3306";
 	private final static String DB_NAME = "/axisbank";
-	private final static String USER_NAME = KonfigFiles.getString(KonfigFiles.DB_USER, KonfigFiles.Konfiguration_Datei_DB);
-	private final static String PASSWORD = KonfigFiles.getString(KonfigFiles.DB_PASSWORD, KonfigFiles.Konfiguration_Datei_DB);
+	private final static String USER_NAME = KonfigFiles.getString(KonfigFiles.DB_USER);
+	private final static String PASSWORD = KonfigFiles.getString(KonfigFiles.DB_PASSWORD);
 	protected final static String Table_Prefix = "";
 	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
 

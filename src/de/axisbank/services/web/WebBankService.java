@@ -14,11 +14,11 @@ import de.axisbank.tools.KonfigFiles;
 public class WebBankService {
 	/************************** Konstanten *************************************/
 
-	private static final int MIN_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MIN_LAUFZEIT, KonfigFiles.Konfiguration_Datei_Kalkulation);
-	private static final int MAX_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MAX_LAUFZEIT, KonfigFiles.Konfiguration_Datei_Kalkulation);
-	private static final double MIN_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_KREDIT, KonfigFiles.Konfiguration_Datei_Kalkulation);;
-	private static final double MAX_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_KREDIT, KonfigFiles.Konfiguration_Datei_Kalkulation);;
-	private static final double ZINSSATZ = KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ, KonfigFiles.Konfiguration_Datei_Kalkulation);;
+	private static final int MIN_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MIN_LAUFZEIT);
+	private static final int MAX_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MAX_LAUFZEIT);
+	private static final double MIN_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_KREDIT);;
+	private static final double MAX_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_KREDIT);;
+	private static final double ZINSSATZ = KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ);;
 
 	/************************** Konstruktor *************************************/
 	public WebBankService() {
