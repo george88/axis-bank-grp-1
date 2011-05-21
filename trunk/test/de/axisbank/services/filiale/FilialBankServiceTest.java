@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
@@ -29,6 +30,8 @@ import de.axisbank.daos.DaoObject;
 import de.axisbank.daos.Einnahmen;
 import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.Versicherungen;
+import de.axisbank.services.Tilgung;
+import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
 
 public class FilialBankServiceTest extends TestCase {
@@ -184,10 +187,76 @@ public class FilialBankServiceTest extends TestCase {
 
 		OMElement response = sender.sendReceive(request);
 
-		Class<?>[] returnTypes = new Class[] { int.class };
+		Class<?>[] returnTypes = new Class[] { boolean.class };
 		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
-		int results = (Integer) result[0];
-		System.out.println(results + " Datensatz/Datensätze geupdated");
+		boolean results = (Boolean) result[0];
+		System.out.println(" Datensatz geupdated:" + results);
+	}
+
+	@Test
+	public void testGetTilgungsPlan() throws AxisFault {
+		ServiceClient sender = getServiceClient(0);
+
+		// start Login
+		QName opgetTilgungsPlan = new QName("http://filiale.services.axisbank.de", "getTilgungsPlan");
+
+		double kreditHoehe = 15000;
+		String kreditBeginn = "01.08.2011";
+		double zinsatzDifferenz = -0.39;
+		double ratenHoehe = 450.10;
+		int laufzeitMonate = -1;
+
+		Object[] opArgs = new Object[] { kreditHoehe, kreditBeginn, zinsatzDifferenz, ratenHoehe, laufzeitMonate, sessionID };
+		OMElement request = BeanUtil.getOMElement(opgetTilgungsPlan, opArgs, null, false, null);
+
+		OMElement response = sender.sendReceive(request);
+		Class<?>[] returnTypes = new Class[] { Tilgungsplan.class };
+		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+		DecimalFormat df = new DecimalFormat("#,###,###,##0.00");
+		if (result != null && result.length > 0) {
+			Tilgungsplan tp = (Tilgungsplan) result[0];
+			System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
+			System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
+			System.out.println("_____________________________________________________________________________________________________________");
+			double summeZinsAnteil = 0.;
+			double summeTilgung = 0.;
+			for (Tilgung t : tp.getTilgungen()) {
+				System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|" + df.format(t.getRate())
+						+ "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
+				summeZinsAnteil += t.getZinsAnteil();
+				summeTilgung += t.getTilgung();
+			}
+			System.out.println("_____________________________________________________________________________________________________________");
+			System.out.println("Summen:\t\t\t\t\t\t\t|" + summeZinsAnteil + "\t|" + df.format(summeTilgung));
+		}
+
+		kreditHoehe = 15000;
+		kreditBeginn = "01.08.2012";
+		zinsatzDifferenz = -0.39;
+		ratenHoehe = -1;
+		laufzeitMonate = 36;
+
+		opArgs = new Object[] { kreditHoehe, kreditBeginn, zinsatzDifferenz, ratenHoehe, laufzeitMonate, sessionID };
+		request = BeanUtil.getOMElement(opgetTilgungsPlan, opArgs, null, false, null);
+
+		response = sender.sendReceive(request);
+		result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+		if (result != null && result.length > 0) {
+			Tilgungsplan tp = (Tilgungsplan) result[0];
+			System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
+			System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
+			System.out.println("_____________________________________________________________________________________________________________");
+			double summeZinsAnteil = 0.;
+			double summeTilgung = 0.;
+			for (Tilgung t : tp.getTilgungen()) {
+				System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|" + df.format(t.getRate())
+						+ "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
+				summeZinsAnteil += t.getZinsAnteil();
+				summeTilgung += t.getTilgung();
+			}
+			System.out.println("_____________________________________________________________________________________________________________");
+			System.out.println("Summen:\t\t\t\t\t\t\t|" + summeZinsAnteil + "\t|" + df.format(summeTilgung));
+		}
 	}
 
 	@Test

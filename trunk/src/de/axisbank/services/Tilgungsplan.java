@@ -2,20 +2,54 @@ package de.axisbank.services;
 
 public class Tilgungsplan {
 
-	private int laufzeitMonate;
+	private double kreditHoehe;
+
+	private String kreditBeginn;
+
+	private double zinsatz;
 
 	private double ratenHoehe;
 
-	private double zinsSatz;
+	private int laufzeitMonate;
 
-	private double kredithoehe;
+	private Tilgung[] tilgungen;
 
-	public int getLaufzeitMonate() {
-		return laufzeitMonate;
+	public Tilgungsplan() {
+
 	}
 
-	public void setLaufzeitMonate(int laufzeitMonate) {
+	public Tilgungsplan(double kreditHoehe, String kreditBeginn, double zinsatz, double ratenHoehe, int laufzeitMonate, Tilgung[] tilgungen) {
+		super();
+		this.kreditHoehe = kreditHoehe;
+		this.kreditBeginn = kreditBeginn;
+		this.zinsatz = zinsatz;
+		this.ratenHoehe = ratenHoehe;
 		this.laufzeitMonate = laufzeitMonate;
+		this.tilgungen = tilgungen;
+	}
+
+	public double getKreditHoehe() {
+		return kreditHoehe;
+	}
+
+	public void setKreditHoehe(double kreditHoehe) {
+		this.kreditHoehe = kreditHoehe;
+	}
+
+	public String getKreditBeginn() {
+		return kreditBeginn;
+	}
+
+	public void setKreditBeginn(String kreditBeginn) {
+		this.kreditBeginn = kreditBeginn;
+	}
+
+	public double getZinsatz() {
+		return zinsatz;
+	}
+
+	public void setZinsatz(double zinsatz) {
+		this.zinsatz = zinsatz;
 	}
 
 	public double getRatenHoehe() {
@@ -26,22 +60,19 @@ public class Tilgungsplan {
 		this.ratenHoehe = ratenHoehe;
 	}
 
-	public double getZinsSatz() {
-		return zinsSatz;
+	public int getLaufzeitMonate() {
+		return laufzeitMonate;
 	}
 
-	public void setZinsSatz(double zinsSatz) {
-		this.zinsSatz = zinsSatz;
+	public void setLaufzeitMonate(int laufzeitMonate) {
+		this.laufzeitMonate = laufzeitMonate;
 	}
 
-	public double getKredithoehe() {
-		return kredithoehe;
+	public Tilgung[] getTilgungen() {
+		return tilgungen;
 	}
 
-	public void setKredithoehe(double kredithoehe) {
-		this.kredithoehe = kredithoehe;
-	}
-
-	public Tilgungsplan() {
+	public void setTilgungen(Tilgung[] tilgungen) {
+		this.tilgungen = tilgungen;
 	}
 }

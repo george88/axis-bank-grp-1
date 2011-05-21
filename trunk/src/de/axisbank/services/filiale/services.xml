@@ -9,7 +9,7 @@
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 
-	<operation name="getRueckzahlungsPlan">
+	<operation name="getTilgungsPlan">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 	

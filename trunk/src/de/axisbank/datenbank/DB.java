@@ -194,7 +194,7 @@ public class DB {
 		if (updates == null)
 			return false;
 
-		boolean erfolg = false;
+		boolean erfolg = true;
 		for (int i = 0; i < updates.length; i++) {
 			if (updates[i] != null)
 				try {
