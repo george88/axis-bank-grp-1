@@ -11,6 +11,8 @@ import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.datenbank.DB;
 import de.axisbank.services.Tilgungsplan;
+import de.axisbank.tools.KonfigFiles;
+import de.axisbank.tools.TilgungsPlanErsteller;
 
 public class FilialBankService {
 
@@ -67,22 +69,16 @@ public class FilialBankService {
 		return 0;
 	}
 
-	public Tilgungsplan getTilgungsPlan(double kreditHoehe, double ratenHoehe, Long sessionID) {
+	public Tilgungsplan getTilgungsPlan(double kreditHoehe, String kreditBeginn, double zinsatzDifferenz, double ratenHoehe, int laufzeitMonate, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
 
+		Tilgungsplan tp = new Tilgungsplan(kreditHoehe, kreditBeginn, KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ, KonfigFiles.Konfiguration_Datei_Kalkulation) + zinsatzDifferenz,
+				ratenHoehe, laufzeitMonate, null);
+		tp.setTilgungen(TilgungsPlanErsteller.erstelleTilgungsPlan(tp));
 		SessionManagement.updateSession(sessionID);
 
-		return new Tilgungsplan();
-	}
-
-	public Tilgungsplan getTilgungsPlan(double kreditHoehe, int laufzeitMonate, Long sessionID) {
-		if (SessionManagement.checkSession(sessionID) == null)
-			return null;
-
-		SessionManagement.updateSession(sessionID);
-
-		return new Tilgungsplan();
+		return tp;
 	}
 
 	public Antragssteller[] getAntragssteller(String vorname, String nachname, String gebDatum, int hauptGirokonto, Long sessionID) {
