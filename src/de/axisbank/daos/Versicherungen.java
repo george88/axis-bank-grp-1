@@ -12,13 +12,13 @@ public class Versicherungen extends DaoObject {
 
 	public Versicherungen() {
 		super();
-		setReferenzIdName("idAntragssteller");
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public Versicherungen(int idAntragssteller) {
 		super();
-		setReferenzIdName("idAntragssteller");
-		setReferenzId(idAntragssteller);
+		setReferenzIdNames(new String[] { "idAntragssteller" });
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
 	public Versicherungen(String versArt, String versGesellschaft, double versSumme, double mtlBeitrag) {
@@ -27,6 +27,7 @@ public class Versicherungen extends DaoObject {
 		this.versGesellschaft = versGesellschaft;
 		this.versSumme = versSumme;
 		this.mtlBeitrag = mtlBeitrag;
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public String getVersArt() {

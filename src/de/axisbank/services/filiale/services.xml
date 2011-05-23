@@ -30,5 +30,9 @@
 	<operation name="updateAntragssteller">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
+	
+	<operation name="insertAntragssteller">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
 
 </service>

@@ -52,13 +52,13 @@ public class Antragssteller extends DaoObject {
 
 	public Antragssteller() {
 		super();
-		setReferenzIdName("idAntragssteller_2");
+		setReferenzIdNames(new String[] { "idAntragssteller_2" });
 	}
 
-	public Antragssteller(int idAntragssteller) {
+	public Antragssteller(int idAntragssteller_2) {
 		super();
-		setReferenzIdName("idAntragssteller_2");
-		setReferenzId(idAntragssteller);
+		setReferenzIdNames(new String[] { "idAntragssteller_2" });
+		setReferenzIds(new int[] { idAntragssteller_2 });
 	}
 
 	public Antragssteller(String anrede, String titel, String vorname, String nachname, String gebName, String gebOrt, String gebDatum, String str, String hnr, String plz, String ort,
@@ -89,6 +89,7 @@ public class Antragssteller extends DaoObject {
 		this.arbeitgeber = arbeitgeber;
 		this.kreditverbindlichkeiten = kreditverbindlichkeiten;
 		this.setKreditantraege(kreditantraege);
+		setReferenzIdNames(new String[] { "idAntragssteller_2" });
 	}
 
 	public String getAnrede() {

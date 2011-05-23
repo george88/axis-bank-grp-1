@@ -25,8 +25,8 @@ public class DB {
 		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
 	}
 
-	public static boolean[] insert(DaoObject[] daoObject) {
-		return new DB().insert(MySqlQueryFactory.createInsert(daoObject), daoObject, true);
+	public static boolean insert(DaoObject[] daoObject) {
+		return new DB().insert(MySqlQueryFactory.createInsert(daoObject), true);
 	}
 
 	public DB() {
@@ -212,23 +212,26 @@ public class DB {
 		return erfolg;
 	}
 
-	public boolean[] insert(String[] insert, DaoObject daoObj[], boolean hauptInsert) {
+	public boolean insert(String[] inserts, boolean hauptInsert) {
 		if (connection == null)
-			return null;
+			return false;
 
-		if (insert == null || daoObj == null || ((daoObj != null && insert != null) && insert.length != daoObj.length))
-			return null;
+		if (inserts == null || (inserts != null && inserts.length < 1))
+			return false;
 
-		boolean[] success = new boolean[daoObj.length];
+		boolean success = true;
 		try {
-			for (int i = 0; i < insert.length; i++) {
+			for (int i = 0; i < inserts.length; i++) {
+				if (inserts[i] == null)
+					continue;
 				Statement stmt = connection.createStatement();
-				System.out.println("INSERT: " + insert[i] + "\n\n");
-				success[i] = stmt.execute(insert[i]);
+				System.out.println("INSERT: " + inserts[i] + "\n\n");
+				stmt.execute(inserts[i]);
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			success = false;
 		}
 		if (hauptInsert)
 			closing();
@@ -338,18 +341,53 @@ class MySqlQueryFactory {
 	protected static String[] createInsert(DaoObject[] daoObject) {
 		String[] inserts = new String[daoObject.length];
 		for (int i = 0; i < inserts.length; i++) {
+			if (daoObject[i].getId() > 0)
+				continue;
 			try {
 				String insert = "INSERT INTO " + DB.Table_Prefix + daoObject[i].getTableName() + "(";
-				Class<?> c = Class.forName(daoObject.getClass().getPackage().getName() + "." + daoObject[i].getTableName());
+				Class<?> c = Class.forName(daoObject[i].getClass().getPackage().getName() + "." + daoObject[i].getTableName());
+
 				Method[] ms = c.getDeclaredMethods();
 				String values = "";
 				String valueNames = "";
+				if (daoObject[i].getReferenzIdNames() != null && daoObject[i].getReferenzIdNames().length > 0 && daoObject[i].getReferenzIds() != null && daoObject[i].getReferenzIds().length > 0) {
+					for (int j = 0; j < daoObject[i].getReferenzIds().length; j++) {
+						valueNames += "`" + daoObject[i].getReferenzIdNames()[j] + "`, ";
+						values += "'" + daoObject[i].getReferenzIds()[j] + "', ";
+					}
+				}
 				for (Method m : ms) {
 					String mn = m.getName();
 					if (mn.startsWith("get")) {
-						if (m.getReturnType().isPrimitive()) {
-							valueNames += "`" + mn.substring(3) + "`, ";
-							values += "'" + m.invoke(daoObject[i], new Object[] {}).toString() + "', ";
+						Object obj = m.invoke(daoObject[i], new Object[] {});
+						if (obj != null) {
+							if (obj instanceof String) {
+								if (mn.substring(3).endsWith("_dt")) {
+									try {
+										String[] ds = obj.toString().split("\\.");
+										for (String s : ds)
+											System.out.println(s);
+										String d = ds[2] + "-" + ds[1] + "-" + ds[0];
+										valueNames += "`" + mn.substring(3, mn.indexOf("_dt")) + "`, ";
+										values += "'" + d + "', ";
+
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								} else {
+									valueNames += "`" + mn.substring(3) + "`, ";
+									values += "'" + obj.toString() + "', ";
+								}
+							} else if (obj instanceof Integer && ((Integer) obj) != -1) {
+								valueNames += "`" + mn.substring(3) + "`, ";
+								values += "'" + ((Integer) obj).intValue() + "', ";
+							} else if (obj instanceof Double && ((Double) obj) != -1.0D) {
+								valueNames += "`" + mn.substring(3) + "`, ";
+								values += "'" + ((Double) obj).doubleValue() + "', ";
+							} else if (obj instanceof Long && ((Long) obj) != -1L) {
+								valueNames += "`" + mn.substring(3) + "`, ";
+								values += "'" + ((Long) obj).longValue() + "', ";
+							}
 						}
 					}
 				}
@@ -362,15 +400,21 @@ class MySqlQueryFactory {
 					inserts[i] = null;
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+				inserts[i] = null;
 
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
+				inserts[i] = null;
+
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
+				inserts[i] = null;
+
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
-			}
+				inserts[i] = null;
 
+			}
 		}
 
 		return inserts;
@@ -384,7 +428,7 @@ class MySqlQueryFactory {
 			Class<?> c = Class.forName(daoObject.getClass().getPackage().getName() + "." + daoObject.getTableName());
 			Method[] ms = c.getDeclaredMethods();
 			int id = daoObject.getId();
-			if (id == 0) {
+			if (id < 0) {
 				for (Method m : ms) {
 					String mn = m.getName();
 					if (mn.startsWith("get")) {
@@ -421,9 +465,12 @@ class MySqlQueryFactory {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-		if (daoObject.getReferenzId() != 0 && daoObject.getReferenzIdName() != null)
-			where += "`" + daoObject.getReferenzIdName() + "` = '" + daoObject.getReferenzId() + "' AND ";
+		if (daoObject.getReferenzIdNames() != null && daoObject.getReferenzIdNames().length > 0 && daoObject.getReferenzIds() != null && daoObject.getReferenzIds().length > 0) {
+			for (int j = 0; j < daoObject.getReferenzIds().length; j++) {
+				where += "`" + daoObject.getReferenzIdNames()[j] + "` = '" + daoObject.getReferenzIds()[j] + "' AND ";
 
+			}
+		}
 		if (where.length() > 0) {
 			where = " WHERE " + where.substring(0, where.length() - 4);
 		}

@@ -8,19 +8,20 @@ public class Einnahmen extends DaoObject {
 
 	public Einnahmen(String art, double betrag) {
 		super();
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 		this.art = art;
 		this.betrag = betrag;
 	}
 
 	public Einnahmen() {
 		super();
-		setReferenzIdName("idAntragssteller");
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public Einnahmen(int idAntragssteller) {
 		super();
-		setReferenzIdName("idAntragssteller");
-		setReferenzId(idAntragssteller);
+		setReferenzIdNames(new String[] { "idAntragssteller" });
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
 	public void setArt(String art) {

@@ -26,13 +26,13 @@ public class Kreditantrag extends DaoObject {
 
 	public Kreditantrag() {
 		super();
-		setReferenzIdName("idAntragssteller");
+		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
 	}
 
 	public Kreditantrag(int idKreditantrag) {
 		super();
-		setReferenzIdName("idAntragssteller");
-		setReferenzId(idKreditantrag);
+		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
+		setReferenzIds(new int[] { idKreditantrag });
 	}
 
 	public Kreditantrag(User berater, String datum, String status, String filiale, double kreditWunsch, double ratenHoehe, int ratenAnzahl, Antragssteller antragssteller_2, String verhaeltnisZu_2) {
@@ -46,6 +46,7 @@ public class Kreditantrag extends DaoObject {
 		this.ratenAnzahl = ratenAnzahl;
 		this.setAntragssteller_2(antragssteller_2);
 		this.setVerhaeltnisZu_2(verhaeltnisZu_2);
+		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
 	}
 
 	public User getBerater() {

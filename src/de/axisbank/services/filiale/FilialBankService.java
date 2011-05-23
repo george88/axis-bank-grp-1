@@ -149,4 +149,56 @@ public class FilialBankService {
 
 		return update;
 	}
+
+	public boolean insertAntragssteller(Antragssteller antragsssteller, Long sessionID) {
+		if (SessionManagement.checkSession(sessionID) == null)
+			return false;
+
+		boolean insert = false;
+		insert = DB.insert(new DaoObject[] { antragsssteller });
+
+		Ausgaben[] ausgaben = antragsssteller.getAusgaben();
+		if (ausgaben != null)
+			for (Ausgaben a : ausgaben)
+				a.setReferenzIds(new int[] { antragsssteller.getId() });
+		insert = DB.insert(ausgaben);
+
+		Arbeitgeber[] arbeitgeber = antragsssteller.getArbeitgeber();
+		if (arbeitgeber != null)
+			for (Arbeitgeber a : arbeitgeber)
+				a.setReferenzIds(new int[] { antragsssteller.getId() });
+		insert = DB.insert(arbeitgeber);
+
+		Einnahmen[] einnahmen = antragsssteller.getEinnahmen();
+		if (einnahmen != null)
+			for (Einnahmen a : einnahmen) {
+				a.setReferenzIds(new int[] { antragsssteller.getId() });
+			}
+		insert = DB.insert(einnahmen);
+
+		Versicherungen[] versicherungen = antragsssteller.getVersicherungen();
+		if (versicherungen != null)
+			for (Versicherungen a : versicherungen)
+				a.setReferenzIds(new int[] { antragsssteller.getId() });
+		insert = DB.insert(versicherungen);
+
+		Kreditverbindlichkeiten[] kreditverbindlichkeiten = antragsssteller.getKreditverbindlichkeiten();
+		if (kreditverbindlichkeiten != null)
+			for (Kreditverbindlichkeiten a : kreditverbindlichkeiten)
+				a.setReferenzIds(new int[] { antragsssteller.getId() });
+		insert = DB.insert(kreditverbindlichkeiten);
+
+		Kreditantrag[] kreditantraege = antragsssteller.getKreditantraege();
+		if (kreditantraege != null)
+			for (Kreditantrag ka : kreditantraege) {
+				ka.setReferenzIds(new int[] { antragsssteller.getId() });
+				insert = DB.insert(new DaoObject[] { ka.getAntragssteller_2() });
+				// insert = DB.insert(new DaoObject[] { ka.getBerater() });
+			}
+		insert = DB.insert(kreditantraege);
+
+		SessionManagement.updateSession(sessionID);
+
+		return insert;
+	}
 }
