@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 public class DaoObject {
 
-	private int id;
+	private int id = -1;
 
-	private int referenzId;
+	private int[] referenzIds;
 
 	private String IdName;
 
-	private String referenzIdName;
+	private String[] referenzIdNames;
 
 	private String tableName;
 
@@ -53,19 +53,19 @@ public class DaoObject {
 		return IdName;
 	}
 
-	public void setReferenzId(int referenzId) {
-		this.referenzId = referenzId;
+	public void setReferenzIds(int[] referenzIds) {
+		this.referenzIds = referenzIds;
 	}
 
-	public int getReferenzId() {
-		return referenzId;
+	public int[] getReferenzIds() {
+		return referenzIds;
 	}
 
-	public void setReferenzIdName(String referenzIdName) {
-		this.referenzIdName = referenzIdName;
+	public void setReferenzIdNames(String[] referenzIdName) {
+		this.referenzIdNames = referenzIdName;
 	}
 
-	public String getReferenzIdName() {
-		return referenzIdName;
+	public String[] getReferenzIdNames() {
+		return referenzIdNames;
 	}
 }

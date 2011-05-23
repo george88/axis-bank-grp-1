@@ -16,17 +16,18 @@ public class Kreditverbindlichkeiten extends DaoObject {
 		this.gesamtschuld = gesamtschuld;
 		this.restSchuld = restSchuld;
 		this.mtlRate = mtlRate;
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public Kreditverbindlichkeiten() {
 		super();
-		setReferenzIdName("idAntragssteller");
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
-	public Kreditverbindlichkeiten(int idKreditverbindlichkeiten) {
+	public Kreditverbindlichkeiten(int idAntragssteller) {
 		super();
-		setReferenzIdName("idAntragssteller");
-		setReferenzId(idKreditverbindlichkeiten);
+		setReferenzIdNames(new String[] { "idAntragssteller" });
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
 	public String getKreditinstitut() {

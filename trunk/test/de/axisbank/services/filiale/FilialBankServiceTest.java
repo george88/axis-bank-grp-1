@@ -165,8 +165,9 @@ public class FilialBankServiceTest extends TestCase {
 					}
 				}
 				System.out.println("Arbeitgeber:");
-				for (Arbeitgeber ag : as.getArbeitgeber())
-					System.out.println(ag.getNameArbeitgeber());
+				if (as.getArbeitgeber() != null)
+					for (Arbeitgeber ag : as.getArbeitgeber())
+						System.out.println(ag.getNameArbeitgeber());
 			}
 		}
 	}
@@ -257,6 +258,29 @@ public class FilialBankServiceTest extends TestCase {
 			System.out.println("_____________________________________________________________________________________________________________");
 			System.out.println("Summen:\t\t\t\t\t\t\t|" + summeZinsAnteil + "\t|" + df.format(summeTilgung));
 		}
+	}
+
+	@Test
+	public void testInsertAntragsteller() throws AxisFault {
+		ServiceClient sender = getServiceClient(0);
+
+		// start getAntragsteller
+		QName opInsertAntragsteller = new QName("http://filiale.services.axisbank.de", "insertAntragssteller");
+
+		Antragssteller as = antragssteller;
+		as.setGebDatum_dt("12.12.2012");
+		System.out.println(sessionID);
+		as.setEinnahmen(new Einnahmen[] { new Einnahmen("Strichen", 5.99) });
+
+		Object[] opArgs = new Object[] { as, sessionID };
+		OMElement request = BeanUtil.getOMElement(opInsertAntragsteller, opArgs, null, false, null);
+
+		OMElement response = sender.sendReceive(request);
+
+		Class<?>[] returnTypes = new Class[] { boolean.class };
+		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+		boolean results = (Boolean) result[0];
+		System.out.println(" Datensatz inserted:" + results);
 	}
 
 	@Test

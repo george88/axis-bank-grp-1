@@ -16,13 +16,13 @@ public class Arbeitgeber extends DaoObject {
 
 	public Arbeitgeber() {
 		super();
-		setReferenzIdName("idAntragssteller");
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public Arbeitgeber(int idArbeitgeber) {
 		super();
-		setReferenzIdName("idAntragssteller");
-		setReferenzId(idArbeitgeber);
+		setReferenzIdNames(new String[] { "idAntragssteller" });
+		setReferenzIds(new int[] { idArbeitgeber });
 	}
 
 	public Arbeitgeber(String nameArbeitgeber, String beschSeit, String strArbeitgeber, String hnrArbeitgeber, String plzArbeitgeber, String ortArbeitgeber) {
@@ -33,6 +33,7 @@ public class Arbeitgeber extends DaoObject {
 		this.hnrArbeitgeber = hnrArbeitgeber;
 		this.plzArbeitgeber = plzArbeitgeber;
 		this.ortArbeitgeber = ortArbeitgeber;
+		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public String getNameArbeitgeber() {
