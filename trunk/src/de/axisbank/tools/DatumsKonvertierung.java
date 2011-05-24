@@ -83,8 +83,10 @@ public class DatumsKonvertierung {
 
 	public static String getNaechstenMonatsAnfang(String datum) {
 		int monat = -1;
+		int jahr = -1;
 		try {
 			monat = Integer.parseInt(datum.substring(3, 5));
+
 		} catch (Exception e) {
 			try {
 				monat = Integer.parseInt(datum.substring(4, 5));
@@ -92,9 +94,19 @@ public class DatumsKonvertierung {
 				monat = -1;
 			}
 		}
-		if (monat > 0) {
-			monat = monat < 12 ? ++monat : 1;
-			return "01." + (monat < 10 ? "0" + monat : monat) + datum.substring(5);
+		try {
+			jahr = Integer.parseInt(datum.substring(6));
+		} catch (Exception e) {
+		}
+
+		if (monat > 0 && jahr > 0) {
+			if (monat < 12)
+				monat++;
+			else {
+				monat = 1;
+				jahr++;
+			}
+			return "01." + (monat < 10 ? "0" + monat : monat) + "." + jahr;
 		}
 		return datum;
 	}
