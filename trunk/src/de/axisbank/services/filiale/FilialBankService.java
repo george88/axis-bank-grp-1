@@ -154,51 +154,53 @@ public class FilialBankService {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
 
-		boolean insert = false;
-		insert = DB.insert(new DaoObject[] { antragsssteller });
+		int[] ids;
+		ids = DB.insert(new DaoObject[] { antragsssteller });
+		if (ids != null && ids.length > 0 && ids[0] > 0)
+			antragsssteller.setId(ids[0]);
 
 		Ausgaben[] ausgaben = antragsssteller.getAusgaben();
 		if (ausgaben != null)
 			for (Ausgaben a : ausgaben)
 				a.setReferenzIds(new int[] { antragsssteller.getId() });
-		insert = DB.insert(ausgaben);
+		ids = DB.insert(ausgaben);
 
 		Arbeitgeber[] arbeitgeber = antragsssteller.getArbeitgeber();
 		if (arbeitgeber != null)
 			for (Arbeitgeber a : arbeitgeber)
 				a.setReferenzIds(new int[] { antragsssteller.getId() });
-		insert = DB.insert(arbeitgeber);
+		ids = DB.insert(arbeitgeber);
 
 		Einnahmen[] einnahmen = antragsssteller.getEinnahmen();
 		if (einnahmen != null)
 			for (Einnahmen a : einnahmen) {
 				a.setReferenzIds(new int[] { antragsssteller.getId() });
 			}
-		insert = DB.insert(einnahmen);
+		ids = DB.insert(einnahmen);
 
 		Versicherungen[] versicherungen = antragsssteller.getVersicherungen();
 		if (versicherungen != null)
 			for (Versicherungen a : versicherungen)
 				a.setReferenzIds(new int[] { antragsssteller.getId() });
-		insert = DB.insert(versicherungen);
+		ids = DB.insert(versicherungen);
 
 		Kreditverbindlichkeiten[] kreditverbindlichkeiten = antragsssteller.getKreditverbindlichkeiten();
 		if (kreditverbindlichkeiten != null)
 			for (Kreditverbindlichkeiten a : kreditverbindlichkeiten)
 				a.setReferenzIds(new int[] { antragsssteller.getId() });
-		insert = DB.insert(kreditverbindlichkeiten);
+		ids = DB.insert(kreditverbindlichkeiten);
 
 		Kreditantrag[] kreditantraege = antragsssteller.getKreditantraege();
 		if (kreditantraege != null)
 			for (Kreditantrag ka : kreditantraege) {
 				ka.setReferenzIds(new int[] { antragsssteller.getId() });
-				insert = DB.insert(new DaoObject[] { ka.getAntragssteller_2() });
+				ids = DB.insert(new DaoObject[] { ka.getAntragssteller_2() });
 				// insert = DB.insert(new DaoObject[] { ka.getBerater() });
 			}
-		insert = DB.insert(kreditantraege);
+		ids = DB.insert(kreditantraege);
 
 		SessionManagement.updateSession(sessionID);
 
-		return insert;
+		return true;
 	}
 }
