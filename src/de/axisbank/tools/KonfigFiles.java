@@ -11,6 +11,10 @@ public class KonfigFiles {
 
 	public static final String DB_USER = "DB_USER";
 	public static final String DB_PASSWORD = "DB_PASSWORD";
+	public static final String DB_HOST = "DB_HOST";
+	public static final String DB_NAME = "DB_NAME";
+	public static final String DB_PORT = "DB_PORT";
+	public static final String DB_TABLEPREFIX = "DB_TABLEPREFIX";
 
 	public static final String Kalkulation_MIN_LAUFZEIT = "Kalkulation_MIN_LAUFZEIT";
 	public static final String Kalkulation_MAX_LAUFZEIT = "Kalkulation_MAX_LAUFZEIT";

@@ -25,25 +25,24 @@ public class DB {
 		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
 	}
 
-	public static boolean insert(DaoObject[] daoObject) {
-		return new DB().insert(MySqlQueryFactory.createInsert(daoObject), true);
+	public static int[] insert(DaoObject[] daoObject) {
+		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
+		return new DB().insert(inserts, true);
 	}
 
 	public DB() {
-		lastAskedSubClasses.removeAllElements();
 		connecting();
 	}
 
 	private Connection connection = null;
 	private final static String URL = "jdbc:mysql:";
-	private final static String SERVER_NAME = "//localhost";
+	private final static String SERVER_NAME = "//" + KonfigFiles.getString(KonfigFiles.DB_HOST);
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
-	private final static String PORT = ":3306";
-	private final static String DB_NAME = "/axisbank";
+	private final static String PORT = ":" + KonfigFiles.getString(KonfigFiles.DB_PORT);
+	private final static String DB_NAME = "/" + KonfigFiles.getString(KonfigFiles.DB_NAME);
 	private final static String USER_NAME = KonfigFiles.getString(KonfigFiles.DB_USER);
 	private final static String PASSWORD = KonfigFiles.getString(KonfigFiles.DB_PASSWORD);
-	protected final static String Table_Prefix = "";
-	private static Vector<Class<?>> lastAskedSubClasses = new Vector<Class<?>>();
+	protected final static String Table_Prefix = KonfigFiles.getString(KonfigFiles.DB_TABLEPREFIX);
 
 	public Object select(String select, DaoObject daoObj, boolean hauptSelect) {
 		if (connection == null)
@@ -212,30 +211,39 @@ public class DB {
 		return erfolg;
 	}
 
-	public boolean insert(String[] inserts, boolean hauptInsert) {
+	public int[] insert(String[] inserts, boolean hauptInsert) {
 		if (connection == null)
-			return false;
+			return null;
 
 		if (inserts == null || (inserts != null && inserts.length < 1))
-			return false;
+			return null;
 
-		boolean success = true;
-		try {
-			for (int i = 0; i < inserts.length; i++) {
+		ResultSet rs = null;
+		int[] ids = new int[inserts.length];
+		for (int i = 0; i < inserts.length; i++) {
+			try {
 				if (inserts[i] == null)
 					continue;
 				Statement stmt = connection.createStatement();
 				System.out.println("INSERT: " + inserts[i] + "\n\n");
-				stmt.execute(inserts[i]);
-			}
+				stmt.executeUpdate(inserts[i], Statement.RETURN_GENERATED_KEYS);
+				ids[i] = -1;
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			success = false;
+				rs = stmt.getGeneratedKeys();
+
+				if (rs.next()) {
+					ids[i] = rs.getInt(1);
+				}
+				System.out.println("Resturn ID is: " + ids[i]);
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				ids[i] = -1;
+			}
 		}
 		if (hauptInsert)
 			closing();
-		return success;
+		return ids;
 	}
 
 	private void connecting() {
@@ -339,6 +347,9 @@ class MySqlQueryFactory {
 	}
 
 	protected static String[] createInsert(DaoObject[] daoObject) {
+		if (daoObject == null)
+			return null;
+
 		String[] inserts = new String[daoObject.length];
 		for (int i = 0; i < inserts.length; i++) {
 			if (daoObject[i].getId() > 0)

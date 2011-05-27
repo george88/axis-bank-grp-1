@@ -15,8 +15,7 @@
 	
 	<operation name="login">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
-	</operation>
-	
+	</operation>	
 	<operation name="logoff">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
@@ -30,9 +29,7 @@
 	<operation name="updateAntragssteller">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
-	
 	<operation name="insertAntragssteller">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
-
 </service>
