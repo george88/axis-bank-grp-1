@@ -2,11 +2,7 @@ package de.axisbank.services.filiale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.xml.namespace.QName;
@@ -23,12 +19,14 @@ import org.apache.axis2.engine.DefaultObjectSupplier;
 import org.apache.axis2.util.Loader;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.junit.experimental.results.ResultMatchers;
 
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.DaoObject;
 import de.axisbank.daos.Einnahmen;
 import de.axisbank.daos.Kreditantrag;
+import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.Tilgung;
 import de.axisbank.services.Tilgungsplan;
@@ -38,10 +36,10 @@ public class FilialBankServiceTest extends TestCase {
 
 	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
 
-	private static long sessionID;
-	private static Antragssteller antragssteller;
+	static long sessionID;
+	static Antragssteller antragssteller;
 
-	private static ServiceClient getServiceClient(int nr) throws AxisFault {
+	private ServiceClient getServiceClient(int nr) throws AxisFault {
 		ServiceClient sc = null;
 		if (senders.size() >= (nr + 1) && senders.get(nr) != null) {
 			sc = senders.get(nr);
@@ -49,7 +47,9 @@ public class FilialBankServiceTest extends TestCase {
 			while (senders.size() < (nr + 1)) {
 				ServiceClient s = new ServiceClient();
 				Options options = s.getOptions();
-				EndpointReference targetEPR = new EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
+				// EndpointReference targetEPR = new
+				// EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
+				EndpointReference targetEPR = new EndpointReference("http://japp.george4j.de/axis2/services/FilialBankService");
 				options.setTo(targetEPR);
 				// options.setManageSession(true);
 				senders.add(s);
@@ -60,13 +60,7 @@ public class FilialBankServiceTest extends TestCase {
 	}
 
 	@Test
-	public void testGetLiquidity() {
-
-	}
-
-	@Test
-	public void testGetRepaymentPlan() {
-		// fail("Not yet implemented");
+	public void testGetLiquidity() throws AxisFault {
 	}
 
 	@Test
@@ -99,8 +93,8 @@ public class FilialBankServiceTest extends TestCase {
 		// start getAntragsteller
 		QName opGetAntragsteller = new QName("http://filiale.services.axisbank.de", "getAntragssteller");
 
-		String vorname = "Da";
-		String nachname = "Schmi";
+		String vorname = "Daniel";
+		String nachname = "Schmitz";
 		String gebDatum = null;
 		int hauptGirokonto = -1;
 		System.out.println(sessionID);
@@ -114,7 +108,8 @@ public class FilialBankServiceTest extends TestCase {
 
 		if (result != null && result.length > 0) {
 			Antragssteller[] antragsteller = (Antragssteller[]) result[0];
-			antragssteller = ((Antragssteller[]) result[0])[0];
+			if (((Antragssteller[]) result[0]).length > 0)
+				antragssteller = ((Antragssteller[]) result[0])[0];
 
 			for (Antragssteller as : antragsteller) {
 				System.out.println("Anrede:" + as.getAnrede());
@@ -178,20 +173,21 @@ public class FilialBankServiceTest extends TestCase {
 
 		// start getAntragsteller
 		QName opGetAntragsteller = new QName("http://filiale.services.axisbank.de", "updateAntragssteller");
+		if (antragssteller != null) {
+			Antragssteller as = antragssteller;
+			as.setGebDatum_dt("12.12.2012");
+			System.out.println(sessionID);
 
-		Antragssteller as = antragssteller;
-		as.setGebDatum_dt("12.12.2012");
-		System.out.println(sessionID);
+			Object[] opArgs = new Object[] { as, sessionID };
+			OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs, null, false, null);
 
-		Object[] opArgs = new Object[] { as, sessionID };
-		OMElement request = BeanUtil.getOMElement(opGetAntragsteller, opArgs, null, false, null);
+			OMElement response = sender.sendReceive(request);
 
-		OMElement response = sender.sendReceive(request);
-
-		Class<?>[] returnTypes = new Class[] { boolean.class };
-		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
-		boolean results = (Boolean) result[0];
-		System.out.println(" Datensatz geupdated:" + results);
+			Class<?>[] returnTypes = new Class[] { boolean.class };
+			Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+			boolean results = (Boolean) result[0];
+			System.out.println(" Datensatz geupdated:" + results);
+		}
 	}
 
 	@Test
@@ -201,10 +197,10 @@ public class FilialBankServiceTest extends TestCase {
 		// start Login
 		QName opgetTilgungsPlan = new QName("http://filiale.services.axisbank.de", "getTilgungsPlan");
 
-		double kreditHoehe = 15000;
-		String kreditBeginn = "01.08.2011";
-		double zinsatzDifferenz = +0.639;
-		double ratenHoehe = 450.10;
+		double kreditHoehe = 12550;
+		String kreditBeginn = "01.02.2012";
+		double zinsatzDifferenz = +0.;
+		double ratenHoehe = 555;
 		int laufzeitMonate = -1;
 
 		Object[] opArgs = new Object[] { kreditHoehe, kreditBeginn, zinsatzDifferenz, ratenHoehe, laufzeitMonate, sessionID };
@@ -216,26 +212,30 @@ public class FilialBankServiceTest extends TestCase {
 		DecimalFormat df = new DecimalFormat("#,###,###,##0.00");
 		if (result != null && result.length > 0) {
 			Tilgungsplan tp = (Tilgungsplan) result[0];
-			System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
-			System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
-			System.out.println("_____________________________________________________________________________________________________________");
-			double summeZinsAnteil = 0.;
-			double summeTilgung = 0.;
-			for (Tilgung t : tp.getTilgungen()) {
-				System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|" + df.format(t.getRate())
-						+ "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
-				summeZinsAnteil += t.getZinsAnteil();
-				summeTilgung += t.getTilgung();
+			if (tp != null) {
+				System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
+				System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
+				System.out.println("_____________________________________________________________________________________________________________");
+				double summeZinsAnteil = 0.;
+				double summeTilgung = 0.;
+				double summeRaten = 0.;
+				for (Tilgung t : tp.getTilgungen()) {
+					System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|"
+							+ df.format(t.getRate()) + "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
+					summeZinsAnteil += t.getZinsAnteil();
+					summeTilgung += t.getTilgung();
+					summeRaten += t.getRate();
+				}
+				System.out.println("_____________________________________________________________________________________________________________");
+				System.out.println("Summen:\t\t\t\t\t|" + df.format(summeRaten) + "\t\t|" + df.format(summeZinsAnteil) + "\t|" + df.format(summeTilgung));
 			}
-			System.out.println("_____________________________________________________________________________________________________________");
-			System.out.println("Summen:\t\t\t\t\t\t\t|" + summeZinsAnteil + "\t|" + df.format(summeTilgung));
 		}
 
-		kreditHoehe = 15000;
-		kreditBeginn = "01.08.2012";
-		zinsatzDifferenz = -0.539;
+		kreditHoehe = 12550;
+		kreditBeginn = "01.02.2012";
+		zinsatzDifferenz = 0.;
 		ratenHoehe = -1;
-		laufzeitMonate = 36;
+		laufzeitMonate = 23;
 
 		opArgs = new Object[] { kreditHoehe, kreditBeginn, zinsatzDifferenz, ratenHoehe, laufzeitMonate, sessionID };
 		request = BeanUtil.getOMElement(opgetTilgungsPlan, opArgs, null, false, null);
@@ -244,19 +244,23 @@ public class FilialBankServiceTest extends TestCase {
 		result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
 		if (result != null && result.length > 0) {
 			Tilgungsplan tp = (Tilgungsplan) result[0];
-			System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
-			System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
-			System.out.println("_____________________________________________________________________________________________________________");
-			double summeZinsAnteil = 0.;
-			double summeTilgung = 0.;
-			for (Tilgung t : tp.getTilgungen()) {
-				System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|" + df.format(t.getRate())
-						+ "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
-				summeZinsAnteil += t.getZinsAnteil();
-				summeTilgung += t.getTilgung();
+			if (tp != null) {
+				System.out.println("Zinsatz liegt bei " + tp.getZinsatz() + "%");
+				System.out.println("Restschuld Anfang der Laufzeit\t\tRate\tZinsanteil\tTilgung\t\tRestschuld Ende der Laufzeit");
+				System.out.println("_____________________________________________________________________________________________________________");
+				double summeZinsAnteil = 0.;
+				double summeTilgung = 0.;
+				double summeRaten = 0.;
+				for (Tilgung t : tp.getTilgungen()) {
+					System.out.println(t.getStartDatum() + "\t|" + (t.getStartSchuld() > 1000 ? df.format(t.getStartSchuld()) : df.format(t.getStartSchuld()) + "\t") + "\t\t|"
+							+ df.format(t.getRate()) + "\t\t|" + df.format(t.getZinsAnteil()) + "\t|" + df.format(t.getTilgung()) + "\t\t|" + t.getEndDatum() + "\t|" + df.format(t.getEndSchuld()));
+					summeZinsAnteil += t.getZinsAnteil();
+					summeTilgung += t.getTilgung();
+					summeRaten += t.getRate();
+				}
+				System.out.println("_____________________________________________________________________________________________________________");
+				System.out.println("Summen:\t\t\t\t\t|" + df.format(summeRaten) + "\t\t|" + df.format(summeZinsAnteil) + "\t|" + df.format(summeTilgung));
 			}
-			System.out.println("_____________________________________________________________________________________________________________");
-			System.out.println("Summen:\t\t\t\t\t\t\t|" + summeZinsAnteil + "\t|" + df.format(summeTilgung));
 		}
 	}
 
@@ -268,23 +272,25 @@ public class FilialBankServiceTest extends TestCase {
 		QName opInsertAntragsteller = new QName("http://filiale.services.axisbank.de", "insertAntragssteller");
 
 		Antragssteller as = antragssteller;
-		as.setGebDatum_dt("12.12.2012");
-		System.out.println(sessionID);
-		as.setEinnahmen(new Einnahmen[] { new Einnahmen("Strichen", 5.99) });
+		if (as != null) {
+			as.setGebDatum_dt("12.12.2012");
+			System.out.println(sessionID);
+			as.setEinnahmen(new Einnahmen[] { new Einnahmen("Strichen", 5.99) });
 
-		Object[] opArgs = new Object[] { as, sessionID };
-		OMElement request = BeanUtil.getOMElement(opInsertAntragsteller, opArgs, null, false, null);
+			Object[] opArgs = new Object[] { as, sessionID };
+			OMElement request = BeanUtil.getOMElement(opInsertAntragsteller, opArgs, null, false, null);
 
-		OMElement response = sender.sendReceive(request);
+			OMElement response = sender.sendReceive(request);
 
-		Class<?>[] returnTypes = new Class[] { boolean.class };
-		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
-		boolean results = (Boolean) result[0];
-		System.out.println(" Datensatz inserted:" + results);
+			Class<?>[] returnTypes = new Class[] { boolean.class };
+			Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+			boolean results = (Boolean) result[0];
+			System.out.println(" Datensatz inserted:" + results);
+		}
 	}
 
 	@Test
-	public void testlogout() throws AxisFault {
+	public void testlogoff() throws AxisFault {
 		ServiceClient sender = getServiceClient(0);
 
 		// start Login
