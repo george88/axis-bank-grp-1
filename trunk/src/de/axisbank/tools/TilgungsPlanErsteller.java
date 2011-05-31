@@ -1,6 +1,9 @@
 package de.axisbank.tools;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Vector;
 
 import de.axisbank.services.Tilgung;
@@ -24,7 +27,8 @@ public class TilgungsPlanErsteller {
 			double tilgung = rate - zinsAnteil;
 			double endSchuld = startSchuld - tilgung;
 
-			tilgungen.add(new Tilgung(startDatum, startSchuld, rate, zinsAnteil, tilgung, endDatum, endSchuld));
+			tilgungen.add(new Tilgung(startDatum, startSchuld, rundeAufZweiNachKomma(rate), rundeAufZweiNachKomma(zinsAnteil), rundeAufZweiNachKomma(tilgung), endDatum,
+					rundeAufZweiNachKomma(endSchuld)));
 
 			while (endSchuld >= rate) {
 				startDatum = DatumsKonvertierung.getNaechstenMonatsAnfang(endDatum);
@@ -33,7 +37,8 @@ public class TilgungsPlanErsteller {
 				tilgung = (rate - zinsAnteil);
 				endSchuld = (startSchuld - tilgung);
 				endDatum = DatumsKonvertierung.getMonatsEnde(startDatum);
-				tilgungen.add(new Tilgung(startDatum, startSchuld, rate, zinsAnteil, tilgung, endDatum, endSchuld));
+				tilgungen.add(new Tilgung(startDatum, startSchuld, rundeAufZweiNachKomma(rate), rundeAufZweiNachKomma(zinsAnteil), rundeAufZweiNachKomma(tilgung), endDatum,
+						rundeAufZweiNachKomma(endSchuld)));
 			}
 			if (endSchuld > 0) {
 				startDatum = DatumsKonvertierung.getNaechstenMonatsAnfang(endDatum);
@@ -43,7 +48,8 @@ public class TilgungsPlanErsteller {
 				zinsAnteil = (startSchuld * (tp.getZinsatz() / 1200.));
 				rate = (tilgung + zinsAnteil);
 				endSchuld = (startSchuld - tilgung);
-				tilgungen.add(new Tilgung(startDatum, startSchuld, rate, zinsAnteil, tilgung, endDatum, endSchuld));
+				tilgungen.add(new Tilgung(startDatum, startSchuld, rundeAufZweiNachKomma(rate), rundeAufZweiNachKomma(zinsAnteil), rundeAufZweiNachKomma(tilgung), endDatum,
+						rundeAufZweiNachKomma(endSchuld)));
 			}
 
 		} else if (tp.getLaufzeitMonate() > 0 && tp.getRatenHoehe() < 0) {
@@ -63,7 +69,8 @@ public class TilgungsPlanErsteller {
 				tilgung = (rate - zinsAnteil);
 				endSchuld = (startSchuld - tilgung);
 				endDatum = DatumsKonvertierung.getMonatsEnde(startDatum);
-				tilgungen.add(new Tilgung(startDatum, startSchuld, rate, zinsAnteil, tilgung, endDatum, endSchuld));
+				tilgungen.add(new Tilgung(startDatum, startSchuld, rundeAufZweiNachKomma(rate), rundeAufZweiNachKomma(zinsAnteil), rundeAufZweiNachKomma(tilgung), endDatum,
+						rundeAufZweiNachKomma(endSchuld)));
 			}
 			if (endSchuld > 0) {
 				startDatum = DatumsKonvertierung.getNaechstenMonatsAnfang(endDatum);
@@ -73,7 +80,8 @@ public class TilgungsPlanErsteller {
 				zinsAnteil = (startSchuld * (tp.getZinsatz() / 1200.));
 				rate = (tilgung + zinsAnteil);
 				endSchuld = (startSchuld - tilgung);
-				tilgungen.add(new Tilgung(startDatum, startSchuld, rate, zinsAnteil, tilgung, endDatum, endSchuld));
+				tilgungen.add(new Tilgung(startDatum, startSchuld, rundeAufZweiNachKomma(rate), rundeAufZweiNachKomma(zinsAnteil), rundeAufZweiNachKomma(tilgung), endDatum,
+						rundeAufZweiNachKomma(endSchuld)));
 			}
 		}
 		Tilgung[] tilgs = new Tilgung[tilgungen.size()];
@@ -82,6 +90,7 @@ public class TilgungsPlanErsteller {
 	}
 
 	public static Double rundeAufZweiNachKomma(double zuRunden) {
-		return Math.round((zuRunden) * 100.) / 100.;
+		return Double.parseDouble(new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.ENGLISH)).format(zuRunden));
+		//		return Math.round((zuRunden) * 100.) / 100.;
 	}
 }
