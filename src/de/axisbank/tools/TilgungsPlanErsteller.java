@@ -2,7 +2,6 @@ package de.axisbank.tools;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -13,8 +12,6 @@ public class TilgungsPlanErsteller {
 
 	public static Tilgung[] erstelleTilgungsPlan(Tilgungsplan tp) {
 
-		NumberFormat nf = NumberFormat.getInstance();
-		nf.setMaximumFractionDigits(2);
 		Vector<Tilgung> tilgungen = new Vector<Tilgung>();
 
 		if (tp.getLaufzeitMonate() < 0 && tp.getRatenHoehe() > 0) {
@@ -90,7 +87,8 @@ public class TilgungsPlanErsteller {
 	}
 
 	public static Double rundeAufZweiNachKomma(double zuRunden) {
-		return Double.parseDouble(new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.ENGLISH)).format(zuRunden));
-		//		return Math.round((zuRunden) * 100.) / 100.;
+		//		return Double.parseDouble(new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.ENGLISH)).format(zuRunden));
+		//				return Math.round((zuRunden) * 100.) / 100.;
+		return zuRunden;
 	}
 }
