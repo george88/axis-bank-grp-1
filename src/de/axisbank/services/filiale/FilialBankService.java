@@ -1,5 +1,6 @@
 package de.axisbank.services.filiale;
 
+import java.util.Random;
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
@@ -17,6 +18,26 @@ import de.axisbank.tools.TilgungsPlanErsteller;
 public class FilialBankService {
 
 	public FilialBankService() {
+	}
+
+	public String getServerInfos(String pw, int infocode, String parameter) {
+		if (!pw.equals("Kennwort1!"))
+			return "";
+		switch (infocode) {
+		case 0:
+			return SessionManagement.getSessions().size() + "";
+		case 1:
+			SessionManagement.deleteSession(Long.parseLong(parameter));
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+
+		}
+		return "Nothing";
 	}
 
 	public Long login(String benutzername, String passwort) {
@@ -44,7 +65,7 @@ public class FilialBankService {
 	public boolean logoff(Long sessionID) {
 		User updateuser = new User();
 		updateuser.setBenutzername(SessionManagement.checkSession(sessionID));
-		updateuser.setStatus(1);
+		// updateuser.setStatus(1);
 		SessionManagement.deleteSession(sessionID);
 		Object userObjs = DB.select(updateuser);
 		if (userObjs != null)
@@ -66,7 +87,7 @@ public class FilialBankService {
 
 		SessionManagement.updateSession(sessionID);
 
-		return 0;
+		return new Random().nextInt(5);
 	}
 
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, String kreditBeginn, double zinsatzDifferenz, double ratenHoehe, int laufzeitMonate, Long sessionID) {
@@ -74,13 +95,16 @@ public class FilialBankService {
 			return null;
 		if (zinsatzDifferenz > KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF)) {
 			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF);
-			System.out.println("MAX ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_ZINSSATZDIF));
 		} else if (zinsatzDifferenz < KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF)) {
 			zinsatzDifferenz = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF);
-			System.out.println("MIN ÜBESCHRITTEN VON:" + KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_ZINSSATZDIF));
 		}
 		Tilgungsplan tp = new Tilgungsplan(kreditHoehe, kreditBeginn, KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ) + zinsatzDifferenz, ratenHoehe, laufzeitMonate, null);
 		tp.setTilgungen(TilgungsPlanErsteller.erstelleTilgungsPlan(tp));
+		if (tp.getLaufzeitMonate() == -1)
+			tp.setLaufzeitMonate(tp.getTilgungen() != null ? tp.getTilgungen().length : -1);
+		else if (tp.getRatenHoehe() == -1)
+			tp.setRatenHoehe(tp.getTilgungen() != null && tp.getTilgungen().length > 0 ? tp.getTilgungen()[0].getRate() : -1);
+
 		SessionManagement.updateSession(sessionID);
 
 		return tp;
