@@ -1,4 +1,4 @@
-<service name="FilialBankService"  scope="transportsession" >
+<service name="FilialBankService" >
 
 	<description>Ein Service um die Liquidität eines Kunden zu erörtern und einen Tilgungsplan zu erstellen</description>
 	<parameter name="ServiceClass" locked="false">
@@ -30,6 +30,9 @@
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 	<operation name="insertAntragssteller">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	<operation name="getServerInfos">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 </service>
