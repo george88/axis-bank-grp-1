@@ -8,6 +8,10 @@ public class SessionManagement {
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 	private static Random random = new Random();
 
+	public static HashMap<Long, Session> getSessions() {
+		return sessions;
+	}
+
 	public static Long addSession(String username) {
 		Long sessionID = -1L;
 		sessionID = random.nextLong();
