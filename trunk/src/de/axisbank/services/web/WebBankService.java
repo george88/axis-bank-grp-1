@@ -14,11 +14,16 @@ import de.axisbank.tools.KonfigFiles;
 public class WebBankService {
 	/************************** Konstanten *************************************/
 
-	private static final int MIN_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MIN_LAUFZEIT);
-	private static final int MAX_LAUFZEIT = KonfigFiles.getInt(KonfigFiles.Kalkulation_MAX_LAUFZEIT);
-	private static final double MIN_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MIN_KREDIT);;
-	private static final double MAX_KREDIT = KonfigFiles.getDouble(KonfigFiles.Kalkulation_MAX_KREDIT);;
-	private static final double ZINSSATZ = KonfigFiles.getDouble(KonfigFiles.Kalkulation_ZINSSATZ);;
+	private static final int MIN_LAUFZEIT = KonfigFiles
+			.getInt(KonfigFiles.Kalkulation_MIN_LAUFZEIT);
+	private static final int MAX_LAUFZEIT = KonfigFiles
+			.getInt(KonfigFiles.Kalkulation_MAX_LAUFZEIT);
+	private static final double MIN_KREDIT = KonfigFiles
+			.getDouble(KonfigFiles.Kalkulation_MIN_KREDIT);;
+	private static final double MAX_KREDIT = KonfigFiles
+			.getDouble(KonfigFiles.Kalkulation_MAX_KREDIT);;
+	private static final double ZINSSATZ = KonfigFiles
+			.getDouble(KonfigFiles.Kalkulation_ZINSSATZ);;
 
 	/************************** Konstruktor *************************************/
 	public WebBankService() {
@@ -92,7 +97,9 @@ public class WebBankService {
 					} else {
 						letzteRate = monRate;
 					}
-					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe), laufZeit, monRate, letzteRate, gesamtBetrag, ZINSSATZ)); // Objekt
+					bufferVector.add(new KreditWunsch(Math.rint(kreditHoehe),
+							laufZeit, monRate, letzteRate, gesamtBetrag,
+							ZINSSATZ)); // Objekt
 					// dem
 					// Vector
 					// hinzufuegen
@@ -125,7 +132,8 @@ public class WebBankService {
 	 *            - gewuenschte Laufzeit
 	 * @return KreditWunsch - ein Objekt mit dem Kreditwunsch
 	 */
-	public KreditWunsch getTilgungsPlanDurchBetragLaufzeit(double kreditHoehe, int laufZeit) {
+	public KreditWunsch getTilgungsPlanDurchBetragLaufzeit(double kreditHoehe,
+			int laufZeit) {
 		KreditWunsch kreditWunsch = new KreditWunsch();
 		double monZins = 0; // monatlicher Zins
 		double monRate = 0; // monatliche Rate
@@ -133,7 +141,8 @@ public class WebBankService {
 		double letzteRate = 0; // letze Rate des Kredites
 
 		// wird nur ausgefuehrt, wenn die uebergebenen Werte in Rahmen liegen
-		if (kreditHoehe >= MIN_KREDIT && kreditHoehe <= MAX_KREDIT && laufZeit >= MIN_LAUFZEIT && laufZeit <= MAX_LAUFZEIT) {
+		if (kreditHoehe >= MIN_KREDIT && kreditHoehe <= MAX_KREDIT
+				&& laufZeit >= MIN_LAUFZEIT && laufZeit <= MAX_LAUFZEIT) {
 			monZins = MonZins();// berechne monatlichen Zins
 			monRate = MonRate(kreditHoehe, monZins, laufZeit); // berechne
 																// monatl. Rate
@@ -190,9 +199,11 @@ public class WebBankService {
 	 * @return monRate - monatlicher Rate
 	 */
 	private double MonRate(double kreditHoehe, double monZins, int laufZeit) {
-		double monRate = (kreditHoehe * monZins * Math.pow((1 + monZins), laufZeit) / (-1 + Math.pow((1 + monZins), laufZeit))); // berechne
-																																	// monatl.
-																																	// Rate
+		double monRate = (kreditHoehe * monZins
+				* Math.pow((1 + monZins), laufZeit) / (-1 + Math.pow(
+				(1 + monZins), laufZeit))); // berechne
+											// monatl.
+											// Rate
 		return monRate;
 	}
 }
