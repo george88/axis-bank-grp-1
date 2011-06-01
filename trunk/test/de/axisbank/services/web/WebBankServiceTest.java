@@ -1,30 +1,43 @@
 package de.axisbank.services.web;
 
-import java.util.Vector;
+import junit.framework.TestCase;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
+import org.junit.Test;
 
-public class WebBankServiceTest {
-	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
+/**
+ * Testet die Klasse WebBankService <br>
+ * <br>
+ * <p>
+ * Test-Cases: <br>
+ * 1. Testen der Methode getTilgungsPlanDurchRate - uebergibt die Gewuenscht
+ * Rate und prueft die Rueckgabe<br>
+ * 2. Testen der Methode getTilgungsPlanDurchBetragLaufzeit - uebergibt
+ * Kredithoehe und Laufzeit und erwartet eine Kreditauskunft zu diesen Werten
+ * </p>
+ * 
+ * @author PrivateRyan
+ * 
+ */
+public class WebBankServiceTest extends TestCase {
 
-	private ServiceClient getServiceClient(int nr) throws AxisFault {
-		ServiceClient sc = null;
-		if (senders.size() >= (nr + 1) && senders.get(nr) != null) {
-			sc = senders.get(nr);
-		} else {
-			while (senders.size() < (nr + 1)) {
-				ServiceClient s = new ServiceClient();
-				Options options = s.getOptions();
-				EndpointReference targetEPR = new EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
-				options.setTo(targetEPR);
-				senders.add(s);
-			}
-			sc = senders.get(nr);
-		}
-		return sc;
+	WebBankService wbs = new WebBankService();
+
+	@Test
+	public void testGetTilgungsPlanDurchRate() {
+		int ueberschuss = 200;
+		KreditWunsch[] kw = wbs.getTilgungsPlanDurchRate(ueberschuss);
+		assertTrue(kw[0].getKreditHoehe() == 5000D
+				&& kw[0].getMonRate() <= (double) ueberschuss);
 	}
 
+	@Test
+	public void testGetTilgungsPlanDurchBetragLaufzeit() {
+		int laufZeit = 12;
+		double kreditHoehe = 10000;
+		KreditWunsch kw = wbs.getTilgungsPlanDurchBetragLaufzeit(kreditHoehe,
+				laufZeit);
+		assertTrue(kw.getKreditHoehe() == kreditHoehe
+				&& kw.getLaufzeit() == laufZeit
+				&& kw.getGesamtBetrag() > kreditHoehe);
+	}
 }
