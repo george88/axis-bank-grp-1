@@ -1,8 +1,5 @@
 package de.axisbank.tools;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import java.util.Vector;
 
 import de.axisbank.services.Tilgung;
@@ -10,6 +7,11 @@ import de.axisbank.services.Tilgungsplan;
 
 public class TilgungsPlanErsteller {
 
+	/**
+	 * 
+	 * @param tp
+	 * @return {@link Tilgungsplan} [ ]
+	 */
 	public static Tilgung[] erstelleTilgungsPlan(Tilgungsplan tp) {
 
 		Vector<Tilgung> tilgungen = new Vector<Tilgung>();
