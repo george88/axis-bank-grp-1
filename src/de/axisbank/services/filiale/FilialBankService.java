@@ -25,7 +25,13 @@ public class FilialBankService {
 			return "";
 		switch (infocode) {
 		case 0:
-			return SessionManagement.getSessions().size() + "";
+			String r = "";
+			r += "Anzahl der aktiven Sessions: " + SessionManagement.getSessions().size()
+					+ "\nsessionID\t\t|\tBenutzname\t\tRestzeit\n______________________________________________________________\n";
+			for (Long sessionID : SessionManagement.getSessions().keySet()) {
+				r += sessionID + "\t\t" + SessionManagement.getSessions().get(sessionID).getBenutzername() + "\t\t" + SessionManagement.getSessions().get(sessionID).getDelayTime() + "\n";
+			}
+			return r;
 		case 1:
 			SessionManagement.deleteSession(Long.parseLong(parameter));
 			break;
@@ -46,18 +52,22 @@ public class FilialBankService {
 		tmpUser.setPasswort(passwort);
 		User[] users = (User[]) DB.select(tmpUser);
 		Long sessionID = -1L;
-		if (users != null)
-			if (users.length == 1)
-				if ((users)[0] != null) {
-					User user = users[0];
-					User updateuser = new User();
-					updateuser.setId(user.getId());
-					updateuser.setStatus(1);
-					updateuser.setLetzterLogin(System.currentTimeMillis());
-					DB.update(new DaoObject[] { updateuser });
-					if (benutzername.equals(user.getBenutzername()))
-						sessionID = SessionManagement.addSession(benutzername);
-				}
+		if (users != null && users.length == 1 && (users)[0] != null) {
+			User user = users[0];
+			if (user.getStatus() == 0) {
+				User updateuser = new User();
+				updateuser.setId(user.getId());
+				updateuser.setStatus(1);
+				updateuser.setLetzterLogin(System.currentTimeMillis());
+				DB.update(new DaoObject[] { updateuser });
+			}
+			if (benutzername.equals(user.getBenutzername()))
+				if (SessionManagement.checkSession(benutzername) != -1) {
+					sessionID = SessionManagement.checkSession(benutzername);
+					Logging.logLine("Benutzer ist bereits angemeldet");
+				} else
+					sessionID = SessionManagement.addSession(benutzername);
+		}
 		String checkUser = SessionManagement.checkSession(sessionID);
 		return checkUser != null && checkUser.equals(benutzername) ? sessionID : -1;
 	}
@@ -242,7 +252,7 @@ public class FilialBankService {
 			for (Kreditantrag ka : kreditantraege) {
 				ka.setReferenzIds(new int[] { antragsssteller.getId() });
 				ids = DB.insert(new DaoObject[] { ka.getAntragssteller_2() });
-				// insert = DB.insert(new DaoObject[] { ka.getBerater() });
+				ids = DB.insert(new DaoObject[] { ka.getBerater() });
 			}
 		ids = DB.insert(kreditantraege);
 

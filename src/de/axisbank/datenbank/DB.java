@@ -527,9 +527,7 @@ class MySqlQueryFactory {
 			if (daoObject[i] != null) {
 				int id = daoObject[i].getId();
 				if (id > 0) {
-
 					deletes[i] = "DELETE  FROM " + DB.Table_Prefix + daoObject[i].getTableName() + " WHERE " + daoObject[i].getIdName() + " = " + id;
-
 				} else
 					deletes[i] = null;
 			} else
