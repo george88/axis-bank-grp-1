@@ -4,11 +4,13 @@ import java.text.DecimalFormat;
 import junit.framework.TestCase;
 import org.junit.Test;
 import de.axisbank.daos.Antragssteller;
+import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.Tilgung;
 import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
+import de.axisbank.tools.KonfigFiles;
 
 public class FilialBankServiceTest extends TestCase {
 
@@ -37,7 +39,7 @@ public class FilialBankServiceTest extends TestCase {
 		FilialBankService wbs = new FilialBankService();
 		long sessID = wbs.login("1", "1");
 		assertTrue("SessionId ist -1 --> Benutzer nicht vorhanden oder Datenbank nicht erreichbar", sessID != -1);
-
+		System.out.println("Benutzer angemeldet: SessionID:" + sessID);
 	}
 
 	@Test
@@ -84,10 +86,10 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testGetServerInfos() {
-
+		System.out.println("testGetServerInfos");
 		FilialBankService wbs = new FilialBankService();
 		String s = wbs.getServerInfos("Kennwort1!", 0, "");
-		System.out.println("ServerInfo: Aktive Sessions:" + s);
+		System.out.println(s);
 	}
 
 	@Test
@@ -231,9 +233,29 @@ public class FilialBankServiceTest extends TestCase {
 			}
 		}
 		wbs = new FilialBankService();
-		r = wbs.deleteAntragssteller(as, true, getSessionID());
+		r = wbs.deleteAntragssteller(as, false, getSessionID());
 		assertTrue("testantragssteller konnte nicht gelöscht werden", r);
 		System.out.println("Testantragssteller erfolgreich gelöscht.");
+	}
+
+	@Test
+	public void testInsertKreditantrag() {
+		System.out.println("Test InsertKreditantrag");
+		Kreditantrag ka = antragssteller.getKreditantraege()[0];
+		ka.setDatum_dt("12.12.2012");
+		ka.setFiliale("testFiliale");
+		ka.setKreditWunsch(222222);
+		ka.setId(-1);
+
+		FilialBankService wbs = new FilialBankService();
+		boolean r = wbs.insertKreditantrag(1, ka, getSessionID());
+		assertTrue("Kreditantrag wurde NICHT erfolgreich eingefügt ", r);
+		System.out.println("Kreditantrag erfolgreich eingefügt");
+		Antragssteller as = new Antragssteller();
+		as.setId(antragssteller.getId());
+		testGetAntragsteller();
+		as.setKreditantraege(new Kreditantrag[] { antragssteller.getKreditantraege()[antragssteller.getKreditantraege().length - 1] });
+		wbs.deleteAntragssteller(as, true, getSessionID());
 	}
 
 	@Test
