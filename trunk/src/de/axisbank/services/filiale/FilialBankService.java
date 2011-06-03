@@ -188,8 +188,10 @@ public class FilialBankService {
 	public boolean insertKreditantrag(int idAntragssteller, Kreditantrag kreditantrag, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
+		kreditantrag.setReferenzIds(new int[] { idAntragssteller });
 
-		if (DB.insert(new DaoObject[] { new Kreditantrag(idAntragssteller) }).length == 1)
+		kreditantrag.setId(-1);
+		if (DB.insert(new DaoObject[] { kreditantrag }).length == 1)
 			return true;
 		else
 			return false;
