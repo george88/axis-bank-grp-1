@@ -81,13 +81,15 @@ public class FilialBankService {
 		return false;
 	}
 
-	public int getLiquiditaet(Antragssteller antragsteller, Long sessionID) {
+	public boolean getLiquiditaet(double einnahmen, double ueberschuss, double rateKredit, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
-			return -1;
-
+			return false;
 		SessionManagement.updateSession(sessionID);
-
-		return new Random().nextInt(5);
+		
+		if((einnahmen / 2 > rateKredit) && ueberschuss > 1)
+			return true;
+		else
+			return false;
 	}
 
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, String kreditBeginn, double zinsatzDifferenz, double ratenHoehe, int laufzeitMonate, Long sessionID) {
