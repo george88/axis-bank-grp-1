@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import de.axisbank.tools.Logging;
+
 public class Session implements ActionListener {
 
 	/**
@@ -26,7 +28,7 @@ public class Session implements ActionListener {
 	}
 
 	public void updateTimer() {
-		System.out.println("Es wären noch " + delay + " Sekunden zum SessionDelete");
+		Logging.logLine("Es wären noch " + delay + " Sekunden zum SessionDelete");
 		delay = INITIAL_DELAY;
 	}
 
@@ -38,7 +40,7 @@ public class Session implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		delay--;
 		if (delay <= 0) {
-			System.out.println("Die Session mit der ID " + getSessionID() + " wird gelöscht!");
+			Logging.logLine("Die Session mit der ID " + getSessionID() + " wird gelöscht!");
 			timer.stop();
 			SessionManagement.deleteSession(getSessionID());
 		}

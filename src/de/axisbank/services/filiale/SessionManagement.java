@@ -3,6 +3,8 @@ package de.axisbank.services.filiale;
 import java.util.HashMap;
 import java.util.Random;
 
+import de.axisbank.tools.Logging;
+
 public class SessionManagement {
 
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();
@@ -19,23 +21,23 @@ public class SessionManagement {
 			sessionID = random.nextLong();
 		}
 		sessions.put(sessionID, new Session(username, sessionID));
-		System.out.println("Session " + sessionID + " vom Benutzer " + username + " wurde erstellt");
+		Logging.logLine("Session " + sessionID + " vom Benutzer " + username + " wurde erstellt");
 		return sessionID;
 	}
 
 	public static void updateSession(Long sessionID) {
 		if (sessions.get(sessionID) != null) {
-			System.out.println("Session " + sessionID + " wird verlängert");
+			Logging.logLine("Session " + sessionID + " wird verlängert");
 			sessions.get(sessionID).updateTimer();
 		}
 	}
 
 	public static String checkSession(Long sessionID) {
 		if (sessions.get(sessionID) != null) {
-			System.out.println("Noch " + sessions.get(sessionID).getDelayTime() + " Sekunden zum SessionDelete");
+			Logging.logLine("Noch " + sessions.get(sessionID).getDelayTime() + " Sekunden zum SessionDelete");
 			return sessions.get(sessionID).getUsername();
 		}
-		System.out.println("Session " + sessionID + " ungültig");
+		Logging.logLine("Session " + sessionID + " ungültig");
 
 		return null;
 	}
@@ -43,8 +45,8 @@ public class SessionManagement {
 	public static void deleteSession(Long sessionID) {
 		if (sessions.get(sessionID) != null) {
 			sessions.remove(sessionID);
-			System.out.print("Jetzt sollte sie geloescht sein:");
-			System.out.println(sessions.get(sessionID) == null);
+			Logging.log("Jetzt sollte sie geloescht sein:");
+			Logging.logLine(sessions.get(sessionID) == null);
 		}
 	}
 }

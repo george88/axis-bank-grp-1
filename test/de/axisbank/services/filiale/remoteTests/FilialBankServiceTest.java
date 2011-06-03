@@ -1,9 +1,9 @@
-package de.axisbank.services.filiale;
+package de.axisbank.services.filiale.remoteTests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.DecimalFormat;
-import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
@@ -16,14 +16,10 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.databinding.utils.BeanUtil;
 import org.apache.axis2.engine.DefaultObjectSupplier;
-import org.apache.axis2.util.Loader;
-import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
-import de.axisbank.daos.DaoObject;
 import de.axisbank.daos.Einnahmen;
 import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.User;
@@ -34,44 +30,41 @@ import de.axisbank.services.filiale.FilialBankService;
 
 public class FilialBankServiceTest extends TestCase {
 
-	private static Vector<ServiceClient> senders = new Vector<ServiceClient>();
+	private static ServiceClient sender;
 
 	static long sessionID;
 	static Antragssteller antragssteller;
 
-	private ServiceClient getServiceClient(int nr) throws AxisFault {
-		ServiceClient sc = null;
-		if (senders.size() >= (nr + 1) && senders.get(nr) != null) {
-			sc = senders.get(nr);
-		} else {
-			while (senders.size() < (nr + 1)) {
-				ServiceClient s = new ServiceClient();
-				Options options = s.getOptions();
-				// EndpointReference targetEPR = new
-				// EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
-				EndpointReference targetEPR = new EndpointReference("http://japp.george4j.de/axis2/services/FilialBankService");
-				options.setTo(targetEPR);
-				// options.setManageSession(true);
-				senders.add(s);
-			}
-			sc = senders.get(nr);
+	private ServiceClient getServiceClient() throws AxisFault {
+		if (sender == null) {
+			sender = new ServiceClient();
+			Options options = sender.getOptions();
+			EndpointReference targetEPR = new EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
+			// EndpointReference targetEPR = new
+			// EndpointReference("http://japp.george4j.de/axis2/services/FilialBankService");
+			options.setTo(targetEPR);
 		}
-		return sc;
+		return sender;
 	}
 
+	/**
+	 * Test der Methode " testLogin()".<br />
+	 * <br /><br />
+	 * Beschreibung der Methode : siehe {@link FilialBankService}
+	 * <br /><br />
+	 * Test - Cases : <br />
+	 * 1. Verbindung vorhanden<br/>
+	 * 2. Remotefunktion erreichbar<br />
+	 * 3. Login erfolgreich --> bei Erfolg SessionID({@link Long}) zurück, die nicht -1 ist <br />
+	 */
 	@Test
-	public void testGetLiquidity() throws AxisFault {
-	}
-
-	@Test
-	public void testlogin() throws AxisFault {
-		ServiceClient sender = getServiceClient(0);
-
+	public void testLogin() throws AxisFault {
+		ServiceClient sender = getServiceClient();
 		// start Login
 		QName opLogin = new QName("http://filiale.services.axisbank.de", "login");
 
-		String benutzername = "Test";
-		String passwort = "test";
+		String benutzername = "1";
+		String passwort = "1";
 		Object[] opArgs = new Object[] { benutzername, passwort };
 		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false, null);
 
@@ -80,15 +73,50 @@ public class FilialBankServiceTest extends TestCase {
 
 		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
 
-		System.out.println("SessionID=: " + result[0]);
+		System.out.println("SessionID =" + result[0]);
 		sessionID = (Long) result[0];
+		assertEquals("Es wurde ein Wert ungleich 0 erwartet", true, (Long) result[0] != -1);
 		// end Login
+	}
+
+	@Test
+	public void testgetUser() throws AxisFault {
+		ServiceClient sender = getServiceClient();
+		// start Login
+		QName opLogin = new QName("http://filiale.services.axisbank.de", "getUser");
+
+		String benutzername = "1";
+		Object[] opArgs = new Object[] { benutzername, sessionID };
+		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false, null);
+
+		OMElement response = sender.sendReceive(request);
+		Class<?>[] returnTypes = new Class[] { User.class };
+
+		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+
+		if (result != null && result.length > 0 && result[0] instanceof User) {
+			User user = (User) result[0];
+			Method[] methods = user.getClass().getMethods();
+			for (Method m : methods) {
+				if (m.getName().startsWith("get")) {
+					try {
+						System.out.println(m.getName().substring(3) + "\t\t=" + m.invoke(user, new Object[] {}));
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 
 	@Test
 	public void testGetAntragsteller() throws AxisFault {
 
-		ServiceClient sender = getServiceClient(0);
+		ServiceClient sender = getServiceClient();
 
 		// start getAntragsteller
 		QName opGetAntragsteller = new QName("http://filiale.services.axisbank.de", "getAntragssteller");
@@ -129,6 +157,7 @@ public class FilialBankServiceTest extends TestCase {
 						System.out.println("Kredithoehe:" + ka.getKreditWunsch());
 						try {
 							System.out.println("Zweitantragssteller:" + ka.getAntragssteller_2().getVorname() + "\n\n");
+							System.out.println("VerhaeltnisZu2:" + ka.getVerhaeltnisZu_2() + "\n\n");
 						} catch (Exception e) {
 						}
 						System.out.println("");
@@ -168,8 +197,48 @@ public class FilialBankServiceTest extends TestCase {
 	}
 
 	@Test
+	public void testGetLiquiditaet() throws AxisFault {
+
+		ServiceClient sender = getServiceClient();
+
+		double einnahmen = 5000, ueberschuss = 200, rateKredit = 500;
+		QName opLogin = new QName("http://filiale.services.axisbank.de", "getLiquiditaet");
+
+		Object[] opArgs = new Object[] { einnahmen, ueberschuss, rateKredit, sessionID };
+		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false, null);
+
+		OMElement response = sender.sendReceive(request);
+		Class<?>[] returnTypes = new Class[] { Boolean.class };
+
+		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+
+		System.out.println("Liqidität: " + result[0]);
+		// end Login
+	}
+
+	@Test
+	public void testGetServerInfos() throws AxisFault {
+
+		ServiceClient sender = getServiceClient();
+
+		// start Login
+		QName opLogin = new QName("http://filiale.services.axisbank.de", "getServerInfos");
+
+		Object[] opArgs = new Object[] { "Kennwort1!", 0, "" };
+		OMElement request = BeanUtil.getOMElement(opLogin, opArgs, null, false, null);
+
+		OMElement response = sender.sendReceive(request);
+		Class<?>[] returnTypes = new Class[] { String.class };
+
+		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
+
+		System.out.println("ServerInfo= " + result[0]);
+		// end Login
+	}
+
+	@Test
 	public void testUpdateAntragssteller() throws AxisFault {
-		ServiceClient sender = getServiceClient(0);
+		ServiceClient sender = getServiceClient();
 
 		// start getAntragsteller
 		QName opGetAntragsteller = new QName("http://filiale.services.axisbank.de", "updateAntragssteller");
@@ -192,7 +261,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testGetTilgungsPlan() throws AxisFault {
-		ServiceClient sender = getServiceClient(0);
+		ServiceClient sender = getServiceClient();
 
 		// start Login
 		QName opgetTilgungsPlan = new QName("http://filiale.services.axisbank.de", "getTilgungsPlan");
@@ -266,7 +335,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testInsertAntragsteller() throws AxisFault {
-		ServiceClient sender = getServiceClient(0);
+		ServiceClient sender = getServiceClient();
 
 		// start getAntragsteller
 		QName opInsertAntragsteller = new QName("http://filiale.services.axisbank.de", "insertAntragssteller");
@@ -291,7 +360,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testlogoff() throws AxisFault {
-		ServiceClient sender = getServiceClient(0);
+		ServiceClient sender = getServiceClient();
 
 		// start Login
 		QName opLogin = new QName("http://filiale.services.axisbank.de", "logoff");
@@ -304,5 +373,6 @@ public class FilialBankServiceTest extends TestCase {
 		Object[] result = BeanUtil.deserialize(response, returnTypes, new DefaultObjectSupplier());
 		System.out.println("Logoff( " + sessionID + " ):" + result[0]);
 		assertEquals("LogoffReturnValue", true, result[0]);
+		testGetServerInfos();
 	}
 }
