@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import de.axisbank.daos.DaoObject;
 import de.axisbank.tools.KonfigFiles;
+import de.axisbank.tools.Logging;
 
 public class DB {
 
@@ -28,6 +29,11 @@ public class DB {
 	public static int[] insert(DaoObject[] daoObject) {
 		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
 		return new DB().insert(inserts, true);
+	}
+
+	public static boolean delete(DaoObject[] daoObject) {
+		String[] deletes = MySqlQueryFactory.createDelete(daoObject);
+		return new DB().delete(deletes, true);
 	}
 
 	public DB() {
@@ -50,26 +56,26 @@ public class DB {
 		Vector<Object> daoObjects = new Vector<Object>();
 		try {
 			Statement stmt = connection.createStatement();
-			System.out.println("SELECT: " + select + "\n\n");
+			Logging.logLine("SELECT: " + select + "\n\n");
 			if (stmt != null) {
 				ResultSet rs = stmt.executeQuery(select);
 				while (rs.next()) {
 					DaoObject daoObject = daoObj.getClass().newInstance();
-					System.out.println("\n\nMainTable: " + daoObject.getTableName());
+					Logging.logLine("\n\nMainTable: " + daoObject.getTableName());
 					for (Method m : daoObject.getClass().getDeclaredMethods()) {
 						String mn = m.getName();
 						if (mn.startsWith("set")) {
 							Class<?>[] parameterTypes = m.getParameterTypes();
 							if (parameterTypes[0] == int.class) {
-								System.out.print("Integer:");
+								Logging.log("Integer:");
 								Object obj = rs.getInt(mn.substring(3));
-								System.out.println(mn.substring(3) + " = " + obj);
+								Logging.logLine(mn.substring(3) + " = " + obj);
 
 								daoObject.getClass().getMethod(mn, parameterTypes).invoke(daoObject, new Object[] { obj });
 							} else if (parameterTypes[0] == String.class) {
 								Object obj = null;
 								if (mn.substring(3).endsWith("_dt")) {
-									System.out.print("String:");
+									Logging.log("String:");
 									java.sql.Date o = rs.getDate(mn.substring(3, mn.indexOf("_dt")));
 									if (o != null) {
 										Calendar c = Calendar.getInstance();
@@ -77,27 +83,27 @@ public class DB {
 										String d = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + c.get(Calendar.DAY_OF_MONTH) : c.get(Calendar.DAY_OF_MONTH)) + "."
 												+ (c.get(Calendar.MONTH) < 10 ? "0" + c.get(Calendar.MONTH) : c.get(Calendar.MONTH)) + "." + c.get(Calendar.YEAR);
 
-										System.out.println(mn.substring(3) + " = " + d);
+										Logging.logLine(mn.substring(3) + " = " + d);
 										obj = d;
 									}
 
 								} else {
-									System.out.print("String:");
+									Logging.log("String:");
 									Object o = rs.getObject(mn.substring(3));
-									System.out.println(mn.substring(3) + " = " + o);
+									Logging.logLine(mn.substring(3) + " = " + o);
 									obj = o;
 								}
 								daoObject.getClass().getMethod(mn, parameterTypes).invoke(daoObject, new Object[] { obj });
 							} else if (parameterTypes[0] == double.class) {
-								System.out.print("Double:");
+								Logging.log("Double:");
 								Object obj = rs.getDouble(mn.substring(3));
-								System.out.println(mn.substring(3) + " = " + obj);
+								Logging.logLine(mn.substring(3) + " = " + obj);
 
 								daoObject.getClass().getMethod(mn, parameterTypes).invoke(daoObject, new Object[] { obj });
 							} else if (parameterTypes[0] == long.class) {
-								System.out.print("Long:");
+								Logging.log("Long:");
 								Object obj = rs.getLong(mn.substring(3));
-								System.out.println(mn.substring(3) + " = " + obj + "\n");
+								Logging.logLine(mn.substring(3) + " = " + obj + "\n");
 								daoObject.getClass().getMethod(mn, parameterTypes).invoke(daoObject, new Object[] { rs.getLong(mn.substring(3)) });
 							}
 							// else if (!parameterTypes[0].isPrimitive()
@@ -114,7 +120,7 @@ public class DB {
 							// parameterTypes[0]
 							// .newInstance();
 							//
-							// System.out.println("SubTable: "
+							// Logging.log("SubTable: "
 							// + dObj.getTableName() + "\n");
 							// dObj.setId(rs.getInt(dObj.getReferenzIdName()));
 							// String subSelect =
@@ -141,7 +147,7 @@ public class DB {
 							// parameterTypes[0]
 							// .getComponentType().newInstance();
 							//
-							// System.out.println("SubTable: "
+							// Logging.log("SubTable: "
 							// + dObj.getTableName() + "\n");
 							// dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
 							// String subSelect =
@@ -154,9 +160,9 @@ public class DB {
 							// }
 						}
 					}
-					System.out.print("Integer:");
+					Logging.log("Integer:");
 					int id = rs.getInt(daoObject.getIdName());
-					System.out.println(daoObject.getIdName() + " = " + id + "\n");
+					Logging.logLine(daoObject.getIdName() + " = " + id + "\n");
 					daoObject.setId(id);
 					daoObjects.add(daoObject);
 				}
@@ -197,10 +203,35 @@ public class DB {
 		for (int i = 0; i < updates.length; i++) {
 			if (updates[i] != null)
 				try {
-					System.out.println("UPDATE: " + updates[i] + "\n\n");
+					Logging.logLine("UPDATE: " + updates[i] + "\n\n");
 					Statement stmt = connection.createStatement();
 					int j = stmt.executeUpdate(updates[i]);
-					System.out.println(j + " Datensätze/Datensatz geändert.");
+					Logging.logLine(j + " Datensätze/Datensatz geändert.");
+				} catch (SQLException e) {
+					erfolg = false;
+					e.printStackTrace();
+				}
+		}
+		if (hauptUpdate)
+			closing();
+		return erfolg;
+	}
+
+	public boolean delete(String[] deletes, boolean hauptUpdate) {
+		if (connection == null)
+			return false;
+
+		if (deletes == null)
+			return false;
+
+		boolean erfolg = true;
+		for (int i = 0; i < deletes.length; i++) {
+			if (deletes[i] != null)
+				try {
+					Logging.logLine("DELETE: " + deletes[i] + "\n");
+					Statement stmt = connection.createStatement();
+					int j = stmt.executeUpdate(deletes[i]);
+					Logging.logLine(j + " Datensätze/Datensatz gelöscht.");
 				} catch (SQLException e) {
 					erfolg = false;
 					e.printStackTrace();
@@ -225,7 +256,7 @@ public class DB {
 				if (inserts[i] == null)
 					continue;
 				Statement stmt = connection.createStatement();
-				System.out.println("INSERT: " + inserts[i] + "\n\n");
+				Logging.logLine("INSERT: " + inserts[i] + "\n\n");
 				stmt.executeUpdate(inserts[i], Statement.RETURN_GENERATED_KEYS);
 				ids[i] = -1;
 
@@ -234,7 +265,7 @@ public class DB {
 				if (rs.next()) {
 					ids[i] = rs.getInt(1);
 				}
-				System.out.println("Resturn ID is: " + ids[i]);
+				Logging.logLine("Resturn ID is: " + ids[i]);
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -255,9 +286,9 @@ public class DB {
 				prop.put("user", USER_NAME);
 				prop.put("password", PASSWORD);
 				connection = DriverManager.getConnection(URL + SERVER_NAME + PORT + DB_NAME, prop);
-				System.out.println("DB-Connection established");
+				Logging.logLine("DB-Connection established");
 			} catch (Exception e) {
-				System.out.println("DB-Connection failed");
+				Logging.logLine("DB-Connection failed");
 			}
 		}
 	}
@@ -273,7 +304,7 @@ public class DB {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			System.out.println("DB-Connection closed");
+			Logging.logLine("DB-Connection closed");
 		}
 	}
 }
@@ -302,7 +333,7 @@ class MySqlQueryFactory {
 											try {
 												String[] ds = o.toString().split("\\.");
 												for (String s : ds)
-													System.out.println(s);
+													Logging.logLine(s);
 												String d = ds[2] + "-" + ds[1] + "-" + ds[0];
 												set += "`" + mn.substring(3, mn.indexOf("_dt")) + "` = '" + d + "', ";
 
@@ -377,7 +408,7 @@ class MySqlQueryFactory {
 									try {
 										String[] ds = obj.toString().split("\\.");
 										for (String s : ds)
-											System.out.println(s);
+											Logging.logLine(s);
 										String d = ds[2] + "-" + ds[1] + "-" + ds[0];
 										valueNames += "`" + mn.substring(3, mn.indexOf("_dt")) + "`, ";
 										values += "'" + d + "', ";
@@ -486,6 +517,25 @@ class MySqlQueryFactory {
 			where = " WHERE " + where.substring(0, where.length() - 4);
 		}
 		return select + where;
+	}
+
+	protected static String[] createDelete(DaoObject[] daoObject) {
+		if (daoObject == null)
+			return null;
+		String[] deletes = new String[daoObject.length];
+		for (int i = 0; i < deletes.length; i++) {
+			if (daoObject[i] != null) {
+				int id = daoObject[i].getId();
+				if (id > 0) {
+
+					deletes[i] = "DELETE  FROM " + DB.Table_Prefix + daoObject[i].getTableName() + " WHERE " + daoObject[i].getIdName() + " = " + id;
+
+				} else
+					deletes[i] = null;
+			} else
+				deletes[i] = null;
+		}
+		return deletes;
 	}
 
 }

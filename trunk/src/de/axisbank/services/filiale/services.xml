@@ -38,4 +38,7 @@
 	<operation name="getUser">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
+	<operation name="insertKreditantrag">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
 </service>

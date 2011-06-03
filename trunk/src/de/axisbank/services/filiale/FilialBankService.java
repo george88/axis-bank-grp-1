@@ -1,6 +1,5 @@
 package de.axisbank.services.filiale;
 
-import java.util.Random;
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.Arbeitgeber;
 import de.axisbank.daos.Ausgaben;
@@ -13,6 +12,7 @@ import de.axisbank.daos.Versicherungen;
 import de.axisbank.datenbank.DB;
 import de.axisbank.services.Tilgungsplan;
 import de.axisbank.tools.KonfigFiles;
+import de.axisbank.tools.Logging;
 import de.axisbank.tools.TilgungsPlanErsteller;
 
 public class FilialBankService {
@@ -65,18 +65,15 @@ public class FilialBankService {
 	public boolean logoff(Long sessionID) {
 		User updateuser = new User();
 		updateuser.setBenutzername(SessionManagement.checkSession(sessionID));
-		// updateuser.setStatus(1);
+		updateuser.setStatus(1);
 		SessionManagement.deleteSession(sessionID);
 		Object userObjs = DB.select(updateuser);
 		if (userObjs != null)
 			if (((User[]) userObjs).length > 0) {
-				updateuser = ((User[]) userObjs)[0];
-				updateuser.setId(updateuser.getId());
-				updateuser.setBenutzername(null);
-				updateuser.setStatus(0);
-				updateuser.setPasswort(null);
-				updateuser.setLetzterLogin(-1L);
-				return DB.update(new DaoObject[] { updateuser });
+				User user = new User();
+				user.setId(((User[]) userObjs)[0].getId());
+				user.setStatus(0);
+				return DB.update(new DaoObject[] { user });
 			}
 		return false;
 	}
@@ -152,7 +149,7 @@ public class FilialBankService {
 					}
 					try {
 						User u = new User();
-						System.out.println("userID" + ka.getidUser());
+						Logging.logLine("userID" + ka.getidUser());
 						u.setId(ka.getidUser());
 						ka.setBerater(((User[]) DB.select(u))[0]);
 					} catch (Exception e) {
@@ -186,6 +183,16 @@ public class FilialBankService {
 		SessionManagement.updateSession(sessionID);
 
 		return update;
+	}
+
+	public boolean insertKreditantrag(int idAntragssteller, Kreditantrag kreditantrag, Long sessionID) {
+		if (SessionManagement.checkSession(sessionID) == null)
+			return false;
+
+		if (DB.insert(new DaoObject[] { new Kreditantrag(idAntragssteller) }).length == 1)
+			return true;
+		else
+			return false;
 	}
 
 	public boolean insertAntragssteller(Antragssteller antragsssteller, Long sessionID) {
@@ -240,5 +247,21 @@ public class FilialBankService {
 		SessionManagement.updateSession(sessionID);
 
 		return true;
+	}
+
+	public boolean deleteAntragssteller(Antragssteller antragssteller, boolean nurEnthalteneReferenzen, Long sessionID) {
+		if (SessionManagement.checkSession(sessionID) == null)
+			return false;
+
+		DB.delete(antragssteller.getArbeitgeber());
+		DB.delete(antragssteller.getAusgaben());
+		DB.delete(antragssteller.getEinnahmen());
+		DB.delete(antragssteller.getKreditantraege());
+		DB.delete(antragssteller.getKreditverbindlichkeiten());
+		DB.delete(antragssteller.getVersicherungen());
+		if (nurEnthalteneReferenzen) {
+			return true;
+		}
+		return DB.delete(new DaoObject[] { antragssteller });
 	}
 }

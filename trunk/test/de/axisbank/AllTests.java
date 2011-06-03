@@ -3,7 +3,7 @@ package de.axisbank;
 import junit.extensions.RepeatedTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import de.axisbank.services.filiale.FilialBankServiceTest;
+import de.axisbank.services.filiale.remoteTests.FilialBankServiceTest;
 import de.axisbank.services.web.WebBankServiceTest;
 
 public class AllTests {

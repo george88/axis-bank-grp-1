@@ -24,6 +24,8 @@ public class KonfigFiles {
 	public static final String Kalkulation_MAX_ZINSSATZDIF = "Kalkulation_MAX_ZINSSATZDIF";
 	public static final String Kalkulation_MIN_ZINSSATZDIF = "Kalkulation_MIN_ZINSSATZDIF";
 
+	public static final String Logging_Aktiv = "Logging_Aktiv";
+
 	public static HashMap<String, String> props = new HashMap<String, String>();
 
 	public static String getString(String key) {
@@ -78,6 +80,24 @@ public class KonfigFiles {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+
+	public static boolean getBoolean(String key) {
+		String file = key.substring(0, key.indexOf("_"));
+		key = key.substring(key.indexOf("_") + 1);
+		if (props.containsKey(key))
+			return Boolean.parseBoolean(props.get(key));
+		try {
+			Properties p = new Properties();
+			p.load(new KonfigFiles().readFile(file));
+			String prop = p.getProperty(key);
+			if (prop != null)
+				props.put(key, prop);
+			return Boolean.parseBoolean(prop);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public InputStreamReader readFile(String konfigFile) {
