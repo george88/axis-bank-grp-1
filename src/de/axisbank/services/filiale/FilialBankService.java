@@ -81,12 +81,24 @@ public class FilialBankService {
 		return false;
 	}
 
+	public User getUser(String benutzername, Long sessionID) {
+		if (SessionManagement.checkSession(sessionID) == null) {
+			return null;
+		}
+		User user = new User();
+		user.setBenutzername(benutzername);
+		User[] u = ((User[]) DB.select(user));
+		if (u != null && u.length > 0)
+			return u[0];
+		return null;
+	}
+
 	public boolean getLiquiditaet(double einnahmen, double ueberschuss, double rateKredit, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
 		SessionManagement.updateSession(sessionID);
-		
-		if((einnahmen / 2 > rateKredit) && ueberschuss > 1)
+
+		if ((einnahmen / 2 > rateKredit) && ueberschuss > 1)
 			return true;
 		else
 			return false;
