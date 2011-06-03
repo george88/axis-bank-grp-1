@@ -13,14 +13,14 @@ public class Session implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = -4034449263354130980L;
-	private String username;
+	private String benutzername;
 	private Long sessionID;
 	private final int INITIAL_DELAY = 30 * 60;
 	private int delay;
 	private final Timer timer;
 
-	public Session(String username, Long sessionID) {
-		setUsername(username);
+	public Session(String benutzername, Long sessionID) {
+		setBenutzername(benutzername);
 		setSessionID(sessionID);
 		delay = INITIAL_DELAY;
 		timer = new Timer(1000, this);
@@ -46,12 +46,12 @@ public class Session implements ActionListener {
 		}
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setBenutzername(String benutzername) {
+		this.benutzername = benutzername;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getBenutzername() {
+		return benutzername;
 	}
 
 	public void setSessionID(Long sessionID) {
