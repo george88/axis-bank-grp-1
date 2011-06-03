@@ -35,4 +35,7 @@
 	<operation name="getServerInfos">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
+	<operation name="getUser">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
 </service>
