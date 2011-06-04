@@ -1,7 +1,5 @@
 package de.axisbank.daos;
 
-import java.util.HashMap;
-
 public class DaoObject {
 
 	private int id = -1;
@@ -39,10 +37,6 @@ public class DaoObject {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}
-
-	public HashMap<Class<DaoObject>, String> getForeignKeyDefinition() {
-		return null;
 	}
 
 	public void setIdName(String idName) {
