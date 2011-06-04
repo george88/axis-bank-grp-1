@@ -29,10 +29,10 @@ public class Kreditantrag extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
 	}
 
-	public Kreditantrag(int idKreditantrag) {
+	public Kreditantrag(int idAntragssteller) {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
-		setReferenzIds(new int[] { idKreditantrag });
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
 	public Kreditantrag(User berater, String datum, String status, String filiale, double kreditWunsch, double ratenHoehe, int ratenAnzahl, Antragssteller antragssteller_2, String verhaeltnisZu_2) {

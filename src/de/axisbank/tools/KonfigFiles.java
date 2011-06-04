@@ -119,6 +119,10 @@ public class KonfigFiles {
 	}
 
 	public InputStreamReader readFile(String konfigFile) {
-		return new InputStreamReader(this.getClass().getResourceAsStream(konfigPath + konfigFile + fileType));
+		try {
+			return new InputStreamReader(this.getClass().getResourceAsStream(konfigPath + konfigFile + fileType));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

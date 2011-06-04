@@ -265,7 +265,7 @@ public class DB {
 				if (rs.next()) {
 					ids[i] = rs.getInt(1);
 				}
-				Logging.logLine("Resturn ID is: " + ids[i]);
+				Logging.logLine("ReturnID ist: " + ids[i]);
 
 			} catch (SQLException e) {
 				e.printStackTrace();
