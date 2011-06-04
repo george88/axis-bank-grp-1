@@ -10,7 +10,6 @@ import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.Tilgung;
 import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
-import de.axisbank.tools.KonfigFiles;
 
 public class FilialBankServiceTest extends TestCase {
 
@@ -186,20 +185,27 @@ public class FilialBankServiceTest extends TestCase {
 		if (ass != null) {
 			if (ass.length == 1) {
 				Antragssteller a = ass[0];
-				boolean found = false;
+				Versicherungen found = null;
 				for (Versicherungen vs : a.getVersicherungen()) {
 					if (vs.getVersArt().equals("TestVersicherung") && vs.getVersGesellschaft().equals("TestGesellschaft") && vs.getVersSumme() == 50000000) {
-						found = true;
+						found = vs;
 						break;
 					}
 				}
-				assertTrue("vorher hinzugefügte Versicherung NICHT vorhanden", found);
+				assertNotNull("vorher hinzugefügte Versicherung NICHT vorhanden", found);
 				System.out.println("Hinzugefügte versicher vorhanden");
+				wbs = new FilialBankService();
+				int id = a.getId();
+				a = new Antragssteller();
+				a.setId(id);
+				a.setVersicherungen(new Versicherungen[] { found });
+				boolean deleted = wbs.deleteAntragssteller(a, true, getSessionID());
+				assertTrue("Versicherung konnte NICHT gewlöscht werden", deleted);
 			}
 		}
 
 		System.out.println("Test Versicherung hinzufügen zum neu erstellten Antragssteller ");
-		as = antragssteller;
+		as = new Antragssteller();
 		as.setId(-1);
 		as.setVorname("Testantragsteller");
 		as.setNachname("Testantragsteller");
@@ -212,26 +218,22 @@ public class FilialBankServiceTest extends TestCase {
 		v.setVersSumme(50000000);
 		as.setVersicherungen(new Versicherungen[] { v });
 		wbs = new FilialBankService();
-		r = wbs.insertAntragssteller(antragssteller, getSessionID());
+		r = wbs.insertAntragssteller(as, getSessionID());
 		assertTrue("Fehler beim Eintrag einer neuen Versicherung", r);
 		wbs = new FilialBankService();
-		ass = wbs.getAntragssteller("Testantragstelle", "Testantragstelle", null, 1111111, getSessionID());
-		assertTrue("neuer Antragssteller nicht vorhanden", ass != null && ass.length == 1);
-		if (ass != null) {
-			if (ass.length == 1) {
-				Antragssteller a = ass[0];
-				as = a;
-				boolean found = false;
-				for (Versicherungen vs : a.getVersicherungen()) {
-					if (vs.getVersArt().equals("TestVersicherung") && vs.getVersGesellschaft().equals("TestGesellschaft") && vs.getVersSumme() == 50000000) {
-						found = true;
-						break;
-					}
-				}
-				assertTrue("vorher hinzugefügte Versicherung NICHT vorhanden", found);
-				System.out.println("Hinzugefügte versicher vorhanden");
+		ass = wbs.getAntragssteller("Testantragsteller", "Testantragsteller", null, 1111111, getSessionID());
+		assertTrue("neuer Antragssteller nicht vorhanden", ass != null && ass.length > 0);
+		Antragssteller a = ass[0];
+		as = a;
+		boolean found = false;
+		for (Versicherungen vs : a.getVersicherungen()) {
+			if (vs.getVersArt().equals("TestVersicherung") && vs.getVersGesellschaft().equals("TestGesellschaft") && vs.getVersSumme() == 50000000) {
+				found = true;
+				break;
 			}
 		}
+		assertTrue("vorher hinzugefügte Versicherung NICHT vorhanden", found);
+		System.out.println("Hinzugefügte versicher vorhanden");
 		wbs = new FilialBankService();
 		r = wbs.deleteAntragssteller(as, false, getSessionID());
 		assertTrue("testantragssteller konnte nicht gelöscht werden", r);
@@ -246,19 +248,17 @@ public class FilialBankServiceTest extends TestCase {
 		ka.setFiliale("testFiliale");
 		ka.setKreditWunsch(222222);
 		ka.setRatenAnzahl(55);
-		ka.setidUser(antragssteller.getKreditantraege()[0].getidUser());
 		ka.setVerhaeltnisZu_2("Mutter");
 		ka.setStatus("abgelehnt");
-		ka.setIdAntragssteller_2(antragssteller.getKreditantraege()[0].getIdAntragssteller_2());
 
 		FilialBankService wbs = new FilialBankService();
-		boolean r = wbs.insertKreditantrag(1, ka, getSessionID());
-		assertTrue("Kreditantrag wurde NICHT erfolgreich eingefügt ", r);
+		int id = wbs.insertKreditantrag(1, 1, ka, getSessionID());
+		assertTrue("Kreditantrag wurde NICHT erfolgreich eingefügt ", id != -1);
 		System.out.println("Kreditantrag erfolgreich eingefügt");
 		Antragssteller as = new Antragssteller();
-		as.setId(antragssteller.getId());
-		testGetAntragsteller();
-		as.setKreditantraege(new Kreditantrag[] { antragssteller.getKreditantraege()[antragssteller.getKreditantraege().length - 1] });
+		as.setId(1);
+		ka.setId(id);
+		as.setKreditantraege(new Kreditantrag[] { ka });
 		wbs.deleteAntragssteller(as, true, getSessionID());
 	}
 

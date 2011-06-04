@@ -147,8 +147,8 @@ public class FilialBankService {
 				ass.setAusgaben((Ausgaben[]) DB.select(new Ausgaben(ass.getId())));
 				ass.setArbeitgeber((Arbeitgeber[]) DB.select(new Arbeitgeber(ass.getId())));
 				ass.setEinnahmen((Einnahmen[]) DB.select(new Einnahmen(ass.getId())));
-				ass.setKreditantraege((Kreditantrag[]) DB.select(new Kreditantrag(ass.getId())));
 				ass.setVersicherungen((Versicherungen[]) DB.select(new Versicherungen(ass.getId())));
+				ass.setKreditantraege((Kreditantrag[]) DB.select(new Kreditantrag(ass.getId())));
 				for (Kreditantrag ka : ass.getKreditantraege()) {
 					try {
 						Antragssteller a = new Antragssteller();
@@ -159,7 +159,7 @@ public class FilialBankService {
 					}
 					try {
 						User u = new User();
-						Logging.logLine("userID" + ka.getidUser());
+						Logging.logLine("userID: " + ka.getidUser());
 						u.setId(ka.getidUser());
 						ka.setBerater(((User[]) DB.select(u))[0]);
 					} catch (Exception e) {
@@ -195,19 +195,19 @@ public class FilialBankService {
 		return update;
 	}
 
-	public boolean insertKreditantrag(int idAntragssteller, Kreditantrag kreditantrag, Long sessionID) {
+	public int insertKreditantrag(int idAntragssteller, int idUser, Kreditantrag kreditantrag, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
-			return false;
+			return -1;
 		Logging.logObjectDetail(kreditantrag);
-		kreditantrag.setReferenzIds(new int[] { idAntragssteller });
+		kreditantrag.setReferenzIds(new int[] { idAntragssteller, idUser });
 		kreditantrag.setTableName("Kreditantrag");
 		kreditantrag.setId(-1);
 		Logging.logObjectDetail(kreditantrag);
-
-		if (DB.insert(new DaoObject[] { kreditantrag }).length == 1)
-			return true;
+		int[] erg = DB.insert(new DaoObject[] { kreditantrag });
+		if (erg.length == 1)
+			return erg[0];
 		else
-			return false;
+			return -1;
 	}
 
 	public boolean insertAntragssteller(Antragssteller antragsssteller, Long sessionID) {
