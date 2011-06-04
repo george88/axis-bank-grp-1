@@ -241,11 +241,15 @@ public class FilialBankServiceTest extends TestCase {
 	@Test
 	public void testInsertKreditantrag() {
 		System.out.println("Test InsertKreditantrag");
-		Kreditantrag ka = antragssteller.getKreditantraege()[0];
+		Kreditantrag ka = new Kreditantrag();
 		ka.setDatum_dt("12.12.2012");
 		ka.setFiliale("testFiliale");
 		ka.setKreditWunsch(222222);
-		ka.setId(-1);
+		ka.setRatenAnzahl(55);
+		ka.setidUser(antragssteller.getKreditantraege()[0].getidUser());
+		ka.setVerhaeltnisZu_2("Mutter");
+		ka.setStatus("abgelehnt");
+		ka.setIdAntragssteller_2(antragssteller.getKreditantraege()[0].getIdAntragssteller_2());
 
 		FilialBankService wbs = new FilialBankService();
 		boolean r = wbs.insertKreditantrag(1, ka, getSessionID());
