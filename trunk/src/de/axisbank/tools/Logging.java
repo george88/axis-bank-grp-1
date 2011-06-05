@@ -1,5 +1,6 @@
 package de.axisbank.tools;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -42,12 +43,22 @@ public class Logging {
 						try {
 							System.out.println("\t" + m.getName() + ":\t\t" + m.invoke(obj, new Object[] {}));
 						} catch (IllegalArgumentException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						} catch (IllegalAccessException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						} catch (InvocationTargetException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						}
+				}
+				System.out.println("Felder:");
+				for (Field f : obj.getClass().getFields()) {
+					try {
+						System.out.println(f.getName() + " = " + f.get(obj));
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		} else {
