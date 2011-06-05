@@ -8,11 +8,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Properties;
 import java.util.Vector;
 
 import de.axisbank.daos.DaoObject;
+import de.axisbank.tools.DatumsKonvertierung;
 import de.axisbank.tools.KonfigFiles;
 import de.axisbank.tools.Logging;
 
@@ -78,11 +78,7 @@ public class DB {
 									Logging.log("String:");
 									java.sql.Date o = rs.getDate(mn.substring(3, mn.indexOf("_dt")));
 									if (o != null) {
-										Calendar c = Calendar.getInstance();
-										c.setTime(o);
-										String d = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + c.get(Calendar.DAY_OF_MONTH) : c.get(Calendar.DAY_OF_MONTH)) + "."
-												+ (c.get(Calendar.MONTH) < 10 ? "0" + c.get(Calendar.MONTH) : c.get(Calendar.MONTH)) + "." + c.get(Calendar.YEAR);
-
+										String d = DatumsKonvertierung.getStringFromDbDate(o);
 										Logging.logLine(mn.substring(3) + " = " + d);
 										obj = d;
 									}
@@ -106,58 +102,6 @@ public class DB {
 								Logging.logLine(mn.substring(3) + " = " + obj + "\n");
 								daoObject.getClass().getMethod(mn, parameterTypes).invoke(daoObject, new Object[] { rs.getLong(mn.substring(3)) });
 							}
-							// else if (!parameterTypes[0].isPrimitive()
-							// && !parameterTypes[0].isArray()) {
-							//
-							// if
-							// (lastAskedSubClasses.contains(parameterTypes[0]))
-							// {
-							// continue;
-							// }
-							// lastAskedSubClasses.add(parameterTypes[0]);
-							//
-							// DaoObject dObj = (DaoObject)
-							// parameterTypes[0]
-							// .newInstance();
-							//
-							// Logging.log("SubTable: "
-							// + dObj.getTableName() + "\n");
-							// dObj.setId(rs.getInt(dObj.getReferenzIdName()));
-							// String subSelect =
-							// MySqlQueryFactory.createSelect(
-							// dObj, null);
-							//
-							// Object d = select(subSelect, dObj, false);
-							// if (Array.getLength(d) > 0)
-							// daoObject
-							// .getClass()
-							// .getMethod(mn, parameterTypes)
-							// .invoke(daoObject,
-							// new Object[] { Array.get(d, 0) });
-							// } else if (parameterTypes[0].isArray()) {
-							//
-							// if
-							// (lastAskedSubClasses.contains(parameterTypes[0]))
-							// {
-							// continue;
-							// }
-							// lastAskedSubClasses.add(parameterTypes[0]);
-							//
-							// DaoObject dObj = (DaoObject)
-							// parameterTypes[0]
-							// .getComponentType().newInstance();
-							//
-							// Logging.log("SubTable: "
-							// + dObj.getTableName() + "\n");
-							// dObj.setReferenzId(rs.getInt(daoObject.getIdName()));
-							// String subSelect =
-							// MySqlQueryFactory.createSelect(
-							// dObj, null);
-							// Object d = select(subSelect, dObj, false);
-							// if (Array.getLength(d) > 0) {
-							// m.invoke(daoObject, new Object[] { d });
-							// }
-							// }
 						}
 					}
 					Logging.log("Integer:");
@@ -331,11 +275,7 @@ class MySqlQueryFactory {
 									if (o.getClass().equals(String.class)) {
 										if (mn.substring(3).endsWith("_dt")) {
 											try {
-												String[] ds = o.toString().split("\\.");
-												for (String s : ds)
-													Logging.logLine(s);
-												String d = ds[2] + "-" + ds[1] + "-" + ds[0];
-												set += "`" + mn.substring(3, mn.indexOf("_dt")) + "` = '" + d + "', ";
+												set += "`" + mn.substring(3, mn.indexOf("_dt")) + "` = '" + DatumsKonvertierung.getStringToDbSttringDate(o.toString()) + "', ";
 
 											} catch (Exception e) {
 												e.printStackTrace();
