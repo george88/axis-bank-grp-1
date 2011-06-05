@@ -199,10 +199,11 @@ public class FilialBankService {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
 		Logging.logObjectDetail(kreditantrag);
-		kreditantrag.setReferenzIds(new int[] { idAntragssteller, kreditantrag.getBerater().getId() });
+		kreditantrag.setReferenzIds(new int[] { idAntragssteller, kreditantrag.getBerater() != null ? kreditantrag.getBerater().getId() : 1 });
 		kreditantrag.setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
 		kreditantrag.setidUser(-1);
-		kreditantrag.setIdAntragssteller_2(kreditantrag.getAntragssteller_2().getId());
+		if (kreditantrag.getAntragssteller_2() != null)
+			kreditantrag.setIdAntragssteller_2(kreditantrag.getAntragssteller_2().getId());
 		kreditantrag.setTableName("Kreditantrag");
 		kreditantrag.setId(-1);
 		Logging.logObjectDetail(kreditantrag);
