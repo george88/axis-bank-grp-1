@@ -105,7 +105,7 @@ public class FilialBankService {
 			return false;
 		SessionManagement.updateSession(sessionID);
 
-		if ((einnahmen / 2 > rateKredit) && ueberschuss > 1)
+		if ((einnahmen / 2.) > rateKredit && ueberschuss > 1)
 			return true;
 		else
 			return false;
@@ -195,17 +195,22 @@ public class FilialBankService {
 		return update;
 	}
 
-	public boolean insertKreditantrag(int idAntragssteller, Kreditantrag kreditantrag, Long sessionID) {
+	public boolean insertKreditantrag(User berater, Antragssteller antragsteller, Antragssteller antragsteller_2, String verhaeltnisZu_2, String filiale, String status, Tilgungsplan tilgungsPlan,
+			Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
-		Logging.logObjectDetail(kreditantrag);
-		kreditantrag.setReferenzIds(new int[] { idAntragssteller, kreditantrag.getBerater() != null ? kreditantrag.getBerater().getId() : 1 });
+		Kreditantrag kreditantrag = new Kreditantrag();
+		kreditantrag.setDatum_dt(tilgungsPlan.getKreditBeginn());
+		kreditantrag.setFiliale(filiale);
+		kreditantrag.setVerhaeltnisZu_2(verhaeltnisZu_2);
+		kreditantrag.setKreditWunsch(tilgungsPlan.getKreditHoehe());
+		kreditantrag.setStatus(status);
+		kreditantrag.setRatenHoehe(tilgungsPlan.getRatenHoehe());
+		kreditantrag.setRatenAnzahl(tilgungsPlan.getLaufzeitMonate());
+		kreditantrag.setReferenzIds(new int[] { antragsteller.getId(), berater.getId() });
 		kreditantrag.setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
-		kreditantrag.setidUser(-1);
-		if (kreditantrag.getAntragssteller_2() != null)
-			kreditantrag.setIdAntragssteller_2(kreditantrag.getAntragssteller_2().getId());
-		kreditantrag.setTableName("Kreditantrag");
-		kreditantrag.setId(-1);
+		if (antragsteller_2 != null)
+			kreditantrag.setIdAntragssteller_2(antragsteller_2.getId());
 		Logging.logObjectDetail(kreditantrag);
 		int[] erg = DB.insert(new DaoObject[] { kreditantrag });
 		if (erg.length == 1)

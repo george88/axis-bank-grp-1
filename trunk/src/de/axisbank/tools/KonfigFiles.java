@@ -101,16 +101,16 @@ public class KonfigFiles {
 		return false;
 	}
 
-	public static boolean getLogging(String key) {
+	public static boolean getLogging(String className) {
 		String file = "Logging";
-		if (props.containsKey(key))
-			return Boolean.parseBoolean(props.get(key).toString());
+		if (props.containsKey(className))
+			return Boolean.parseBoolean(props.get(className).toString());
 		try {
 			Properties p = new Properties();
 			p.load(new KonfigFiles().readFile(file));
-			String prop = p.getProperty(key);
+			String prop = p.getProperty(className, "true");
 			if (prop != null)
-				props.put(key, prop);
+				props.put(className, prop);
 			return Boolean.parseBoolean(prop);
 		} catch (Exception e) {
 			e.printStackTrace();

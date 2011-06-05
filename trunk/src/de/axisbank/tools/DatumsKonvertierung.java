@@ -1,11 +1,8 @@
 package de.axisbank.tools;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import javax.swing.text.DateFormatter;
 
 public class DatumsKonvertierung {
 
@@ -109,5 +106,30 @@ public class DatumsKonvertierung {
 			return "01." + (monat < 10 ? "0" + monat : monat) + "." + jahr;
 		}
 		return datum;
+	}
+
+	public static String getStringFromDbDate(java.sql.Date o) {
+		String d = o.toString();
+		try {
+			Calendar c = Calendar.getInstance();
+			c.setTime(o);
+			d = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + c.get(Calendar.DAY_OF_MONTH) : c.get(Calendar.DAY_OF_MONTH)) + "."
+					+ (c.get(Calendar.MONTH) < 10 ? "0" + c.get(Calendar.MONTH) : c.get(Calendar.MONTH)) + "." + c.get(Calendar.YEAR);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return d;
+	}
+
+	public static String getStringToDbSttringDate(String date) {
+		String d = date;
+		try {
+			String[] ds = date.split("\\.");
+			d = ds[2] + "-" + ds[1] + "-" + ds[0];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return d;
 	}
 }
