@@ -493,6 +493,7 @@ class MySqlQueryFactory {
 						}
 					}
 				}
+				where += "`" + daoObject.getIdName() + "` > 0 AND ";
 			} else {
 				where += "`" + daoObject.getIdName() + "` = " + id + "  AND ";
 			}
