@@ -137,8 +137,8 @@ public class FilialBankService {
 		}
 
 		Antragssteller as = new Antragssteller();
-		as.setVorname(vorname != null && !vorname.equals("") ? vorname + "%" : null);
-		as.setNachname(nachname != null && !nachname.equals("") ? nachname + "%" : null);
+		as.setVorname(vorname != null && !vorname.equals("") ? "%" + vorname + "%" : null);
+		as.setNachname(nachname != null && !nachname.equals("") ? "%" + nachname + "%" : null);
 		as.setGebDatum_dt(gebDatum);
 		as.setHauptGirokonto(hauptGirokonto);
 		Antragssteller[] asss = (Antragssteller[]) DB.select(as);
@@ -195,19 +195,22 @@ public class FilialBankService {
 		return update;
 	}
 
-	public int insertKreditantrag(int idAntragssteller, int idUser, Kreditantrag kreditantrag, Long sessionID) {
+	public boolean insertKreditantrag(int idAntragssteller, Kreditantrag kreditantrag, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
-			return -1;
+			return false;
 		Logging.logObjectDetail(kreditantrag);
-		kreditantrag.setReferenzIds(new int[] { idAntragssteller, idUser });
+		kreditantrag.setReferenzIds(new int[] { idAntragssteller, kreditantrag.getBerater().getId() });
+		kreditantrag.setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
+		kreditantrag.setidUser(-1);
+		kreditantrag.setIdAntragssteller_2(kreditantrag.getAntragssteller_2().getId());
 		kreditantrag.setTableName("Kreditantrag");
 		kreditantrag.setId(-1);
 		Logging.logObjectDetail(kreditantrag);
 		int[] erg = DB.insert(new DaoObject[] { kreditantrag });
 		if (erg.length == 1)
-			return erg[0];
+			return true;
 		else
-			return -1;
+			return false;
 	}
 
 	public boolean insertAntragssteller(Antragssteller antragsssteller, Long sessionID) {
