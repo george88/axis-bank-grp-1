@@ -6,9 +6,9 @@ import org.junit.Test;
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
-import de.axisbank.services.Tilgung;
-import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
+import de.axisbank.services.filiale.Tilgung;
+import de.axisbank.services.filiale.Tilgungsplan;
 import de.axisbank.tools.TilgungsPlanErsteller;
 
 public class FilialBankServiceTest extends TestCase {
@@ -82,8 +82,9 @@ public class FilialBankServiceTest extends TestCase {
 	public void testGetServerInfos() {
 		System.out.println("testGetServerInfos");
 		FilialBankService wbs = new FilialBankService();
-		String s = wbs.getSessionInfos("Kennwort1!");
-		System.out.println(s);
+		String[] s = wbs.getSessionInfos("Kennwort1!");
+		for (String ss : s)
+			System.out.println(ss);
 	}
 
 	@Test
@@ -165,10 +166,11 @@ public class FilialBankServiceTest extends TestCase {
 	@Test
 	public void testInsertAntragsteller() {
 		System.out.println("testInsertAntragsteller");
-		System.out.println("testInsertAntragsteller");
 		System.out.println("Test Versicherung hinzufügen zum vorhandenen Antragssteller ");
 		Antragssteller as = new Antragssteller();
-		as.setId(antragssteller.getId());
+		as.setVorname("Daniel");
+		as.setNachname("Schmitz");
+		as.setId(1);
 		Versicherungen v = new Versicherungen();
 		v.setMtlBeitrag(55);
 		v.setVersArt("TestVersicherung");
@@ -176,7 +178,7 @@ public class FilialBankServiceTest extends TestCase {
 		v.setVersSumme(50000000);
 		as.setVersicherungen(new Versicherungen[] { v });
 		FilialBankService wbs = new FilialBankService();
-		boolean r = wbs.insertAntragssteller(antragssteller, getSessionID());
+		boolean r = wbs.insertAntragssteller(as, getSessionID());
 		assertTrue("Fehler beim Eintrag einer neuen Versicherung", r);
 		wbs = new FilialBankService();
 		Antragssteller[] ass = wbs.getAntragssteller(antragssteller.getVorname(), antragssteller.getNachname(), antragssteller.getGebDatum_dt(), antragssteller.getHauptGirokonto(), getSessionID());

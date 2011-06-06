@@ -12,10 +12,13 @@ public class SessionManagement {
 	private static Object syncObj = new Object();
 
 	public static HashMap<Long, Session> getSessions() {
-		return sessions;
+		synchronized (syncObj) {
+			return sessions;
+		}
 	}
 
 	public static Long addSession(String benutzername) {
+		//		synchronized (syncObj) {
 		Long sessionID = -1L;
 		sessionID = random.nextLong();
 		while (checkSession(sessionID) != null) {
@@ -24,12 +27,16 @@ public class SessionManagement {
 		sessions.put(sessionID, new Session(benutzername, sessionID));
 		Logging.logLine("Session " + sessionID + " vom Benutzer " + benutzername + " wurde erstellt");
 		return sessionID;
+		//		}
 	}
 
 	public static void updateSession(Long sessionID) {
-		if (sessions.get(sessionID) != null) {
-			Logging.logLine("Session " + sessionID + " wird verlängert");
-			sessions.get(sessionID).updateTimer();
+		synchronized (syncObj) {
+
+			if (sessions.get(sessionID) != null) {
+				Logging.logLine("Session " + sessionID + " wird verlängert");
+				sessions.get(sessionID).updateTimer();
+			}
 		}
 	}
 
