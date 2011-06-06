@@ -4,24 +4,19 @@ import java.text.DecimalFormat;
 import junit.framework.TestCase;
 import org.junit.Test;
 import de.axisbank.daos.Antragssteller;
-import de.axisbank.daos.Kreditantrag;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.services.Tilgung;
 import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
+import de.axisbank.tools.TilgungsPlanErsteller;
 
 public class FilialBankServiceTest extends TestCase {
 
-	private static long sessionID;
-	static Antragssteller antragssteller;
+	private static Antragssteller antragssteller;
 
 	private long getSessionID() {
-		if (sessionID == 0) {
-			FilialBankService wbs = new FilialBankService();
-			sessionID = wbs.login("1", "1");
-		}
-		return sessionID;
+		return new FilialBankService().login("1", "1");
 	}
 
 	/**
@@ -71,7 +66,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testGetLiquiditaet() {
-
+		System.out.println("testGetLiquiditaet");
 		double einnahmen = 5000, ueberschuss = 200, rateKredit = 500;
 		FilialBankService wbs = new FilialBankService();
 		boolean r = wbs.getLiquiditaet(einnahmen, ueberschuss, rateKredit, getSessionID());
@@ -87,12 +82,13 @@ public class FilialBankServiceTest extends TestCase {
 	public void testGetServerInfos() {
 		System.out.println("testGetServerInfos");
 		FilialBankService wbs = new FilialBankService();
-		String s = wbs.getServerInfos("Kennwort1!", 0, "");
+		String s = wbs.getSessionInfos("Kennwort1!");
 		System.out.println(s);
 	}
 
 	@Test
 	public void testUpdateAntragssteller() {
+		System.out.println("testUpdateAntragssteller");
 		Antragssteller as = null;
 		if (antragssteller != null) {
 			as = antragssteller;
@@ -109,6 +105,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testGetTilgungsPlan() {
+		System.out.println("testGetTilgungsPlan");
 		double kreditHoehe = 12550;
 		String kreditBeginn = "01.02.2012";
 		double zinsatzDifferenz = +0.;
@@ -167,6 +164,7 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testInsertAntragsteller() {
+		System.out.println("testInsertAntragsteller");
 		System.out.println("testInsertAntragsteller");
 		System.out.println("Test Versicherung hinzufügen zum vorhandenen Antragssteller ");
 		Antragssteller as = new Antragssteller();
@@ -242,24 +240,34 @@ public class FilialBankServiceTest extends TestCase {
 
 	@Test
 	public void testInsertKreditantrag() {
-		System.out.println("Test InsertKreditantrag");
-		Kreditantrag ka = new Kreditantrag();
-		ka.setDatum_dt("12.12.2012");
-		ka.setFiliale("testFiliale");
-		ka.setKreditWunsch(222222);
-		ka.setRatenAnzahl(55);
-		ka.setVerhaeltnisZu_2("Mutter");
-		ka.setStatus("abgelehnt");
+		System.out.println("testInsertKreditantrag");
 
-		FilialBankService wbs = new FilialBankService();
-		int id = wbs.insertKreditantrag(1, 1, ka, getSessionID());
-		assertTrue("Kreditantrag wurde NICHT erfolgreich eingefügt ", id != -1);
-		System.out.println("Kreditantrag erfolgreich eingefügt");
+		String status = "testFiliale";
+
+		String verhaeltnisZu_2 = "Mutter";
+
+		Tilgungsplan tp = new Tilgungsplan();
+		tp.setKreditHoehe(5000.);
+		tp.setLaufzeitMonate(12);
+		tp.setZinsatz(5.59);
+		tp.setKreditBeginn("12.12.2012");
+		tp.setTilgungen(TilgungsPlanErsteller.erstelleTilgungsPlan(tp));
+
+		String filiale = "PB NORD";
+
 		Antragssteller as = new Antragssteller();
 		as.setId(1);
-		ka.setId(id);
-		as.setKreditantraege(new Kreditantrag[] { ka });
-		wbs.deleteAntragssteller(as, true, getSessionID());
+
+		Antragssteller as2 = new Antragssteller();
+		as2.setId(2);
+
+		User berater = new User();
+		berater.setId(1);
+
+		FilialBankService wbs = new FilialBankService();
+		boolean erfolg = wbs.insertKreditantrag(berater, as, as2, verhaeltnisZu_2, filiale, status, tp, getSessionID());
+		assertTrue("Kreditantrag wurde NICHT erfolgreich eingefügt ", erfolg);
+		System.out.println("Kreditantrag erfolgreich eingefügt");
 	}
 
 	@Test
