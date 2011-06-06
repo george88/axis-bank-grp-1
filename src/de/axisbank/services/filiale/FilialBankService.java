@@ -1,3 +1,10 @@
+/**
+ * Serviceklasse, stellt den Service zur Verfügung, der in der services.xml beschrieben ist
+ * 
+ * @author Georg Neufeld
+ * @version 25.05.2011
+ * 
+ */
 package de.axisbank.services.filiale;
 
 import de.axisbank.daos.Antragssteller;
@@ -10,7 +17,6 @@ import de.axisbank.daos.Kreditverbindlichkeiten;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.datenbank.DB;
-import de.axisbank.services.Tilgungsplan;
 import de.axisbank.tools.KonfigFiles;
 import de.axisbank.tools.Logging;
 import de.axisbank.tools.TilgungsPlanErsteller;
@@ -20,20 +26,24 @@ public class FilialBankService {
 	public FilialBankService() {
 	}
 
-	public String getSessionInfos(String pw) {
-		if (!pw.equals("Kennwort1!"))
-			return "";
+	public String[] getSessionInfos(String pw) {
+		if (!pw.equals(KonfigFiles.getString(KonfigFiles.Manage_Passwort)))
+			return null;
 
-		String r = "";
-		r += "Anzahl der aktiven Sessions: " + SessionManagement.getSessions().size() + "\nsessionID\t\t\tBenutzname\tRestzeit\n______________________________________________________________\n";
-		for (Long sessionID : SessionManagement.getSessions().keySet()) {
-			r += sessionID + "\t\t" + SessionManagement.getSessions().get(sessionID).getBenutzername() + "\t\t" + SessionManagement.getSessions().get(sessionID).getDelayTime() + "\n";
+		if (SessionManagement.getSessions() == null || SessionManagement.getSessions().keySet() == null)
+			return null;
+		String[] sessions = new String[SessionManagement.getSessions().size()];
+		int i = 0;
+		for (Long sid : SessionManagement.getSessions().keySet()) {
+			sessions[i] = "<tr><td>" + sid + "</td><td>" + SessionManagement.getSessions().get(sid).getBenutzername() + "</td><td>" + SessionManagement.getSessions().get(sid).getDelayTime()
+					+ "</td><tr>";
+			i++;
 		}
-		return r;
+		return sessions;
 	}
 
 	public void deleteAllSessions(String pw) {
-		if (!pw.equals("Kennwort1!"))
+		if (!pw.equals(KonfigFiles.getString(KonfigFiles.Manage_Passwort)))
 			return;
 		for (Long l : SessionManagement.getSessions().keySet())
 			SessionManagement.deleteSession(l);

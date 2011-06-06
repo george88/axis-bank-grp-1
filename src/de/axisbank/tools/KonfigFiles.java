@@ -27,6 +27,8 @@ public class KonfigFiles {
 	public static final String Logging_Aktiv = "Logging_Aktiv";
 	public static final String Logging_Classes = "Logging_Classes";
 
+	public static final String Manage_Passwort = "Manage_Passwort";
+
 	public static HashMap<String, Object> props = new HashMap<String, Object>();
 
 	public static String getString(String key) {

@@ -21,9 +21,8 @@ public class SessionInfoTest extends TestCase {
 		l.setLevel(Level.WARN);
 		ServiceClient sender = new ServiceClient();
 		Options options = sender.getOptions();
-		EndpointReference targetEPR = new EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
-		// EndpointReference targetEPR = new
-		// EndpointReference("http://japp.george4j.de/axis2/services/FilialBankService");
+		//		EndpointReference targetEPR = new EndpointReference("http://localhost:9080/axis2/services/FilialBankService");
+		EndpointReference targetEPR = new EndpointReference("http://japp.george4j.de/axis2/services/FilialBankService");
 		options.setTo(targetEPR);
 
 		QName opGetSessionInfos = new QName("http://filiale.services.axisbank.de", "getSessionInfos");
