@@ -50,10 +50,11 @@ public class Logging {
 							e.printStackTrace();
 						}
 				}
-				System.out.println("Felder:");
-				for (Field f : obj.getClass().getFields()) {
+				System.out.println("Fields:");
+				for (Field f : obj.getClass().getDeclaredFields()) {
 					try {
-						System.out.println(f.getName() + " = " + f.get(obj));
+						f.setAccessible(true);
+						System.out.println("\t" + f.getName() + " = " + f.get(obj));
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {

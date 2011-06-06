@@ -32,7 +32,10 @@
 	<operation name="insertAntragssteller">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
-	<operation name="getServerInfos">
+	<operation name="getSessionInfos">
+		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+	</operation>
+	<operation name="deleteAllSessions">
 		<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 	</operation>
 	<operation name="getUser">

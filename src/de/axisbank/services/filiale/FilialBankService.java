@@ -20,30 +20,23 @@ public class FilialBankService {
 	public FilialBankService() {
 	}
 
-	public String getServerInfos(String pw, int infocode, String parameter) {
+	public String getSessionInfos(String pw) {
 		if (!pw.equals("Kennwort1!"))
 			return "";
-		switch (infocode) {
-		case 0:
-			String r = "";
-			r += "Anzahl der aktiven Sessions: " + SessionManagement.getSessions().size()
-					+ "\nsessionID\t\t|\tBenutzname\t\tRestzeit\n______________________________________________________________\n";
-			for (Long sessionID : SessionManagement.getSessions().keySet()) {
-				r += sessionID + "\t\t" + SessionManagement.getSessions().get(sessionID).getBenutzername() + "\t\t" + SessionManagement.getSessions().get(sessionID).getDelayTime() + "\n";
-			}
-			return r;
-		case 1:
-			SessionManagement.deleteSession(Long.parseLong(parameter));
-			break;
-		case 2:
 
-			break;
-		case 3:
-
-			break;
-
+		String r = "";
+		r += "Anzahl der aktiven Sessions: " + SessionManagement.getSessions().size() + "\nsessionID\t\t\tBenutzname\tRestzeit\n______________________________________________________________\n";
+		for (Long sessionID : SessionManagement.getSessions().keySet()) {
+			r += sessionID + "\t\t" + SessionManagement.getSessions().get(sessionID).getBenutzername() + "\t\t" + SessionManagement.getSessions().get(sessionID).getDelayTime() + "\n";
 		}
-		return "Nothing";
+		return r;
+	}
+
+	public void deleteAllSessions(String pw) {
+		if (!pw.equals("Kennwort1!"))
+			return;
+		for (Long l : SessionManagement.getSessions().keySet())
+			SessionManagement.deleteSession(l);
 	}
 
 	public Long login(String benutzername, String passwort) {
@@ -53,23 +46,19 @@ public class FilialBankService {
 		User[] users = (User[]) DB.select(tmpUser);
 		Long sessionID = -1L;
 		if (users != null && users.length == 1 && (users)[0] != null) {
-			User user = users[0];
-			if (user.getStatus() == 0) {
-				User updateuser = new User();
-				updateuser.setId(user.getId());
-				updateuser.setStatus(1);
-				updateuser.setLetzterLogin(System.currentTimeMillis());
-				DB.update(new DaoObject[] { updateuser });
+			sessionID = SessionManagement.checkSession(benutzername);
+			if (sessionID != -1L) {
+				Logging.logLine("Benutzer war bereits angemeldet, Session wird gelöscht und neue erstellt!");
+				SessionManagement.deleteSession(sessionID);
 			}
-			if (benutzername.equals(user.getBenutzername()))
-				if (SessionManagement.checkSession(benutzername) != -1) {
-					sessionID = SessionManagement.checkSession(benutzername);
-					Logging.logLine("Benutzer ist bereits angemeldet");
-				} else
-					sessionID = SessionManagement.addSession(benutzername);
+			User user = users[0];
+			user.setStatus(1);
+			user.setLetzterLogin(System.currentTimeMillis());
+			DB.update(new DaoObject[] { user });
+			sessionID = SessionManagement.addSession(benutzername);
+			return sessionID;
 		}
-		String checkUser = SessionManagement.checkSession(sessionID);
-		return checkUser != null && checkUser.equals(benutzername) ? sessionID : -1;
+		return -1L;
 	}
 
 	public boolean logoff(Long sessionID) {
@@ -205,7 +194,7 @@ public class FilialBankService {
 		kreditantrag.setVerhaeltnisZu_2(verhaeltnisZu_2);
 		kreditantrag.setKreditWunsch(tilgungsPlan.getKreditHoehe());
 		kreditantrag.setStatus(status);
-		kreditantrag.setRatenHoehe(tilgungsPlan.getRatenHoehe());
+		kreditantrag.setRatenHoehe(Math.round(tilgungsPlan.getRatenHoehe() * 100) / 100);
 		kreditantrag.setRatenAnzahl(tilgungsPlan.getLaufzeitMonate());
 		kreditantrag.setReferenzIds(new int[] { antragsteller.getId(), berater.getId() });
 		kreditantrag.setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });

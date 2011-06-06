@@ -9,6 +9,7 @@ public class SessionManagement {
 
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 	private static Random random = new Random();
+	private static Object syncObj = new Object();
 
 	public static HashMap<Long, Session> getSessions() {
 		return sessions;
@@ -33,9 +34,11 @@ public class SessionManagement {
 	}
 
 	public static String checkSession(Long sessionID) {
-		if (sessions.get(sessionID) != null) {
-			Logging.logLine("Noch " + sessions.get(sessionID).getDelayTime() + " Sekunden zum SessionDelete");
-			return sessions.get(sessionID).getBenutzername();
+		synchronized (syncObj) {
+			if (sessions.get(sessionID) != null) {
+				Logging.logLine("Noch " + sessions.get(sessionID).getDelayTime() + " Sekunden zum SessionDelete");
+				return sessions.get(sessionID).getBenutzername();
+			}
 		}
 		Logging.logLine("Session " + sessionID + " ungültig");
 
@@ -43,17 +46,22 @@ public class SessionManagement {
 	}
 
 	public static Long checkSession(String benutzername) {
-		for (Long s : sessions.keySet())
-			if (sessions.get(s).getBenutzername().equals(benutzername))
-				return s;
+		synchronized (syncObj) {
+			for (Long s : sessions.keySet())
+				if (sessions.get(s).getBenutzername().equals(benutzername))
+					return s;
+		}
+
 		return -1L;
 	}
 
 	public static void deleteSession(Long sessionID) {
-		if (sessions.get(sessionID) != null) {
-			sessions.remove(sessionID);
-			Logging.log("Jetzt sollte sie geloescht sein:");
-			Logging.logLine(sessions.get(sessionID) == null);
+		synchronized (syncObj) {
+			if (sessions.get(sessionID) != null) {
+				sessions.remove(sessionID);
+				Logging.log("Jetzt sollte sie geloescht sein:");
+				Logging.logLine(sessions.get(sessionID) == null);
+			}
 		}
 	}
 }
