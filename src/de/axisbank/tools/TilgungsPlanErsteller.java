@@ -2,8 +2,8 @@ package de.axisbank.tools;
 
 import java.util.Vector;
 
-import de.axisbank.services.Tilgung;
-import de.axisbank.services.Tilgungsplan;
+import de.axisbank.services.filiale.Tilgung;
+import de.axisbank.services.filiale.Tilgungsplan;
 
 public class TilgungsPlanErsteller {
 
