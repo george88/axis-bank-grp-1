@@ -6,9 +6,9 @@ import org.junit.Test;
 import de.axisbank.daos.Antragssteller;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
+import de.axisbank.services.Tilgung;
+import de.axisbank.services.Tilgungsplan;
 import de.axisbank.services.filiale.FilialBankService;
-import de.axisbank.services.filiale.Tilgung;
-import de.axisbank.services.filiale.Tilgungsplan;
 import de.axisbank.tools.TilgungsPlanErsteller;
 
 public class FilialBankServiceTest extends TestCase {
