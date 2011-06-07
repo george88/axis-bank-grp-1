@@ -17,6 +17,7 @@ import de.axisbank.daos.Kreditverbindlichkeiten;
 import de.axisbank.daos.User;
 import de.axisbank.daos.Versicherungen;
 import de.axisbank.datenbank.DB;
+import de.axisbank.services.Tilgungsplan;
 import de.axisbank.tools.KonfigFiles;
 import de.axisbank.tools.Logging;
 import de.axisbank.tools.TilgungsPlanErsteller;

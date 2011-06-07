@@ -1,4 +1,4 @@
-package de.axisbank.services.filiale;
+package de.axisbank.services;
 
 public class Tilgung {
 
