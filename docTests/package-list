@@ -1,0 +1,9 @@
+de.axisbank
+de.axisbank.daos
+de.axisbank.datenbank
+de.axisbank.services
+de.axisbank.services.filiale
+de.axisbank.services.filiale.direktTests
+de.axisbank.services.filiale.remoteTests
+de.axisbank.services.web
+de.axisbank.tools

@@ -90,7 +90,7 @@ public class DB {
 	/**
 	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
 	 * @param daoObject
-	 * @return
+	 * @return Boolean
 	 */
 	public static boolean update(DaoObject[] daoObject) {
 		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
@@ -99,7 +99,7 @@ public class DB {
 	/**
 	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
 	 * @param daoObject
-	 * @return
+	 * @return int[]
 	 */
 	public static int[] insert(DaoObject[] daoObject) {
 		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
@@ -109,7 +109,7 @@ public class DB {
 	/**
 	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
 	 * @param daoObject
-	 * @return
+	 * @return Boolean
 	 */
 	public static boolean delete(DaoObject[] daoObject) {
 		String[] deletes = MySqlQueryFactory.createDelete(daoObject);
@@ -122,7 +122,7 @@ public class DB {
 	 * @param select
 	 * @param daoObj
 	 * @param hauptSelect
-	 * @return
+	 * @return Object
 	 */
 	public Object select(String select, DaoObject daoObj, boolean hauptSelect) {
 		if (connection == null)
@@ -276,7 +276,7 @@ public class DB {
 	 * Es wird ein Insertquery an die Datenbank gegeben.
 	 * @param inserts
 	 * @param hauptInsert
-	 * @return
+	 * @return int[]
 	 */
 	public int[] insert(String[] inserts, boolean hauptInsert) {
 		if (connection == null)
