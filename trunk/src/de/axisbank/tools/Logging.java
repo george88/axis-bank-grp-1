@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 /**
  * Diese Klasse bietet eine schnelle Möglichkeit geordneter Logginginformationen in der Konsole darzustellen.
- * Sie prüft vor Ausgabe des Loggings, ob das Logging aktiviert ist.
+ * Sie prüft vor Ausgabe des Loggings, ob das Logging für diese Klasse aktiviert ist aktiviert ist.
  * @author Georg Neufeld
  *
  */

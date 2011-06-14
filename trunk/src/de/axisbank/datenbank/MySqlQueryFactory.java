@@ -12,7 +12,7 @@ import de.axisbank.tools.Logging;
  * @author Georg Neufeld
  *
  */
-class MySqlQueryFactory {
+public class MySqlQueryFactory {
 
 	/**
 	 * Es wird ein Updatequery erstellt.
