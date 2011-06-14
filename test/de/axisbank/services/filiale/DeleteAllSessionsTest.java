@@ -1,4 +1,4 @@
-package de.axisbank.services;
+package de.axisbank.services.filiale;
 
 import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
