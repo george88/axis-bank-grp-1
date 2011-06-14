@@ -1,5 +1,10 @@
 package de.axisbank.daos;
 
+/**
+ * Diese Klasse stellt das gleichnamige Datenbankobjekt zur Verfügung. Sie ist quasi Eintrag der Datenbanktabelle Einnahmen. 
+ * @author Georg Neufeld
+ *
+ */
 public class Einnahmen extends DaoObject {
 
 	private String art;

@@ -1,5 +1,10 @@
 package de.axisbank.daos;
 
+/**
+ * Diese Klasse stellt das gleichnamige Datenbankobjekt zur Verfügung. Sie ist quasi Eintrag der Datenbanktabelle User 
+ * @author Georg Neufeld
+ *
+ */
 public class User extends DaoObject {
 
 	private String benutzername;

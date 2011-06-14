@@ -4,6 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Die DatumsKonvertierung dient als Hilfe zur Umwandlung und von Datumsformaten.
+ * @author Georg Neufeld
+ *
+ */
 public class DatumsKonvertierung {
 
 	public static Date getDatumFromString(String datum) {

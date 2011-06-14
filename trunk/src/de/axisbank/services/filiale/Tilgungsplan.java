@@ -1,5 +1,10 @@
 package de.axisbank.services.filiale;
 
+/**
+ * Der Tilgungsplan wird von einem  Tool Namens TilgungsPLanersteller aus dem package tool erstellt.
+ * @author Georg Neufeld
+ *
+ */
 public class Tilgungsplan {
 
 	private double kreditHoehe;

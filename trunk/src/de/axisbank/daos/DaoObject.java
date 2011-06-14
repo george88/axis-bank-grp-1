@@ -1,5 +1,10 @@
 package de.axisbank.daos;
 
+/**
+ * Diese Klasse stellt die Superklasse füpr alle anderen Klassen in diesem package dar. Sie stellt die grundlegenden Eigenschaften aller anderen Data-Access-Object-Klassen zur Verfügung. 
+ * @author Georg Neufeld
+ *
+ */
 public class DaoObject {
 
 	private int id = -1;

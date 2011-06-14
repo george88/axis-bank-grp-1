@@ -5,6 +5,11 @@ import java.util.Random;
 
 import de.axisbank.tools.Logging;
 
+/**
+ * Diese Klasse händelt die Sessions und bietet Methoden an, die für ein geregeltes Sessionmanagement von Nöten sind. 
+ * @author Georg Neufeld
+ *
+ */
 public class SessionManagement {
 
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();

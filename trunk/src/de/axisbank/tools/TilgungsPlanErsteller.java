@@ -5,6 +5,11 @@ import java.util.Vector;
 import de.axisbank.services.filiale.Tilgung;
 import de.axisbank.services.filiale.Tilgungsplan;
 
+/**
+ * Der TilgungsPlanErsteller enthält nur eine Methode um einen Tilgungsplan zu erstellen.
+ * @author Georg Neufeld
+ *
+ */
 public class TilgungsPlanErsteller {
 
 	/**

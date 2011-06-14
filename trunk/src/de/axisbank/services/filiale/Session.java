@@ -7,6 +7,12 @@ import javax.swing.Timer;
 
 import de.axisbank.tools.Logging;
 
+/**
+ * Diese Klasse stellt eine Session das. Das heißt, dass eine Instanz dieser Klasse ein gültige Session dargestellt.
+ * Diese Instanz befindet sich dann im Handling des Sessionmanagement. 
+ * @author Georg Neufeld
+ *
+ */
 public class Session implements ActionListener {
 
 	/**

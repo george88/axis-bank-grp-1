@@ -1,5 +1,10 @@
 package de.axisbank.services.filiale;
 
+/**
+ * Die Instanz dieser Klasse ist im übertragenen Sinn eine Zeile in dem Tilgungsplan, der über die Methode getTilgungsPlan in der Serviceklasse FilialBankService.
+ * @author Georg Neufeld
+ *
+ */
 public class Tilgung {
 
 	private String startDatum;

@@ -6,7 +6,23 @@ import de.axisbank.daos.DaoObject;
 import de.axisbank.tools.DatumsKonvertierung;
 import de.axisbank.tools.Logging;
 
+/**
+ * Diese Klasse dient zur Erstellung von Querys für die Datenbankabfrage.
+ * Sie nutzt die Technik der Reflexion mit der, anhand der Klassennamen und der Namen der Get- und Set-Methoden, die Datenbankquerys erstellt werden. 
+ * @author Georg Neufeld
+ *
+ */
 class MySqlQueryFactory {
+
+	/**
+	 * Es wird ein Updatequery erstellt.
+	 * Dabei werden alle Get-Methoden aus der DAO-Klasse abgefragt.
+	 * Welche Get-Methoden dann im Falle einer String-Rückgabe keine null zurückgeben, werden im Query berücksichtigt.
+	 * Im Falle einer Double- oder Integer-Rückgabe wird Rücksicht auf den Wert genommen, wenn diser nicht -1 bzw. -1.0 ist.s 
+	 * Eine Bedingung für die Erstellung eines Update ist, dass die id des DAO-Objektes gesetzt ist um einen eindeutigen Eintrag zu erhalten.
+	 * @param daoObject
+	 * @return String[]
+	 */
 	protected static String[] createUpdate(DaoObject[] daoObject) {
 		if (daoObject == null)
 			return null;
@@ -70,6 +86,11 @@ class MySqlQueryFactory {
 		return updates;
 	}
 
+	/**
+	 * Es wird bei der Erstellung des Insert genauso vorgegangen wie bei der Erstellung eines Updates mit Ausnahme der eindeutigen Id, die hierbei nicht benötigt wird. 
+	 * @param daoObject
+	 * @return String[]
+	 */
 	protected static String[] createInsert(DaoObject[] daoObject) {
 		if (daoObject == null)
 			return null;
@@ -155,6 +176,12 @@ class MySqlQueryFactory {
 		return inserts;
 	}
 
+	/**
+	 * Analog zu der createUpdate-Methode.
+	 * @param daoObject
+	 * @param columns
+	 * @return String
+	 */
 	protected static String createSelect(DaoObject daoObject, String columns) {
 		String select = "SELECT " + (columns != null ? columns : "*") + " FROM " + DB.Table_Prefix + daoObject.getTableName();
 		String where = "";
@@ -213,6 +240,11 @@ class MySqlQueryFactory {
 		return select + where;
 	}
 
+	/**
+	 * Es wird ein einfacher Deletequery gestrickt, anhand der id im Objekt. 
+	 * @param daoObject
+	 * @return String[]
+	 */
 	protected static String[] createDelete(DaoObject[] daoObject) {
 		if (daoObject == null)
 			return null;
