@@ -7,6 +7,7 @@ package de.axisbank.services.filiale;
  */
 public class Tilgungsplan {
 
+	/************************** Variablen *************************************/
 	private double kreditHoehe;
 
 	private String kreditBeginn;
@@ -23,6 +24,7 @@ public class Tilgungsplan {
 
 	}
 
+	/************************** Konstruktor *************************************/
 	public Tilgungsplan(double kreditHoehe, String kreditBeginn, double zinsatz, double ratenHoehe, int laufzeitMonate, Tilgung[] tilgungen) {
 		super();
 		this.kreditHoehe = kreditHoehe;
@@ -33,6 +35,7 @@ public class Tilgungsplan {
 		this.tilgungen = tilgungen;
 	}
 
+	/************************* Getter/Setter ************************************/
 	public double getKreditHoehe() {
 		return kreditHoehe;
 	}

@@ -26,51 +26,6 @@ import de.axisbank.tools.Logging;
 public class DB {
 
 	/**
-	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
-	 * @param daoObject
-	 * @return Object
-	 */
-	public static Object select(DaoObject daoObject) {
-		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null), daoObject, true);
-	}
-
-	/**
-	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
-	 * @param daoObject
-	 * @return
-	 */
-	public static boolean update(DaoObject[] daoObject) {
-		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
-	}
-
-	/**
-	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
-	 * @param daoObject
-	 * @return
-	 */
-	public static int[] insert(DaoObject[] daoObject) {
-		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
-		return new DB().insert(inserts, true);
-	}
-
-	/**
-	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
-	 * @param daoObject
-	 * @return
-	 */
-	public static boolean delete(DaoObject[] daoObject) {
-		String[] deletes = MySqlQueryFactory.createDelete(daoObject);
-		return new DB().delete(deletes, true);
-	}
-
-	/**
-	 * Konstruktor, der beim Aufruf eine Verbindung zur Datenbank erstellt.
-	 */
-	public DB() {
-		connecting();
-	}
-
-	/**
 	 * Das Object zur Datenbankverbindung
 	 */
 	private Connection connection = null;
@@ -114,6 +69,52 @@ public class DB {
 	 * Das Tabellenprefix, welches aus der Konfigdatei entnommen wird
 	 */
 	protected final static String Table_Prefix = KonfigFiles.getString(KonfigFiles.DB_TABLEPREFIX);
+
+	/**
+	 * Konstruktor, der beim Aufruf eine Verbindung zur Datenbank erstellt.
+	 */
+	/************************** Konstruktor *************************************/
+	public DB() {
+		connecting();
+	}
+
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return Object
+	 */
+	public static Object select(DaoObject daoObject) {
+		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null), daoObject, true);
+	}
+
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
+	public static boolean update(DaoObject[] daoObject) {
+		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
+	}
+
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
+	public static int[] insert(DaoObject[] daoObject) {
+		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
+		return new DB().insert(inserts, true);
+	}
+
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
+	public static boolean delete(DaoObject[] daoObject) {
+		String[] deletes = MySqlQueryFactory.createDelete(daoObject);
+		return new DB().delete(deletes, true);
+	}
 
 	/**
 	 * Diese Methode fragt die Datenbank anhand eines DAO-Objektes ab.

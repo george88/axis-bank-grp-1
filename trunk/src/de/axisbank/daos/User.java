@@ -7,6 +7,7 @@ package de.axisbank.daos;
  */
 public class User extends DaoObject {
 
+	/************************** Variablen *************************************/
 	private String benutzername;
 
 	private String passwort;
@@ -25,6 +26,7 @@ public class User extends DaoObject {
 		super();
 	}
 
+	/************************** Konstruktor *************************************/
 	public User(String benutzername, String passwort, int status, long letzterLogin, String vorname, String nachname, String gebDatum) {
 		super();
 		this.benutzername = benutzername;
@@ -36,6 +38,7 @@ public class User extends DaoObject {
 		this.gebDatum = gebDatum;
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getBenutzername() {
 		return benutzername;
 	}
