@@ -16,7 +16,7 @@ public class FilialBankServiceTest extends TestCase {
 	private static Antragssteller antragssteller;
 
 	private long getSessionID() {
-		return new FilialBankService().login("1", "1");
+		return new FilialBankService().login("Guido", "1411");
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class FilialBankServiceTest extends TestCase {
 	@Test
 	public void testLogin() {
 		FilialBankService wbs = new FilialBankService();
-		long sessID = wbs.login("1", "1");
+		long sessID = wbs.login("Guido", "1411");
 		assertTrue("SessionId ist -1 --> Benutzer nicht vorhanden oder Datenbank nicht erreichbar", sessID != -1);
 		System.out.println("Benutzer angemeldet: SessionID:" + sessID);
 	}
@@ -39,9 +39,9 @@ public class FilialBankServiceTest extends TestCase {
 	@Test
 	public void testgetUser() {
 		FilialBankService wbs = new FilialBankService();
-		User user = wbs.getUser("1", getSessionID());
+		User user = wbs.getUser("Guido", getSessionID());
 		if (user != null) {
-			assertEquals("Benutzername stimmt nicht überein", "1", user.getBenutzername());
+			assertEquals("Benutzername stimmt nicht überein", "Guido", user.getBenutzername());
 		}
 	}
 
@@ -67,7 +67,7 @@ public class FilialBankServiceTest extends TestCase {
 	@Test
 	public void testGetLiquiditaet() {
 		System.out.println("testGetLiquiditaet");
-		double einnahmen = 5000, ueberschuss = 200, rateKredit = 500;
+		double einnahmen = 5000, ueberschuss = 600, rateKredit = 500;
 		FilialBankService wbs = new FilialBankService();
 		boolean r = wbs.getLiquiditaet(einnahmen, ueberschuss, rateKredit, getSessionID());
 		assertTrue("Liquidität nicht vorhanden", r);
@@ -168,8 +168,6 @@ public class FilialBankServiceTest extends TestCase {
 		System.out.println("testInsertAntragsteller");
 		System.out.println("Test Versicherung hinzufügen zum vorhandenen Antragssteller ");
 		Antragssteller as = new Antragssteller();
-		as.setVorname("Daniel");
-		as.setNachname("Schmitz");
 		as.setId(1);
 		Versicherungen v = new Versicherungen();
 		v.setMtlBeitrag(55);
@@ -221,7 +219,7 @@ public class FilialBankServiceTest extends TestCase {
 		r = wbs.insertAntragssteller(as, getSessionID());
 		assertTrue("Fehler beim Eintrag einer neuen Versicherung", r);
 		wbs = new FilialBankService();
-		ass = wbs.getAntragssteller("Testantragsteller", "Testantragsteller", null, 1111111, getSessionID());
+		ass = wbs.getAntragssteller("Testantragsteller", null, null, -1, getSessionID());
 		assertTrue("neuer Antragssteller nicht vorhanden", ass != null && ass.length > 0);
 		Antragssteller a = ass[0];
 		as = a;
