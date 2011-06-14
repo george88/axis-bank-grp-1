@@ -4,6 +4,11 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Properties;
 
+/**
+ * Mit dieser Klasse werden die Konfigurationsdateien, die im package konf liegen, ausgelesen.
+ * @author Georg Neufeld
+ *
+ */
 public class KonfigFiles {
 
 	private static final String fileType = "_Konfiguration.properties";

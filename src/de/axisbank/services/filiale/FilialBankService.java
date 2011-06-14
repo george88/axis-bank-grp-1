@@ -21,6 +21,14 @@ import de.axisbank.tools.KonfigFiles;
 import de.axisbank.tools.Logging;
 import de.axisbank.tools.TilgungsPlanErsteller;
 
+/**
+ * Dies ist die Service-Klasse für den Service der von dem Filial-Client genutzt wird.
+ * Sie bietet alle Methoden bzw. RPC (Remote Procedure Calls) nur über eine gültige Session an.
+ * Diese Session erhält man über die login()-Methode.
+ * Die einzige Methoden, die nicht über eine gültige Session funktionieren, dafür mit einen Passwort , sind getSessionInfo() und sessionDelete().
+ * @author Georg Neufeld
+ *
+ */
 public class FilialBankService {
 
 	public FilialBankService() {
@@ -100,6 +108,7 @@ public class FilialBankService {
 	}
 
 	public boolean getLiquiditaet(double einnahmen, double ueberschuss, double rateKredit, Long sessionID) {
+		Logging.logLine("RPC:getLiquiditaet");
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
 		SessionManagement.updateSession(sessionID);

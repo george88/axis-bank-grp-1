@@ -16,40 +16,113 @@ import de.axisbank.tools.DatumsKonvertierung;
 import de.axisbank.tools.KonfigFiles;
 import de.axisbank.tools.Logging;
 
+/**
+ * Diese Klasse stellt die Verbindung zur Datenbank her. Sie bedient sicher der Hilfsklasse MySQLFactory um die Abfrage-Query zu gestallten.
+ * Dabei greift sie auf eine Technik zurück, die sich Reflexion nennt.
+ * Dabei Werden die Namen der DAO-Klassen und deren Methoden als Datenbankindikatoren für Tabellennamen und Attributsnamen verwendet.  
+ * @author Georg Neufeld
+ *
+ */
 public class DB {
 
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return Object
+	 */
 	public static Object select(DaoObject daoObject) {
 		return new DB().select(MySqlQueryFactory.createSelect(daoObject, null), daoObject, true);
 	}
 
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
 	public static boolean update(DaoObject[] daoObject) {
 		return new DB().update(MySqlQueryFactory.createUpdate(daoObject), true);
 	}
 
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
 	public static int[] insert(DaoObject[] daoObject) {
 		String[] inserts = MySqlQueryFactory.createInsert(daoObject);
 		return new DB().insert(inserts, true);
 	}
 
+	/**
+	 * Es wird Query erstellt und dieser dann an die Datenbank-Methode weitergereicht.
+	 * @param daoObject
+	 * @return
+	 */
 	public static boolean delete(DaoObject[] daoObject) {
 		String[] deletes = MySqlQueryFactory.createDelete(daoObject);
 		return new DB().delete(deletes, true);
 	}
 
+	/**
+	 * Konstruktor, der beim Aufruf eine Verbindung zur Datenbank erstellt.
+	 */
 	public DB() {
 		connecting();
 	}
 
+	/**
+	 * Das Object zur Datenbankverbindung
+	 */
 	private Connection connection = null;
+
+	/**
+	 * Der Anfang der URL zur MySQL-Datenbank
+	 */
 	private final static String URL = "jdbc:mysql:";
+
+	/**
+	 * Der Datenbank-Servername, der aus der Konfigdatei ausgelesen wird.
+	 */
 	private final static String SERVER_NAME = "//" + KonfigFiles.getString(KonfigFiles.DB_HOST);
+
+	/**
+	 * Der vollständige Name der Treiberklasse für die MySQL-Datenbank
+	 */
 	private final static String DRIVER = "com.mysql.jdbc.Driver";
+
+	/**
+	 * Der Port, der aus der Konfigdatei gelsen wird
+	 */
 	private final static String PORT = ":" + KonfigFiles.getString(KonfigFiles.DB_PORT);
+
+	/**
+	 * Der Name der Datenbankinstanz, der aus der Konfig gelsen wird
+	 */
 	private final static String DB_NAME = "/" + KonfigFiles.getString(KonfigFiles.DB_NAME);
+
+	/**
+	 * Der Benutzername zur Datenbank, aus der Konfigdatei ausgelesen
+	 */
 	private final static String USER_NAME = KonfigFiles.getString(KonfigFiles.DB_USER);
+
+	/**
+	 * Das Passwort, wechles aus der Konfigdatei gelesen wird
+	 */
 	private final static String PASSWORD = KonfigFiles.getString(KonfigFiles.DB_PASSWORD);
+
+	/**
+	 * Das Tabellenprefix, welches aus der Konfigdatei entnommen wird
+	 */
 	protected final static String Table_Prefix = KonfigFiles.getString(KonfigFiles.DB_TABLEPREFIX);
 
+	/**
+	 * Diese Methode fragt die Datenbank anhand eines DAO-Objektes ab.
+	 * Dabei füllt sie mithilfe von Reflexion die Set-Methoden des DaoObjektes und gibt dieses dann gefüllt zurück.
+	 * @param select
+	 * @param daoObj
+	 * @param hauptSelect
+	 * @return
+	 */
 	public Object select(String select, DaoObject daoObj, boolean hauptSelect) {
 		if (connection == null)
 			return null;
@@ -136,6 +209,12 @@ public class DB {
 		return ds;
 	}
 
+	/**
+	 * Es wird ein Updatequery an die Datenbank übergeben.
+	 * @param updates
+	 * @param hauptUpdate
+	 * @return Boolean
+	 */
 	public boolean update(String[] updates, boolean hauptUpdate) {
 		if (connection == null)
 			return false;
@@ -161,6 +240,12 @@ public class DB {
 		return erfolg;
 	}
 
+	/**
+	 * Es wird eine Deletequery an die Datenbank gereicht.
+	 * @param deletes
+	 * @param hauptUpdate
+	 * @return Boolean
+	 */
 	public boolean delete(String[] deletes, boolean hauptUpdate) {
 		if (connection == null)
 			return false;
@@ -186,6 +271,12 @@ public class DB {
 		return erfolg;
 	}
 
+	/**
+	 * Es wird ein Insertquery an die Datenbank gegeben.
+	 * @param inserts
+	 * @param hauptInsert
+	 * @return
+	 */
 	public int[] insert(String[] inserts, boolean hauptInsert) {
 		if (connection == null)
 			return null;
@@ -221,6 +312,9 @@ public class DB {
 		return ids;
 	}
 
+	/**
+	 * Es wird eine Verbindung zur Datenabank erstellt, falls keine besteht.
+	 */
 	private void connecting() {
 
 		if (connection == null) {
@@ -237,6 +331,9 @@ public class DB {
 		}
 	}
 
+	/**
+	 * Hier wird die Datenbankverbindung geschlossen, falls sie existiert. 
+	 */
 	private void closing() {
 		if (connection != null) {
 

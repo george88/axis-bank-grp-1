@@ -4,6 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Diese Klasse bietet eine schnelle Möglichkeit geordneter Logginginformationen in der Konsole darzustellen.
+ * Sie prüft vor Ausgabe des Loggings, ob das Logging aktiviert ist.
+ * @author Georg Neufeld
+ *
+ */
 public class Logging {
 
 	public static void log(Object obj) {
