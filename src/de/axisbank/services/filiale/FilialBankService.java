@@ -31,6 +31,7 @@ import de.axisbank.tools.TilgungsPlanErsteller;
  */
 public class FilialBankService {
 
+	/************************** Konstruktor *************************************/
 	public FilialBankService() {
 	}
 

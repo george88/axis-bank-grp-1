@@ -12,6 +12,7 @@ import de.axisbank.tools.Logging;
  */
 public class SessionManagement {
 
+	/************************** Variablen *************************************/
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();
 	private static Random random = new Random();
 	private static Object syncObj = new Object();

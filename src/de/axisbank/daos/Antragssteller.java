@@ -7,6 +7,7 @@ package de.axisbank.daos;
  */
 public class Antragssteller extends DaoObject {
 
+	/************************** Variablen *************************************/
 	private String anrede;
 
 	private String titel;
@@ -55,6 +56,7 @@ public class Antragssteller extends DaoObject {
 
 	private Kreditantrag[] kreditantraege;
 
+	/************************** Konstruktor *************************************/
 	public Antragssteller() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller_2" });
@@ -97,6 +99,7 @@ public class Antragssteller extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller_2" });
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getAnrede() {
 		return anrede;
 	}

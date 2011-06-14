@@ -7,10 +7,12 @@ package de.axisbank.daos;
  */
 public class Ausgaben extends DaoObject {
 
+	/************************** Variablen *************************************/
 	private String art;
 
 	private double betrag = -1.0D;
 
+	/************************** Konstruktor *************************************/
 	public Ausgaben() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
@@ -29,6 +31,7 @@ public class Ausgaben extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getArt() {
 		return art;
 	}

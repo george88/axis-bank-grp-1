@@ -7,6 +7,7 @@ package de.axisbank.daos;
  */
 public class DaoObject {
 
+	/************************** Variablen *************************************/
 	private int id = -1;
 
 	private int[] referenzIds;
@@ -17,6 +18,7 @@ public class DaoObject {
 
 	private String tableName;
 
+	/************************** Konstruktor *************************************/
 	public DaoObject() {
 		setTableName(getClass().getSimpleName());
 		setIdName("id" + getTableName());
@@ -28,6 +30,7 @@ public class DaoObject {
 		this.tableName = tableName;
 	}
 
+	/************************* Getter/Setter ************************************/
 	public int getId() {
 		return id;
 	}

@@ -7,6 +7,7 @@ package de.axisbank.daos;
  */
 public class Arbeitgeber extends DaoObject {
 
+	/************************** Variablen *************************************/
 	private String nameArbeitgeber;
 
 	private String beschSeit;
@@ -19,6 +20,7 @@ public class Arbeitgeber extends DaoObject {
 
 	private String ortArbeitgeber;
 
+	/************************** Konstruktor *************************************/
 	public Arbeitgeber() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
@@ -41,6 +43,7 @@ public class Arbeitgeber extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getNameArbeitgeber() {
 		return nameArbeitgeber;
 	}

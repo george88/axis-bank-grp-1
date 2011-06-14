@@ -7,6 +7,7 @@ package de.axisbank.services.filiale;
  */
 public class Tilgung {
 
+	/************************** Variablen *************************************/
 	private String startDatum;
 
 	private double startSchuld;
@@ -25,6 +26,7 @@ public class Tilgung {
 
 	}
 
+	/************************** Konstruktor *************************************/
 	public Tilgung(String startDatum, double startSchuld, double rate, double zinsAnteil, double tilgung, String endDatum, double endSchuld) {
 		super();
 		this.startDatum = startDatum;
@@ -36,6 +38,7 @@ public class Tilgung {
 		this.endSchuld = endSchuld;
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getStartDatum() {
 		return startDatum;
 	}

@@ -7,6 +7,7 @@ package de.axisbank.daos;
  */
 public class Versicherungen extends DaoObject {
 
+	/************************** Variablen *************************************/
 	private String versArt;
 
 	private String versGesellschaft;
@@ -15,6 +16,7 @@ public class Versicherungen extends DaoObject {
 
 	private double mtlBeitrag = -1.0D;
 
+	/************************** Konstruktor *************************************/
 	public Versicherungen() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
@@ -35,6 +37,7 @@ public class Versicherungen extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
+	/************************* Getter/Setter ************************************/
 	public String getVersArt() {
 		return versArt;
 	}

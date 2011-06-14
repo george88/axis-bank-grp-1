@@ -15,9 +15,7 @@ import de.axisbank.tools.Logging;
  */
 public class Session implements ActionListener {
 
-	/**
-	 * 
-	 */
+	/************************** Variablen *************************************/
 	private static final long serialVersionUID = -4034449263354130980L;
 	private String benutzername;
 	private Long sessionID;
@@ -25,6 +23,7 @@ public class Session implements ActionListener {
 	private int delay;
 	private final Timer timer;
 
+	/************************** Konstruktor *************************************/
 	public Session(String benutzername, Long sessionID) {
 		setBenutzername(benutzername);
 		setSessionID(sessionID);
