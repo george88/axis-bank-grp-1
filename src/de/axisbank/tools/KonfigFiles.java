@@ -151,7 +151,7 @@ public class KonfigFiles {
 
 	/**
 	 * Prüft, ob die Loggingeinstellungen dieser Klasse gesetzt sind, falls nicht wird das Logging ausgegeben
-	 * @param key
+	 * @param className
 	 * @return String
 	 */
 	public static boolean getLogging(String className) {

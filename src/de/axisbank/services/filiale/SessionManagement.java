@@ -91,7 +91,7 @@ public class SessionManagement {
 	/**
 	 * Prüft auf Vorhandensein einer Session anhand des Benutzernames, bei Erfolg Rückgabe der Sessionidentifikation
 	 * @param benutzername
-	 * @return
+	 * @return Long
 	 */
 	public static Long checkSession(String benutzername) {
 		synchronized (syncObj) {

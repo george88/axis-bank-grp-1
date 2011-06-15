@@ -30,7 +30,7 @@ public class Ausgaben extends DaoObject {
 
 	/**
 	 * Konstruktor um die Zugehörigkeit der Ausgabe zu einem Antragssteller zuzuordnen
-	 * @param idAusgaben
+	 * @param idAntragssteller
 	 */
 	public Ausgaben(int idAntragssteller) {
 		super();

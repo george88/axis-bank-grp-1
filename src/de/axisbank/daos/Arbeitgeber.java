@@ -51,7 +51,7 @@ public class Arbeitgeber extends DaoObject {
 
 	/**
 	 * Konstruktor um die Zuordnung zum Antragssteller zu erreichen
-	 * @param idArbeitgeber
+	 * @param idAntragssteller
 	 */
 	public Arbeitgeber(int idAntragssteller) {
 		super();
