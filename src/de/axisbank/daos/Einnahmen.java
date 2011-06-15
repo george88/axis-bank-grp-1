@@ -8,11 +8,21 @@ package de.axisbank.daos;
 public class Einnahmen extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Der Art der Einnahme
+	 */
 	private String art;
 
+	/**
+	 * Die Höhe der Einnahmes
+	 */
 	private double betrag = -1.0D;
 
 	/************************** Konstruktor *************************************/
+	/**
+	 * Konstruktor um ein vollständiges Einnahmen-Objekt zu erstellen
+	 */
 	public Einnahmen(String art, double betrag) {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
@@ -20,14 +30,20 @@ public class Einnahmen extends DaoObject {
 		this.betrag = betrag;
 	}
 
+	/**
+	 * Standardkonstruktor
+	 */
 	public Einnahmen() {
 		super();
+		//Name des Attributs zur Referenztabelle Antragsteller --> Ein Arbeitgeber gehört zu genau einem Antragssteller
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
 	public Einnahmen(int idAntragssteller) {
 		super();
+		//Name des Attributs zur Referenztabelle Antragsteller --> Ein Arbeitgeber gehört zu genau einem Antragssteller
 		setReferenzIdNames(new String[] { "idAntragssteller" });
+		//Identifikationsnummer des Attributs zur Referenztabelle
 		setReferenzIds(new int[] { idAntragssteller });
 	}
 

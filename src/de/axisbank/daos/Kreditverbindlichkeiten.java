@@ -8,15 +8,36 @@ package de.axisbank.daos;
 public class Kreditverbindlichkeiten extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Name des Kreditinstitutes
+	 */
 	private String kreditinstitut;
 
+	/**
+	 * Höhe der Gesamtschuld
+	 */
 	private double gesamtschuld = -1.0D;
 
+	/**
+	 * Höhe der Restschuld
+	 */
 	private double restSchuld = -1.0D;
 
+	/**
+	 * Höhe der montalichen Rate
+	 */
 	private double mtlRate = -1.0D;
 
 	/************************** Konstruktor *************************************/
+
+	/**
+	 * Konstruktor um ein vollständiges Kreditverbindlichkeiten-Objekt zu erstellen 
+	 * @param kreditinstitut
+	 * @param gesamtschuld
+	 * @param restSchuld
+	 * @param mtlRate
+	 */
 	public Kreditverbindlichkeiten(String kreditinstitut, double gesamtschuld, double restSchuld, double mtlRate) {
 		super();
 		this.kreditinstitut = kreditinstitut;
@@ -26,11 +47,18 @@ public class Kreditverbindlichkeiten extends DaoObject {
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
-	public Kreditverbindlichkeiten() {
+	/**
+	 * Standardkonstruktur
+	 */
+	Kreditverbindlichkeiten() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
+	/**
+	 * Kostruktor  um den Bezug zum Antragssteller zu ermöglichen
+	 * @param idAntragssteller
+	 */
 	public Kreditverbindlichkeiten(int idAntragssteller) {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
@@ -38,6 +66,7 @@ public class Kreditverbindlichkeiten extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getKreditinstitut() {
 		return kreditinstitut;
 	}

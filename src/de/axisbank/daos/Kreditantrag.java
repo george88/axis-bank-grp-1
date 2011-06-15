@@ -8,40 +8,96 @@ package de.axisbank.daos;
 public class Kreditantrag extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Das User-Objekt bzw. der Berater zum Kreditantrag
+	 */
 	private User berater;
 
+	/**
+	 * die Identfikationsnummer des Kreditberaters
+	 */
 	private int idUser = -1;
 
+	/**
+	 * Das Datum des Kreditantrages tt.mm.yyyy
+	 */
 	private String datum;
 
+	/**
+	 * Der Status des Kreditantrages
+	 */
 	private String status;
 
+	/**
+	 * Der Name der Filiale, in der der Kreditantrag erstellt wurde
+	 */
 	private String filiale;
 
+	/**
+	 * Die Kredithöhe
+	 */
 	private double kreditWunsch = -1.0D;
 
+	/**
+	 * Die Höhe einer Rate pro Monat
+	 */
 	private double ratenHoehe = -1.0D;
 
+	/**
+	 * Die Anzahl der Raten
+	 */
 	private int ratenAnzahl = -1;
 
+	/**
+	 * Die Identifikationsnummer des zweiten Antragssteller
+	 */
 	private int idAntragssteller_2 = -1;
 
+	/**
+	 * Das Objekt des zweiten Antragssteller
+	 */
 	private Antragssteller antragssteller_2;
 
+	/**
+	 * Die Beschreibung des Verhältnis vom ersten Antragsteller zum zweiten
+	 */
 	private String verhaeltnisZu_2;
 
 	/************************** Konstruktor *************************************/
+
+	/**
+	 * Standardkonstruktor
+	 */
 	public Kreditantrag() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
 	}
 
+	/**
+	 * Konstruktor um die Identifikationsnummer des zugehörigen Antragssteller zu setzen
+	 * @param idAntragssteller
+	 */
 	public Kreditantrag(int idAntragssteller) {
 		super();
+		//Name der Identifikationsattribute der Referenztabeller
 		setReferenzIdNames(new String[] { "idAntragssteller", "idUser" });
+		//Identifikation setzen zur ersten Referenztabelle
 		setReferenzIds(new int[] { idAntragssteller });
 	}
 
+	/**
+	 * Konstruktor um ein vollständiges Kreditantrag-Objekt zu erstellen 
+	 * @param berater
+	 * @param datum
+	 * @param status
+	 * @param filiale
+	 * @param kreditWunsch
+	 * @param ratenHoehe
+	 * @param ratenAnzahl
+	 * @param antragssteller_2
+	 * @param verhaeltnisZu_2
+	 */
 	public Kreditantrag(User berater, String datum, String status, String filiale, double kreditWunsch, double ratenHoehe, int ratenAnzahl, Antragssteller antragssteller_2, String verhaeltnisZu_2) {
 		super();
 		this.berater = berater;
@@ -57,6 +113,7 @@ public class Kreditantrag extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public User getBerater() {
 		return berater;
 	}

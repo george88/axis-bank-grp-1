@@ -8,26 +8,54 @@ package de.axisbank.daos;
 public class Versicherungen extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Art der Versicherung
+	 */
 	private String versArt;
 
+	/**
+	 * Name der Versicherungsgesellschaft
+	 */
 	private String versGesellschaft;
 
+	/**
+	 * Höhe der Versicherungssumme
+	 */
 	private double versSumme = -1.0D;
 
+	/**
+	 * Höhe des monatlichen Beitrags
+	 */
 	private double mtlBeitrag = -1.0D;
 
 	/************************** Konstruktor *************************************/
+
+	/**
+	 * Standardkonstruktor
+	 */
 	public Versicherungen() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
+	/**
+	 * Kostruktor  um den Bezug zum Antragssteller zu ermöglichen
+	 * @param idAntragssteller
+	 */
 	public Versicherungen(int idAntragssteller) {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 		setReferenzIds(new int[] { idAntragssteller });
 	}
 
+	/**
+	 * Konstruktor um ein vollständig gefülltes Versicherungs-Objekt zu erhalten
+	 * @param versArt
+	 * @param versGesellschaft
+	 * @param versSumme
+	 * @param mtlBeitrag
+	 */
 	public Versicherungen(String versArt, String versGesellschaft, double versSumme, double mtlBeitrag) {
 		super();
 		this.versArt = versArt;
@@ -38,6 +66,7 @@ public class Versicherungen extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getVersArt() {
 		return versArt;
 	}

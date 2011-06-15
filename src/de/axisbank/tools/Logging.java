@@ -12,17 +12,29 @@ import java.lang.reflect.Method;
  */
 public class Logging {
 
+	/**
+	 * Gibt ein einfaches Logging ohne Zeilenumbruch in der Konsole aus 
+	 * @param obj
+	 */
 	public static void log(Object obj) {
 		if (KonfigFiles.getBoolean(KonfigFiles.Logging_Aktiv) && KonfigFiles.getLogging(Thread.currentThread().getStackTrace()[2].getClassName()))
 			System.out.print(obj);
 	}
 
+	/**
+	 * Gibt ein Logging in der Konsole mit Angabe der Herkunft und Zeilenzahl aus
+	 * @param obj
+	 */
 	public static void logLine(Object obj) {
 		if (KonfigFiles.getBoolean(KonfigFiles.Logging_Aktiv) && KonfigFiles.getLogging(Thread.currentThread().getStackTrace()[2].getClassName()))
 			System.out.println("[ Class:" + Thread.currentThread().getStackTrace()[2].getFileName().substring(0, Thread.currentThread().getStackTrace()[2].getFileName().indexOf(".")) + " ][ Line:"
 					+ Thread.currentThread().getStackTrace()[2].getLineNumber() + " ]\n\t" + obj);
 	}
 
+	/**
+	 * Untersucht ein übergebenes Objekt und gibt deren Get-Methoden-Rückgabenwerte und gesetzten Attribute, private und public, aus
+	 * @param obj
+	 */
 	public static void logObjectDetail(Object obj) {
 		if (obj != null) {
 			if (KonfigFiles.getBoolean(KonfigFiles.Logging_Aktiv) && KonfigFiles.getLogging(Thread.currentThread().getStackTrace()[2].getClassName())) {
@@ -35,11 +47,11 @@ public class Logging {
 						try {
 							System.out.println("\t" + m.getName() + ":\t\t" + m.invoke(obj, new Object[] {}));
 						} catch (IllegalArgumentException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						} catch (IllegalAccessException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						} catch (InvocationTargetException e) {
-							//							e.printStackTrace();
+							e.printStackTrace();
 						}
 				}
 				methods = obj.getClass().getDeclaredMethods();
