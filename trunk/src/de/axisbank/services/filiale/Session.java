@@ -16,14 +16,41 @@ import de.axisbank.tools.Logging;
 public class Session implements ActionListener {
 
 	/************************** Variablen *************************************/
+
 	private static final long serialVersionUID = -4034449263354130980L;
+
+	/**
+	 * Der Benutzername, der mit der Session angemeldet ist
+	 */
 	private String benutzername;
+
+	/**
+	 * die Sessionidentifikation
+	 */
 	private Long sessionID;
+
+	/**
+	 * Legt die Länge einer Session in Sekunden fest
+	 */
 	private final int INITIAL_DELAY = 30 * 60;
+
+	/**
+	 * Enthält den aktuellen Zeitstempel einer Session 
+	 */
 	private int delay;
+
+	/**
+	 * Dient zur Reduzierung der Sessionzeit
+	 */
 	private final Timer timer;
 
 	/************************** Konstruktor *************************************/
+
+	/**
+	 * Konstruktor zu Erstellung einer Session
+	 * @param benutzername
+	 * @param sessionID
+	 */
 	public Session(String benutzername, Long sessionID) {
 		setBenutzername(benutzername);
 		setSessionID(sessionID);
@@ -32,15 +59,25 @@ public class Session implements ActionListener {
 		timer.start();
 	}
 
+	/**
+	 * setzt den Ablaufwert wieder zurück
+	 */
 	public void updateTimer() {
 		Logging.logLine("Es wären noch " + delay + " Sekunden zum SessionDelete");
 		delay = INITIAL_DELAY;
 	}
 
+	/**
+	 * Gibt die aktuelle Erhaltszeit der Session zurück
+	 * @return int
+	 */
 	public int getDelayTime() {
 		return delay;
 	}
 
+	/**
+	 * zählt den Wert des Sessionerhalt sekündlich herunter
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		delay--;
@@ -50,6 +87,8 @@ public class Session implements ActionListener {
 			SessionManagement.deleteSession(getSessionID());
 		}
 	}
+
+	/************************* Getter/Setter ************************************/
 
 	public void setBenutzername(String benutzername) {
 		this.benutzername = benutzername;

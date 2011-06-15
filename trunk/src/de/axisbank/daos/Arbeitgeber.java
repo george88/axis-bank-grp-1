@@ -8,30 +8,68 @@ package de.axisbank.daos;
 public class Arbeitgeber extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Name des Arbeitgebers
+	 */
 	private String nameArbeitgeber;
 
+	/**
+	 * beschäftigt seit tt.mm.yyyy
+	 */
 	private String beschSeit;
 
+	/**
+	 * Strasse des Arbeitgebers
+	 */
 	private String strArbeitgeber;
 
+	/**
+	 * Hausnummer des Arbeitgebers
+	 */
 	private String hnrArbeitgeber;
 
+	/**
+	 * Postleitzahl des Arbeitgebers
+	 */
 	private String plzArbeitgeber;
 
+	/**
+	 * Ort des Arbeitgebers
+	 */
 	private String ortArbeitgeber;
 
 	/************************** Konstruktor *************************************/
+	/**
+	 * Standardkonstruktor
+	 */
 	public Arbeitgeber() {
 		super();
+		//Name des Attributs zur Referenztabelle Antragsteller --> Ein Arbeitgeber gehört zu genau einem Antragssteller
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
-	public Arbeitgeber(int idArbeitgeber) {
+	/**
+	 * Konstruktor um die Zuordnung zum Antragssteller zu erreichen
+	 * @param idArbeitgeber
+	 */
+	public Arbeitgeber(int idAntragssteller) {
 		super();
+		//Name des Attributs zur Referenztabelle Antragsteller --> Ein Arbeitgeber gehört zu genau einem Antragssteller
 		setReferenzIdNames(new String[] { "idAntragssteller" });
-		setReferenzIds(new int[] { idArbeitgeber });
+		//Identifikationsnummer des Attributs zur Referenztabelle
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
+	/**
+	 * Konstruktor für einen vollständigen Arbeitgeber
+	 * @param nameArbeitgeber
+	 * @param beschSeit
+	 * @param strArbeitgeber
+	 * @param hnrArbeitgeber
+	 * @param plzArbeitgeber
+	 * @param ortArbeitgeber
+	 */
 	public Arbeitgeber(String nameArbeitgeber, String beschSeit, String strArbeitgeber, String hnrArbeitgeber, String plzArbeitgeber, String ortArbeitgeber) {
 		super();
 		this.nameArbeitgeber = nameArbeitgeber;
@@ -44,6 +82,7 @@ public class Arbeitgeber extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getNameArbeitgeber() {
 		return nameArbeitgeber;
 	}

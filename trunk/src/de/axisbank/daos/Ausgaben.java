@@ -8,22 +8,41 @@ package de.axisbank.daos;
 public class Ausgaben extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Die Art der Ausgabe
+	 */
 	private String art;
 
+	/**
+	 * Die Höhe der Ausgabe
+	 */
 	private double betrag = -1.0D;
 
 	/************************** Konstruktor *************************************/
+	/**
+	 * Standardkonstruktor
+	 */
 	public Ausgaben() {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
 	}
 
-	public Ausgaben(int idAusgaben) {
+	/**
+	 * Konstruktor um die Zugehörigkeit der Ausgabe zu einem Antragssteller zuzuordnen
+	 * @param idAusgaben
+	 */
+	public Ausgaben(int idAntragssteller) {
 		super();
 		setReferenzIdNames(new String[] { "idAntragssteller" });
-		setReferenzIds(new int[] { idAusgaben });
+		setReferenzIds(new int[] { idAntragssteller });
 	}
 
+	/**
+	 * Konstruktor für ein vollständiges Ausgaben-Objekt
+	 * @param art
+	 * @param betrag
+	 */
 	public Ausgaben(String art, double betrag) {
 		super();
 		this.art = art;
@@ -32,6 +51,7 @@ public class Ausgaben extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getArt() {
 		return art;
 	}

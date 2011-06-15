@@ -11,6 +11,11 @@ import java.util.GregorianCalendar;
  */
 public class DatumsKonvertierung {
 
+	/**
+	 * Kovertiert ein Datum als String aus diesem Fomat "tt.mm.yyyy" in ein <code>java.util.Date</code>
+	 * @param datum
+	 * @return Date
+	 */
 	public static Date getDatumFromString(String datum) {
 		String[] ds = datum.split("\\.");
 
@@ -20,6 +25,11 @@ public class DatumsKonvertierung {
 		return c.getTime();
 	}
 
+	/**
+	 * Kovertiert ein <code>java.util.Date</code> - Datum in einen String mit diesem Fomat "tt.mm.yyyy" 
+	 * @param datum
+	 * @return String
+	 */
 	public static String getStringFromDatum(Date datum) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(datum);
@@ -27,6 +37,12 @@ public class DatumsKonvertierung {
 		return c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "" + c.get(Calendar.YEAR);
 	}
 
+	/**
+	 * Sucht das letzte Datum des übergebenen Monats
+	 * Berücksichtigt dabei Schaltjahre
+	 * @param datum
+	 * @return String
+	 */
 	public static String getMonatsEnde(String datum) {
 		int monat = -1;
 		try {
@@ -83,6 +99,11 @@ public class DatumsKonvertierung {
 		return tag + datum.substring(2);
 	}
 
+	/**
+	 * Findet das erste Datum des Folgemonats
+	 * @param datum
+	 * @return String
+	 */
 	public static String getNaechstenMonatsAnfang(String datum) {
 		int monat = -1;
 		int jahr = -1;
@@ -113,11 +134,16 @@ public class DatumsKonvertierung {
 		return datum;
 	}
 
-	public static String getStringFromDbDate(java.sql.Date o) {
-		String d = o.toString();
+	/**
+	 * Wandelt das datum aus dem Datenbankdatumsformat in folgendendes String-Format um "tt.mm.yyyy"
+	 * @param dbDate
+	 * @return String
+	 */
+	public static String getStringFromDbDate(java.sql.Date dbDate) {
+		String d = dbDate.toString();
 		try {
 			Calendar c = Calendar.getInstance();
-			c.setTime(o);
+			c.setTime(dbDate);
 			d = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + c.get(Calendar.DAY_OF_MONTH) : c.get(Calendar.DAY_OF_MONTH)) + "."
 					+ (c.get(Calendar.MONTH) < 10 ? "0" + c.get(Calendar.MONTH) : c.get(Calendar.MONTH)) + "." + c.get(Calendar.YEAR);
 
@@ -127,7 +153,12 @@ public class DatumsKonvertierung {
 		return d;
 	}
 
-	public static String getStringToDbSttringDate(String date) {
+	/**
+	 * Wandelt ein Datums-String des Formates "tt.mm.yyyy" in einen String, der für einen Datums-Datenbankeintrag konform ist, um ("tt-mm-yyyy")
+	 * @param date
+	 * @return String
+	 */
+	public static String getStringToDbStringDate(String date) {
 		String d = date;
 		try {
 			String[] ds = date.split("\\.");

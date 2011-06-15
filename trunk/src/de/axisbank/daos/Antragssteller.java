@@ -8,66 +8,176 @@ package de.axisbank.daos;
 public class Antragssteller extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Anrede
+	 */
 	private String anrede;
 
+	/**
+	 * Titel
+	 */
 	private String titel;
 
+	/**
+	 * Vorname
+	 */
 	private String vorname;
 
+	/**
+	 * Nachname
+	 */
 	private String nachname;
 
+	/**
+	 * Geburtsname
+	 */
 	private String gebName;
 
+	/**
+	 * Geburtsort
+	 */
 	private String gebOrt;
 
+	/**
+	 * Geburtsdatum tt.mm.yyyy
+	 */
 	private String gebDatum;
 
+	/**
+	 * Strasse
+	 */
 	private String str;
 
+	/**
+	 * Hausnummer
+	 */
 	private String hnr;
 
+	/**
+	 * Postleitzahl
+	 */
 	private String plz;
 
+	/**
+	 * Ort
+	 */
 	private String ort;
 
+	/**
+	 * wohnhaft seit tt.mm.yyyy
+	 */
 	private String wohnhaftSeit;
 
+	/**
+	 * Telefonnummer
+	 */
 	private String telefon;
 
+	/**
+	 * Email-Adress
+	 */
 	private String email;
 
+	/**
+	 * Beruf
+	 */
 	private String beruf;
 
+	/**
+	 * Anzahl der Kinder
+	 */
 	private int anzKinder = -1;
 
+	/**
+	 * Familienstand
+	 */
 	private String familienstand;
 
+	/**
+	 * Kontonummer des Hauptgirokontos
+	 */
 	private int hauptGirokonto = -1;
 
+	/**
+	 * Ein Array der Einnahmen-Klasse
+	 */
 	private Einnahmen[] einnahmen;
 
+	/**
+	 * Ein Array der Versicherungen-Klasse
+	 */
 	private Versicherungen[] versicherungen;
 
+	/**
+	 * Ein Array der Ausgaben-Klasse
+	 */
 	private Ausgaben[] ausgaben;
 
+	/**
+	 * Ein Array der Arbeitgeber-Klasse
+	 */
 	private Arbeitgeber[] arbeitgeber;
 
+	/**
+	 * Ein Array der Kreditverbindlichkeiten-Klasse
+	 */
 	private Kreditverbindlichkeiten[] kreditverbindlichkeiten;
 
+	/**
+	 * Ein Array der Kreditantrag-Klasse
+	 */
 	private Kreditantrag[] kreditantraege;
 
 	/************************** Konstruktor *************************************/
+	/**
+	 * Standardkonstruktor
+	 */
 	public Antragssteller() {
 		super();
+		//der Name zur ersten Referenztabelle wird hier gesetzt um die zusammenhängende Datenbankabfragen zu ermöglichen
 		setReferenzIdNames(new String[] { "idAntragssteller_2" });
 	}
 
+	/**
+	 * Konstruktor mit Angabe der Identifikationnr des Datenbankeintrages, falls diese Objekt als zweiter Antragsteller genutzt wird und nicht als erster
+	 * @param idAntragssteller_2
+	 */
 	public Antragssteller(int idAntragssteller_2) {
 		super();
+		//der Name zur ersten Referenztabelle wird hier gesetzt um die zusammenhängende Datenbankabfragen zu ermöglichen
 		setReferenzIdNames(new String[] { "idAntragssteller_2" });
+		//Identifikationsnummer des Attributs zur Referenztabelle
 		setReferenzIds(new int[] { idAntragssteller_2 });
 	}
 
+	/**
+	 * Konstruktor mit der Möglichkeit einen vollständig gefüllten Antragssteller zu erstellen
+	 * @param anrede
+	 * @param titel
+	 * @param vorname
+	 * @param nachname
+	 * @param gebName
+	 * @param gebOrt
+	 * @param gebDatum
+	 * @param str
+	 * @param hnr
+	 * @param plz
+	 * @param ort
+	 * @param wohnhaftSeit
+	 * @param telefon
+	 * @param email
+	 * @param beruf
+	 * @param anzKinder
+	 * @param familienstand
+	 * @param hauptGirokonto
+	 * @param einnahmen
+	 * @param versicherungen
+	 * @param ausgaben
+	 * @param arbeitgeber
+	 * @param kreditverbindlichkeiten
+	 * @param kreditantraege
+	 */
 	public Antragssteller(String anrede, String titel, String vorname, String nachname, String gebName, String gebOrt, String gebDatum, String str, String hnr, String plz, String ort,
 			String wohnhaftSeit, String telefon, String email, String beruf, int anzKinder, String familienstand, int hauptGirokonto, Einnahmen[] einnahmen, Versicherungen[] versicherungen,
 			Ausgaben[] ausgaben, Arbeitgeber[] arbeitgeber, Kreditverbindlichkeiten[] kreditverbindlichkeiten, Kreditantrag[] kreditantraege) {
@@ -100,6 +210,7 @@ public class Antragssteller extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getAnrede() {
 		return anrede;
 	}

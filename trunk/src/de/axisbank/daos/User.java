@@ -8,25 +8,61 @@ package de.axisbank.daos;
 public class User extends DaoObject {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Benutzername des Filialmitarbeiters
+	 */
 	private String benutzername;
 
+	/**
+	 * Passwort des Filialmitarbeiters
+	 */
 	private String passwort;
 
+	/**
+	 * Anmeldestatus des Filialmitarbeiters
+	 */
 	private int status = -1;
 
+	/**
+	 * Zeitpunkt der letzten Anmeldung am System des Filialmitarbeiters
+	 */
 	private long letzterLogin;
 
+	/**
+	 * Vorname des Filialmitarbeiters
+	 */
 	private String vorname;
 
+	/**
+	 * Nachname des Filialmitarbeiters
+	 */
 	private String nachname;
 
+	/**
+	 * Geburtsdatum des Filialmitarbeiters tt.mm.yyyy
+	 */
 	private String gebDatum;
 
+	/************************** Konstruktor *************************************/
+
+	/**
+	 * Standardkonstruktor
+	 */
 	public User() {
 		super();
 	}
 
-	/************************** Konstruktor *************************************/
+	/**
+	 * Konstruktor um ein vollständig gefülltes User-Objekt zu erhalten
+	 * @param benutzername
+	 * @param passwort
+	 * @param status
+	 * @param letzterLogin
+	 * @param vorname
+	 * @param nachname
+	 * @param gebDatum
+	 */
 	public User(String benutzername, String passwort, int status, long letzterLogin, String vorname, String nachname, String gebDatum) {
 		super();
 		this.benutzername = benutzername;
@@ -39,6 +75,7 @@ public class User extends DaoObject {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getBenutzername() {
 		return benutzername;
 	}

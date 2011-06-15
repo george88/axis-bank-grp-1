@@ -8,25 +8,61 @@ package de.axisbank.services.filiale;
 public class Tilgung {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * Startdatum der Tilgung, meist Anfang des Monats
+	 */
 	private String startDatum;
 
+	/**
+	 * Anfangsschuld oder einfach Kredithöhe am Anfang des Monats
+	 */
 	private double startSchuld;
 
+	/**
+	 * Höhe der monatlichen Rate
+	 */
 	private double rate;
 
+	/**
+	 * Höhe der in der Schuld einthaltenen Zinsen 
+	 */
 	private double zinsAnteil;
 
+	/**
+	 * Höhe der Tilgung
+	 */
 	private double tilgung;
 
+	/**
+	 * Datum des Monatsende
+	 */
 	private String endDatum;
 
+	/**
+	 * Höhe der Schuld am Monatsende
+	 */
 	private double endSchuld;
 
+	/************************** Konstruktor *************************************/
+
+	/**
+	 * Standardkonstruktor
+	 */
 	public Tilgung() {
 
 	}
 
-	/************************** Konstruktor *************************************/
+	/**
+	 * Konstruktor um ein Tilgungs-Obkekt zu erstellen
+	 * @param startDatum
+	 * @param startSchuld
+	 * @param rate
+	 * @param zinsAnteil
+	 * @param tilgung
+	 * @param endDatum
+	 * @param endSchuld
+	 */
 	public Tilgung(String startDatum, double startSchuld, double rate, double zinsAnteil, double tilgung, String endDatum, double endSchuld) {
 		super();
 		this.startDatum = startDatum;
@@ -39,6 +75,7 @@ public class Tilgung {
 	}
 
 	/************************* Getter/Setter ************************************/
+
 	public String getStartDatum() {
 		return startDatum;
 	}

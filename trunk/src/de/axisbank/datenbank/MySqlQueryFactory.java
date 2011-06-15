@@ -44,7 +44,7 @@ public class MySqlQueryFactory {
 									if (o.getClass().equals(String.class)) {
 										if (mn.substring(3).endsWith("_dt")) {
 											try {
-												set += "`" + mn.substring(3, mn.indexOf("_dt")) + "` = '" + DatumsKonvertierung.getStringToDbSttringDate(o.toString()) + "', ";
+												set += "`" + mn.substring(3, mn.indexOf("_dt")) + "` = '" + DatumsKonvertierung.getStringToDbStringDate(o.toString()) + "', ";
 
 											} catch (Exception e) {
 												e.printStackTrace();

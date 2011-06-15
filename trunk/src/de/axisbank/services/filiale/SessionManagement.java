@@ -13,29 +13,54 @@ import de.axisbank.tools.Logging;
 public class SessionManagement {
 
 	/************************** Variablen *************************************/
+
+	/**
+	 * enthält alle Sessions
+	 */
 	private static HashMap<Long, Session> sessions = new HashMap<Long, Session>();
+
+	/**
+	 * Dient der Erstellung einer Sessionidentifikation
+	 */
 	private static Random random = new Random();
+
+	/**
+	 * Dient zur Synchronisierung sämtlicher Methoden im Sessionmanagement 
+	 */
 	private static Object syncObj = new Object();
 
+	/**
+	 * Gibt alle Sessions zurück
+	 * @return HashMap<Long, Session>
+	 */
 	public static HashMap<Long, Session> getSessions() {
 		synchronized (syncObj) {
 			return sessions;
 		}
 	}
 
+	/**
+	 * Erstellt eine Session und gibt die Identifikation dieser zurück
+	 * @param benutzername
+	 * @return Long
+	 */
 	public static Long addSession(String benutzername) {
-		//		synchronized (syncObj) {
-		Long sessionID = -1L;
-		sessionID = random.nextLong();
-		while (checkSession(sessionID) != null) {
+		synchronized (syncObj) {
+			Long sessionID = -1L;
 			sessionID = random.nextLong();
+			while (checkSession(sessionID) != null) {
+				sessionID = random.nextLong();
+			}
+			sessions.put(sessionID, new Session(benutzername, sessionID));
+			Logging.logLine("Session " + sessionID + " vom Benutzer " + benutzername + " wurde erstellt");
+			return sessionID;
 		}
-		sessions.put(sessionID, new Session(benutzername, sessionID));
-		Logging.logLine("Session " + sessionID + " vom Benutzer " + benutzername + " wurde erstellt");
-		return sessionID;
-		//		}
 	}
 
+	/**
+	 * Setzt den Erhaltswert der Session zurück
+	 * @param sessionID
+	 */
 	public static void updateSession(Long sessionID) {
 		synchronized (syncObj) {
 
@@ -46,6 +71,11 @@ public class SessionManagement {
 		}
 	}
 
+	/**
+	 * Prüft auf Vorhandensein einer Session anhand der Identifikation, bei Erfolg Rückgabe des Benutzernames
+	 * @param sessionID
+	 * @return String
+	 */
 	public static String checkSession(Long sessionID) {
 		synchronized (syncObj) {
 			if (sessions.get(sessionID) != null) {
@@ -58,6 +88,11 @@ public class SessionManagement {
 		return null;
 	}
 
+	/**
+	 * Prüft auf Vorhandensein einer Session anhand des Benutzernames, bei Erfolg Rückgabe der Sessionidentifikation
+	 * @param benutzername
+	 * @return
+	 */
 	public static Long checkSession(String benutzername) {
 		synchronized (syncObj) {
 			for (Long s : sessions.keySet())
@@ -68,6 +103,10 @@ public class SessionManagement {
 		return -1L;
 	}
 
+	/**
+	 * Löscht die Session
+	 * @param sessionID
+	 */
 	public static void deleteSession(Long sessionID) {
 		synchronized (syncObj) {
 			if (sessions.get(sessionID) != null) {

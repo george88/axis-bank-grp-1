@@ -32,9 +32,18 @@ import de.axisbank.tools.TilgungsPlanErsteller;
 public class FilialBankService {
 
 	/************************** Konstruktor *************************************/
+
+	/**
+	 * Standardkonstruktor
+	 */
 	public FilialBankService() {
 	}
 
+	/**
+	 * Diese Methode wird nur von der Administration aufgerugen um zu prüfen welche und wieviele Session vorhanden sind
+	 * @param pw
+	 * @return String[]
+	 */
 	public String[] getSessionInfos(String pw) {
 		if (!pw.equals(KonfigFiles.getString(KonfigFiles.Manage_Passwort)))
 			return null;
@@ -51,6 +60,10 @@ public class FilialBankService {
 		return sessions;
 	}
 
+	/**
+	 * mit dieser Methode ist es der Administrations ermöglicht alle aktuelle Sessions zu löschen
+	 * @param pw
+	 */
 	public void deleteAllSessions(String pw) {
 		if (!pw.equals(KonfigFiles.getString(KonfigFiles.Manage_Passwort)))
 			return;
@@ -58,6 +71,12 @@ public class FilialBankService {
 			SessionManagement.deleteSession(l);
 	}
 
+	/**
+	 * Anmeldung über Benutzernamen und Passwort, bei erfolg gibt es eine Sessionidentifikation zurück
+	 * @param benutzername
+	 * @param passwort
+	 * @return Long
+	 */
 	public Long login(String benutzername, String passwort) {
 		User tmpUser = new User();
 		tmpUser.setBenutzername(benutzername);
@@ -80,6 +99,11 @@ public class FilialBankService {
 		return -1L;
 	}
 
+	/**
+	 * Methode zur Abmeldung und zur Löschung der aktuellen eigenen Session
+	 * @param sessionID
+	 * @return Boolean
+	 */
 	public boolean logoff(Long sessionID) {
 		User updateuser = new User();
 		updateuser.setBenutzername(SessionManagement.checkSession(sessionID));
@@ -96,6 +120,12 @@ public class FilialBankService {
 		return false;
 	}
 
+	/**
+	 * Methode zum erhalt eines beliebigen Filialmitarbeiterss
+	 * @param benutzername
+	 * @param sessionID
+	 * @return User
+	 */
 	public User getUser(String benutzername, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null) {
 			return null;
@@ -108,6 +138,14 @@ public class FilialBankService {
 		return null;
 	}
 
+	/**
+	 * Methode zur Prüfung der Liquidität eines Antragsstellers
+	 * @param einnahmen
+	 * @param ueberschuss
+	 * @param rateKredit
+	 * @param sessionID
+	 * @return Boolean
+	 */
 	public boolean getLiquiditaet(double einnahmen, double ueberschuss, double rateKredit, Long sessionID) {
 		Logging.logLine("RPC:getLiquiditaet");
 		if (SessionManagement.checkSession(sessionID) == null)
@@ -120,6 +158,16 @@ public class FilialBankService {
 			return false;
 	}
 
+	/**
+	 * Methode zur Erstellung eines Tilgungsplans
+	 * @param kreditHoehe
+	 * @param kreditBeginn
+	 * @param zinsatzDifferenz
+	 * @param ratenHoehe
+	 * @param laufzeitMonate
+	 * @param sessionID
+	 * @return Tilgungsplan
+	 */
 	public Tilgungsplan getTilgungsPlan(double kreditHoehe, String kreditBeginn, double zinsatzDifferenz, double ratenHoehe, int laufzeitMonate, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return null;
@@ -140,6 +188,15 @@ public class FilialBankService {
 		return tp;
 	}
 
+	/**
+	 * Methode alle Antragssteller zu erhalten, die mit den übergebenen Angaben übereinstimmen
+	 * @param vorname
+	 * @param nachname
+	 * @param gebDatum
+	 * @param hauptGirokonto
+	 * @param sessionID
+	 * @return Antragssteller[]
+	 */
 	public Antragssteller[] getAntragssteller(String vorname, String nachname, String gebDatum, int hauptGirokonto, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null) {
 			return null;
@@ -181,6 +238,12 @@ public class FilialBankService {
 		return asss;
 	}
 
+	/**
+	 * Methode um den Antragssteller selbst oder alle mit ihm verbundenen Referenzen zu aktualisieren
+	 * @param antragsssteller
+	 * @param sessionID
+	 * @return Boolean
+	 */
 	public boolean updateAntragssteller(Antragssteller antragsssteller, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
@@ -204,6 +267,18 @@ public class FilialBankService {
 		return update;
 	}
 
+	/**
+	 * Dient zur Speicherung eines Kreditantrags
+	 * @param berater
+	 * @param antragsteller
+	 * @param antragsteller_2
+	 * @param verhaeltnisZu_2
+	 * @param filiale
+	 * @param status
+	 * @param tilgungsPlan
+	 * @param sessionID
+	 * @return Boolean
+	 */
 	public boolean insertKreditantrag(User berater, Antragssteller antragsteller, Antragssteller antragsteller_2, String verhaeltnisZu_2, String filiale, String status, Tilgungsplan tilgungsPlan,
 			Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
@@ -228,6 +303,13 @@ public class FilialBankService {
 			return false;
 	}
 
+	/**
+	 * Trägt einen neuen Antragssteller ein
+	 * @param antragsssteller
+	 * @param sessionID
+	 * @return Boolean
+	 */
+	@Deprecated
 	public boolean insertAntragssteller(Antragssteller antragsssteller, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
@@ -282,6 +364,14 @@ public class FilialBankService {
 		return true;
 	}
 
+	/**
+	 * Löscht einen Antragssteller
+	 * @param antragssteller
+	 * @param nurEnthalteneReferenzen
+	 * @param sessionID
+	 * @return Boolean
+	 */
+	@Deprecated
 	public boolean deleteAntragssteller(Antragssteller antragssteller, boolean nurEnthalteneReferenzen, Long sessionID) {
 		if (SessionManagement.checkSession(sessionID) == null)
 			return false;
